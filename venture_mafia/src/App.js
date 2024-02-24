@@ -17,10 +17,11 @@ const D3NetworkGraph = () => {
   const d3Container = useRef(null);
   const width = 2000,
     height = 1500,
-    nodeRadius = 20, // Node radius
+    nodeRadius = 30, // Node radius
     mafiaRadius = 400,
     center = { x: width / 2, y: height / 2 },
-    pullStrength = 0.1; // Increase to make the pull towards the center stronger
+    pullStrength = 0.1, // Increase to make the pull towards the center stronger
+    minDistance = 150; // Minimum desired distance between secondary nodes
 
   const primaryNodes = data.nodes.filter((d) => d.type === "primary");
   const angleStep = (2 * Math.PI) / primaryNodes.length;
@@ -80,18 +81,22 @@ const D3NetworkGraph = () => {
     });
     
     function forceSecondaryNodes(alpha) {
-      data.nodes.forEach((d) => {
-        if (d.type === "secondary") {
-          // Force calculation to secondary nodes towayds center
-          const primaryNode = findPrimaryNodeForSecondary(d);
-          if (primaryNode) {
-            const towardsCenterX = (center.x - d.x) * pullStrength;
-            const towardsCenterY = (center.y - d.y) * pullStrength;
-
-            d.x += (towardsCenterX - d.x) * alpha;
-            d.y += (towardsCenterY - d.y) * alpha;
+      const k = alpha * pullStrength;
+      data.nodes.forEach((a, i) => {
+        data.nodes.forEach((b, j) => {
+          if (i !== j && a.type === "secondary" && b.type === "secondary") {
+            let dx = a.x - b.x;
+            let dy = a.y - b.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < minDistance) {
+              let strength = (minDistance - distance) / distance * k;
+              a.vx += dx * strength;
+              a.vy += dy * strength;
+              b.vx -= dx * strength;
+              b.vy -= dy * strength;
+            }
           }
-        }
+        });
       });
     }
 
@@ -121,7 +126,7 @@ const D3NetworkGraph = () => {
           .id((d) => d.id)
           .distance(100)
       )
-      .force("charge", d3.forceManyBody().strength(-50))
+      .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(center.x, center.y))
       .force("secondaryNodes", forceSecondaryNodes);
 
@@ -158,7 +163,7 @@ const D3NetworkGraph = () => {
       .style("text-anchor", "start") // Anchor the text starting from its current position
       .style("fill", "#000000"); // Text color
 
-    // Update and drag configurations
+    // Update configurations
     simulation.on("tick", () => {
       link
         .attr("x1", (d) => d.source.x)
