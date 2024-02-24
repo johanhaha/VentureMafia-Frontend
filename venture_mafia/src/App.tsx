@@ -84,56 +84,6 @@ function getSubsequentOrgsInfo(targetOrgName: string): SubsequentOrgsInfo[] {
 
 console.log(getSubsequentOrgsInfo("PayPal"));
 
-export const data = {
-  nodes: [
-    { id: "Myriel", group: "team1" },
-    { id: "Anne", group: "team1" },
-  ],
-  links: [
-    { source: "Anne", target: "Myriel", value: 1 },
-    { source: "Napoleon", target: "Myriel", value: 1 },
-  ],
-};
-
-console.log(data.nodes)
-
-var nodes = data.nodes;
-
-d3.forceSimulation(nodes) // apply the simulation to our array of nodes
-
-  // Force #1: links between nodes
-  .force(
-    "link",
-    d3.forceLink(data.links).id((d: any) => d.id)
-  )
-
-  // Force #2: avoid node overlaps
-  .force("collide", d3.forceCollide().radius(5))
-
-  // Force #3: attraction or repulsion between nodes
-  .force("charge", d3.forceManyBody())
-
-  // Force #4: nodes are attracted by the center of the chart area
-  .force("center", d3.forceCenter(5 / 2, 5 / 2));
-
-export const NetworkDiagram = ({
-  width,
-  height,
-  data,
-}: NetworkDiagramProps) => {
-  // read the data
-  // compute the nodes position using a d3-force
-  // build the links
-  // build the nodes
-
-  return (
-    <div>
-      <svg width={width} height={height}>
-        // render all the lines and circles
-      </svg>
-    </div>
-  );
-};
 
 function App() {
   return (
