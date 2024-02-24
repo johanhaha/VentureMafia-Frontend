@@ -2,16 +2,12 @@ import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
 
-import data from "./data_typed.json";
-
-/*
+import data from "./data_typed.json";/*
 import alumniNetworkRaw from "./data/alumni_network.json";
 import targetOrg from "./data/targetOrg.json";
 import alumniInfo from "./data/alumniInfo.json";
 import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
 */
-
-// ----------------
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
@@ -98,16 +94,6 @@ const D3NetworkGraph = () => {
           }
         });
       });
-    }
-
-    function findPrimaryNodeForSecondary(node) {
-      // Find the connected primary node for a given secondary node
-      const link = data.links.find(
-        (link) =>
-          link.target.id === node.id &&
-          data.nodes[link.source.index].type === "primary"
-      );
-      return link ? data.nodes[link.source.index] : null;
     }
 
     const svg = d3
