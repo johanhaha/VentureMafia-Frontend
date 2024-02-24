@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
 
-import data from "./data.json";
+import data from "./data_typed.json";
 
 /*
 import alumniNetworkRaw from "./data/alumni_network.json";
@@ -15,14 +15,51 @@ import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
-  const width = 1000,
-    height = 1000,
-    radius = 50; // Circle radius
+  const width = 2000,
+    height = 1500,
+    nodeRadius = 50, // Node radius
+    mafiaRadius = 400,
+    center = { x: width / 2, y: height / 2 };
+
+  const primaryNodes = data.nodes.filter((d) => d.type === "primary");
+  const angleStep = (2 * Math.PI) / primaryNodes.length;
+
+  primaryNodes.forEach((d, i) => {
+    d.fx = center.x + mafiaRadius * Math.cos(i * angleStep);
+    d.fy = center.y + mafiaRadius * Math.sin(i * angleStep);
+  });
 
   useEffect(() => {
     if (!d3Container.current) return;
 
     d3.select(d3Container.current).selectAll("*").remove(); // Clear before rendeting to avoid multiple graphs
+
+    function forceSecondaryNodes(alpha) {
+      data.nodes.forEach((d) => {
+        if (d.type === "secondary") {
+          // Force calculation to secondary nodes towayds center
+          const primaryNode = findPrimaryNodeForSecondary(d);
+          if (primaryNode) {
+            const pullStrength = 0.1; // Increase to make the pull towards the center stronger
+            const towardsCenterX = (center.x - d.x) * pullStrength;
+            const towardsCenterY = (center.y - d.y) * pullStrength;
+
+            d.x += (towardsCenterX - d.x) * alpha;
+            d.y += (towardsCenterY - d.y) * alpha;
+          }
+        }
+      });
+    }
+
+    function findPrimaryNodeForSecondary(node) {
+      // Find the connected primary node for a given secondary node
+      const link = data.links.find(
+        (link) =>
+          link.target.id === node.id &&
+          data.nodes[link.source.index].type === "primary"
+      );
+      return link ? data.nodes[link.source.index] : null;
+    }
 
     const svg = d3
       .select(d3Container.current)
@@ -38,10 +75,11 @@ const D3NetworkGraph = () => {
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(400)
+          .distance(100)
       )
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(width / 2, height / 2));
+      .force("charge", d3.forceManyBody().strength(-50))
+      .force("center", d3.forceCenter(center.x, center.y))
+      .force("secondaryNodes", forceSecondaryNodes);
 
     // Draw lines for the links
     const link = svg
@@ -64,14 +102,14 @@ const D3NetworkGraph = () => {
     // Append circles to those `g` elements
     nodeElements
       .append("circle")
-      .attr("r", radius)
-      .style("fill", "#69b3a2");
+      .attr("r", nodeRadius)
+      .style("fill", (d) => (d.type === "primary" ? "#69b3a2" : "#ffab00")); // Primary nodes in green, secondary in orange
 
     // Append text to the `g` elements, positioning it next to the circles
     nodeElements
       .append("text")
       .text((d) => d.name)
-      .attr("dx", radius + 5) // Offset on the x-axis from the circle center
+      .attr("dx", nodeRadius + 5) // Offset on the x-axis from the circle center
       .attr("dy", ".35em") // Vertically center the text relative to the circle's center
       .style("text-anchor", "start") // Anchor the text starting from its current position
       .style("fill", "#000000"); // Text color
