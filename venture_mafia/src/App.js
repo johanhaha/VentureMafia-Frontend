@@ -2,12 +2,33 @@ import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
 
-import data from "./data_typed.json";/*
+import primaryNodes from "./data/primary_nodes.json";
+import secondaryNodes from "./data/secondary_nodes.json";
+import links from "./data/links.json";
+
+/*
 import alumniNetworkRaw from "./data/alumni_network.json";
 import targetOrg from "./data/targetOrg.json";
 import alumniInfo from "./data/alumniInfo.json";
 import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
 */
+
+const combineAndProcessData = (primaryNodes, secondaryNodes) => {
+  // Assuming both primary and secondary are arrays of node objects
+  const combinedNodes = [...primaryNodes.map(node => ({ ...node, type: 'primary' })), ...secondaryNodes.map(node => ({ ...node, type: 'secondary' }))];
+  const combinedLinks = [...links]; // Define how you combine or create links
+
+  const data = {
+    "nodes": combinedNodes,
+    "links": combinedLinks
+  }
+
+  return data
+};
+
+const data = combineAndProcessData(primaryNodes, secondaryNodes);
+
+console.log(data);
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
