@@ -4,38 +4,56 @@ import * as d3 from "d3";
 
 import primaryNodes from "./data/primary_nodes.json";
 import secondaryNodes from "./data/secondary_nodes.json";
-import links from "./data/links.json";
+//import links from "./data/links.json";
 
-/*
-import alumniNetworkRaw from "./data/alumni_network.json";
 import targetOrg from "./data/targetOrg.json";
 import alumniInfo from "./data/alumniInfo.json";
 import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
-*/
+import relations from "./data/relations.json";
 
-const combineAndProcessData = (primaryNodes, secondaryNodes) => {
+const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
   // Assuming both primary and secondary are arrays of node objects
-  const combinedNodes = [...primaryNodes.map(node => ({ ...node, type: 'primary' })), ...secondaryNodes.map(node => ({ ...node, type: 'secondary' }))];
-  const combinedLinks = [...links]; // Define how you combine or create links
+  const combinedNodes = [
+    ...primaryNodes.map(({ personUuid: id, personName: name, ...rest }) => ({
+      type: "primary",
+      id,
+      name,
+      ...rest,
+    })),
+    ...secondaryNodes.map(({ orgUuid: id, orgName: name, ...rest }) => ({
+      type: "secondary",
+      id,
+      name,
+      ...rest,
+    })),
+  ];
+  const combinedLinks = 
+    links.map(({ personUuid: source, orgUuid: target, ...rest }) => ({
+      source,
+      target,
+      ...rest,
+    }));
+
+  console.log('combinedNodes', combinedNodes)
 
   const data = {
-    "nodes": combinedNodes,
-    "links": combinedLinks
-  }
+    nodes: combinedNodes,
+    links: combinedLinks,
+  };
 
-  return data
+  return data;
 };
 
-const data = combineAndProcessData(primaryNodes, secondaryNodes);
+const data = combineAndProcessData(alumniInfo, subsequentOrgsInfo, relations);
 
 console.log(data);
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
-  const width = 2000,
-    height = 1500,
-    nodeRadius = 30, // Node radius
-    mafiaRadius = 400,
+  const width = 3000,
+    height = 1600,
+    nodeRadius = 10, // Node radius
+    mafiaRadius = 800,
     center = { x: width / 2, y: height / 2 },
     pullStrength = 0.1, // Increase to make the pull towards the center stronger
     minDistance = 150; // Minimum desired distance between secondary nodes
@@ -48,18 +66,18 @@ const D3NetworkGraph = () => {
 
     d3.select(d3Container.current).selectAll("*").remove(); // Clear before rendeting to avoid multiple graphs
 
-    const nodeMap = new Map(data.nodes.map(node => [node.id, node])); // Map with all nodes
+    const nodeMap = new Map(data.nodes.map((node) => [node.id, node])); // Map with all nodes
     let secondaryToPrimaryMap = new Map(); // Mapping between secondary and primary nodes to calculate number of common nodes
     let commonConnectionsScore = new Map(); // Map of the number of common secondary nodes between primary nodes
 
     // Go through each link to count connections for primary nodes
-    data.links.forEach(link => {
+    data.links.forEach((link) => {
       const sourceId = typeof link.source === "object" ? link.source.id : link.source;
       const targetId = typeof link.target === "object" ? link.target.id : link.target;
-    
+
       let sourceNode = nodeMap.get(sourceId);
       let targetNode = nodeMap.get(targetId);
-    
+
       // Since primary nodes can't connect to other primary nodes, only one check is needed
       if (sourceNode.type === "primary" && targetNode.type === "secondary") {
         if (!secondaryToPrimaryMap.has(targetId)) {
@@ -70,7 +88,7 @@ const D3NetworkGraph = () => {
     });
 
     // Initialise score map
-    primaryNodes.forEach(node => commonConnectionsScore.set(node.id, 0));
+    primaryNodes.forEach((node) => commonConnectionsScore.set(node.id, 0));
 
     // Calculate the score based on common secondary connections
     primaryNodes.forEach((nodeA, indexA) => {
@@ -82,7 +100,8 @@ const D3NetworkGraph = () => {
               sharedConnections += 1; // Increment if both primary nodes are connected to the same secondary node
             }
           });
-          commonConnectionsScore.set(nodeA.id, commonConnectionsScore.get(nodeA.id) + sharedConnections);
+          commonConnectionsScore.set(nodeA.id, commonConnectionsScore.get(nodeA.id) + sharedConnections
+          );
         }
       });
     });
@@ -96,7 +115,7 @@ const D3NetworkGraph = () => {
       d.fx = center.x + mafiaRadius * Math.cos(i * angleStep);
       d.fy = center.y + mafiaRadius * Math.sin(i * angleStep);
     });
-    
+
     function forceSecondaryNodes(alpha) {
       const k = alpha * pullStrength;
       data.nodes.forEach((a, i) => {
@@ -106,7 +125,7 @@ const D3NetworkGraph = () => {
             let dy = a.y - b.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < minDistance) {
-              let strength = (minDistance - distance) / distance * k;
+              let strength = ((minDistance - distance) / distance) * k;
               a.vx += dx * strength;
               a.vy += dy * strength;
               b.vx -= dx * strength;
