@@ -2,10 +2,6 @@ import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
 
-import primaryNodes from "./data/primary_nodes.json";
-import secondaryNodes from "./data/secondary_nodes.json";
-//import links from "./data/links.json";
-
 import targetOrg from "./data/targetOrg.json";
 import alumniInfo from "./data/alumniInfo.json";
 import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
@@ -27,14 +23,13 @@ const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
       ...rest,
     })),
   ];
-  const combinedLinks = 
-    links.map(({ personUuid: source, orgUuid: target, ...rest }) => ({
+  const combinedLinks = links.map(
+    ({ personUuid: source, orgUuid: target, ...rest }) => ({
       source,
       target,
       ...rest,
-    }));
-
-  console.log('combinedNodes', combinedNodes)
+    })
+  );
 
   const data = {
     nodes: combinedNodes,
@@ -56,6 +51,7 @@ const D3NetworkGraph = () => {
     mafiaRadius = 800,
     center = { x: width / 2, y: height / 2 },
     pullStrength = 0.1, // Increase to make the pull towards the center stronger
+    baseDistance = 200, // Base distance between primary and secondary nodes
     minDistance = 150; // Minimum desired distance between secondary nodes
 
   const primaryNodes = data.nodes.filter((d) => d.type === "primary");
@@ -136,6 +132,15 @@ const D3NetworkGraph = () => {
       });
     }
 
+    function forceTowardsCenter(alpha) {
+      data.nodes.forEach((node) => {
+        if (node.type === "secondary") {
+          node.vx += (center.x - node.x) * alpha * pullStrength; // Adjust pullStrength as needed
+          node.vy += (center.y - node.y) * alpha * pullStrength; // Adjust pullStrength as needed
+        }
+      });
+    }
+
     const svg = d3
       .select(d3Container.current)
       .append("svg")
@@ -150,11 +155,28 @@ const D3NetworkGraph = () => {
         d3
           .forceLink(data.links)
           .id((d) => d.id)
-          .distance(100)
+          .distance((link) => {
+            // Determine the distance based on the relationType
+            switch (link.relationType) {
+              case "executive":
+                return baseDistance * 1; // Closest distance for executives
+
+              case "board_member":
+                return baseDistance * 2; // Farthest for board members
+
+              case "advisor":
+                return baseDistance * 3; // Slightly farther for advisors
+
+              case "investor":
+                return baseDistance * 4; // Farther for investors
+
+              default:
+                return baseDistance * 3; // Default distance if relationType is unknown
+            }
+          })
       )
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(center.x, center.y))
-      .force("secondaryNodes", forceSecondaryNodes);
+      .force("secondaryNodes", forceSecondaryNodes)
+      .force("forceTowardsCenter", forceTowardsCenter);
 
     // Draw lines for the links
     const link = svg
