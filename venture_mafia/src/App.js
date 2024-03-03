@@ -7,8 +7,8 @@ import alumniInfo from "./data/alumniInfo.json";
 import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
 import relations from "./data/relations.json";
 
+// Combining datasets and mapping them to the correct attribute names
 const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
-  // Assuming both primary and secondary are arrays of node objects
   const combinedNodes = [
     ...primaryNodes.map(({ personUuid: id, personName: name, ...rest }) => ({
       type: "primary",
@@ -45,25 +45,27 @@ console.log(data);
 
 // Normalise data for secondary node sizes
 const fundingValues = data.nodes
-  .filter(d => d.type === 'secondary')
-  .map(d => d.totalFundingUsd);
+  .filter((d) => d.type === "secondary")
+  .map((d) => d.totalFundingUsd);
 
 const fundingExtent = d3.extent(fundingValues); // [min, max] of funding
 
 // Scaling function
-const sizeScale = d3.scalePow()
+const sizeScale = d3
+  .scalePow()
   .exponent(0.45) // Tune this for good secondary node sizes
   .domain(fundingExtent)
   .range([3, 60]);
 
-
+// Support function to get the ID of the source element of a link
 const getSourceId = (link) => {
   return typeof link.source === "object" ? link.source.id : link.source;
-}
+};
 
+// Support function to get the ID of the target element of a link
 const getTargetId = (link) => {
   return typeof link.target === "object" ? link.target.id : link.target;
-}
+};
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
@@ -91,8 +93,8 @@ const D3NetworkGraph = () => {
 
     // Go through each link to count connections for primary nodes
     data.links.forEach((link) => {
-      let sourceId = getSourceId(link)
-      let targetId = getTargetId(link)
+      let sourceId = getSourceId(link);
+      let targetId = getTargetId(link);
       let sourceNode = nodeMap.get(sourceId);
       let targetNode = nodeMap.get(targetId);
 
@@ -118,7 +120,9 @@ const D3NetworkGraph = () => {
               sharedConnections += 1; // Increment if both primary nodes are connected to the same secondary node
             }
           });
-          commonConnectionsScore.set(nodeA.id, commonConnectionsScore.get(nodeA.id) + sharedConnections
+          commonConnectionsScore.set(
+            nodeA.id,
+            commonConnectionsScore.get(nodeA.id) + sharedConnections
           );
         }
       });
@@ -134,14 +138,13 @@ const D3NetworkGraph = () => {
       d.fy = center.y + mafiaRadius * Math.sin(i * angleStep);
     });
 
-
     let linkedByIndex = {};
 
     // Create lookup structure to map connected nodes (for highlighting)
-    data.links.forEach(link => {
+    data.links.forEach((link) => {
       // Required to check type as the link is a string prior to simulation and an object afterwards
-      let sourceId = getSourceId(link)
-      let targetId = getTargetId(link)
+      let sourceId = getSourceId(link);
+      let targetId = getTargetId(link);
 
       // If there is a link, add entry with the source and target id and true
       linkedByIndex[`${sourceId},${targetId}`] = true;
@@ -150,7 +153,11 @@ const D3NetworkGraph = () => {
 
     // Helper function to check if two nodes are linked
     function isConnected(a, b) {
-      return linkedByIndex[`${a.id},${b.id}`] || linkedByIndex[`${b.id},${a.id}`] || a.id === b.id;
+      return (
+        linkedByIndex[`${a.id},${b.id}`] ||
+        linkedByIndex[`${b.id},${a.id}`] ||
+        a.id === b.id
+      );
     }
 
     function forceSecondaryNodes(alpha) {
@@ -159,7 +166,10 @@ const D3NetworkGraph = () => {
         data.nodes.forEach((b, j) => {
           if (i !== j && a.type === "secondary" && b.type === "secondary") {
             // Adjust minDistance based on node sizes
-            const adjustedMinDistance = minDistance + sizeScale(a.totalFundingUsd) + sizeScale(b.totalFundingUsd);
+            const adjustedMinDistance =
+              minDistance +
+              sizeScale(a.totalFundingUsd) +
+              sizeScale(b.totalFundingUsd);
             let dx = a.x - b.x;
             let dy = a.y - b.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
@@ -221,24 +231,24 @@ const D3NetworkGraph = () => {
       .force("secondaryNodes", forceSecondaryNodes)
       .force("forceTowardsCenter", forceTowardsCenter);
 
-      const defs = svg.append("defs");
+    const defs = svg.append("defs");
 
-      // Creating a pattern for profile pictures
-      defs.selectAll(".node-pattern")
-        .data(data.nodes.filter(d => d.type === 'primary'))
-        .enter()
-        .append("pattern")
-          .attr("class", "node-pattern")
-          .attr("id", d => `node-image-${d.id}`)
-          .attr("height", "100%")
-          .attr("width", "100%")
-          .attr("patternContentUnits", "objectBoundingBox")
-        .append("image")
-          .attr("height", 1)
-          .attr("width", 1)
-          .attr("preserveAspectRatio", "xMidYMid slice")
-          .attr("xlink:href", d => d.personLogoUrl);
-      
+    // Creating a pattern for profile pictures
+    defs
+      .selectAll(".node-pattern")
+      .data(data.nodes.filter((d) => d.type === "primary"))
+      .enter()
+      .append("pattern")
+      .attr("class", "node-pattern")
+      .attr("id", (d) => `node-image-${d.id}`)
+      .attr("height", "100%")
+      .attr("width", "100%")
+      .attr("patternContentUnits", "objectBoundingBox")
+      .append("image")
+      .attr("height", 1)
+      .attr("width", 1)
+      .attr("preserveAspectRatio", "xMidYMid slice")
+      .attr("xlink:href", (d) => d.personLogoUrl);
 
     // Draw lines for the links
     const linkElements = svg
@@ -250,7 +260,7 @@ const D3NetworkGraph = () => {
       .join("line")
       .attr("stroke-width", 1);
 
-    // Create a `g` element for each node that will contain the circle and the text
+    // Create a 'g' element for each node that will contain the circle and the text
     const nodeElements = svg
       .append("g")
       .selectAll("g")
@@ -261,51 +271,57 @@ const D3NetworkGraph = () => {
     // Event handler for selecting nodes
     function clickNode(event, clickedNode) {
       // Adjust the opacity to emphasise/de-emphasise nodes
-      nodeElements.style("opacity", node => {
-        return isConnected(clickedNode, node) ? 1.0 : 0.1
-      })
+      nodeElements.style("opacity", (node) => {
+        return isConnected(clickedNode, node) ? 1.0 : 0.1;
+      });
       // Adjust the opacity to emphasise/de-emphasise nodes
-      linkElements.style("stroke-opacity", link => {
-        return isConnected(clickedNode, link.target) ? 1.0 : 0.02
-      })
+      linkElements.style("stroke-opacity", (link) => {
+        return isConnected(clickedNode, link.target) ? 1.0 : 0.02;
+      });
       // Adjust the stroke colour for directly connected nodes
-      linkElements.style("stroke", link => {
-        return (link.source === clickedNode || link.target === clickedNode) ? "red" : "#737373"
-      })
+      linkElements.style("stroke", (link) => {
+        return link.source === clickedNode || link.target === clickedNode
+          ? "red"
+          : "#737373";
+      });
       event.stopPropagation();
     }
 
     // Event listener and handler for deselecting nodes. Resets styling
-    d3.select(document).on('click', function() {
-      nodeElements.style('opacity', 1);
-      linkElements.style('stroke', '#737373');
-      linkElements.style('stroke-opacity', 0.3);
+    d3.select(document).on("click", function () {
+      nodeElements.style("opacity", 1);
+      linkElements.style("stroke", "#737373");
+      linkElements.style("stroke-opacity", 0.3);
     });
 
-    // Append circles to those `g` elements and set the node size
+    // Append circles to the 'g' elements and set the node size
     nodeElements
       .append("circle")
-      .attr("r", d => { // Set node size
-        if (d.type == 'primary') {
-          return primaryNodeRadius
-        }
-        else if (d.type === 'secondary' && d.totalFundingUsd != null) {
-          return sizeScale(d.totalFundingUsd); // Dynamic size for secondary nodes
+      .attr("r", (d) => {
+        // Set node size
+        if (d.type == "primary") {
+          return primaryNodeRadius;
+        } else if (d.type === "secondary" && d.totalFundingUsd != null) {
+          return sizeScale(d.totalFundingUsd); // Dynamic size for secondary nodes based on funding amount
         } else {
           return 10; // Default size secondary nodes without funding info
         }
       })
-      .attr("fill", d => d.type === 'primary' ? `url(#node-image-${d.id})` : "#ffab00") // Use pattern for primary nodes to populate profile pictures
+      .attr("fill", (d) =>
+        d.type === "primary" ? `url(#node-image-${d.id})` : "#ffab00"
+      ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
-    // Append text to the `g` elements, positioning it next to the circles
+    // Append text to the 'g' elements, positioning it next to the circles
     nodeElements
       .append("text")
       .text((d) => d.name)
-      .attr("dx", d => d.type === 'primary' ? primaryNodeRadius + 5 : secondaryNodeRadius + 5) // Offset on the x-axis from the circle center
-      .attr("dy", ".35em") // Vertically center the text relative to the circle's center
-      .style("text-anchor", "start") // Anchor the text starting from its current position
-      .style("fill", "#000000"); // Text color
+      .attr("dx", (d) =>
+        d.type === "primary" ? primaryNodeRadius + 5 : secondaryNodeRadius + 5
+      ) // Offset on the x-axis from the circle center
+      .attr("dy", ".35em")
+      .style("text-anchor", "start")
+      .style("fill", "#000000");
 
     // Update configurations
     simulation.on("tick", () => {
