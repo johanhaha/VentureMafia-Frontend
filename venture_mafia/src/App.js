@@ -43,6 +43,19 @@ const data = combineAndProcessData(alumniInfo, subsequentOrgsInfo, relations);
 
 console.log(data);
 
+// Normalise data for secondary node sizes
+const fundingValues = data.nodes
+  .filter(d => d.type === 'secondary')
+  .map(d => d.totalFundingUsd);
+
+const fundingExtent = d3.extent(fundingValues); // [min, max] of funding
+
+// Scaling function
+const sizeScale = d3.scalePow()
+  .exponent(0.45) // Tune this for good secondary node sizes
+  .domain(fundingExtent)
+  .range([3, 60]);
+
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
   const width = 3000,
@@ -51,7 +64,7 @@ const D3NetworkGraph = () => {
     secondaryNodeRadius = 10,
     mafiaRadius = 800,
     center = { x: width / 2, y: height / 2 },
-    pullStrength = 0.1, // Increase to make the pull towards the center stronger
+    pullStrength = 0.3, // Increase to make forces stronger
     baseDistance = 200, // Base distance between primary and secondary nodes
     minDistance = 150; // Minimum desired distance between secondary nodes
 
@@ -118,11 +131,13 @@ const D3NetworkGraph = () => {
       data.nodes.forEach((a, i) => {
         data.nodes.forEach((b, j) => {
           if (i !== j && a.type === "secondary" && b.type === "secondary") {
+            // Adjust minDistance based on node sizes
+            const adjustedMinDistance = minDistance + sizeScale(a.totalFundingUsd) + sizeScale(b.totalFundingUsd);
             let dx = a.x - b.x;
             let dy = a.y - b.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < minDistance) {
-              let strength = ((minDistance - distance) / distance) * k;
+            if (distance < adjustedMinDistance) {
+              let strength = ((adjustedMinDistance - distance) / distance) * k;
               a.vx += dx * strength;
               a.vy += dy * strength;
               b.vx -= dx * strength;
@@ -216,10 +231,19 @@ const D3NetworkGraph = () => {
       .enter()
       .append("g");
 
-    // Append circles to those `g` elements
+    // Append circles to those `g` elements and set the node size
     nodeElements
       .append("circle")
-      .attr("r", d => d.type === 'primary' ? primaryNodeRadius : secondaryNodeRadius)
+      .attr("r", d => { // Set node size
+        if (d.type == 'primary') {
+          return primaryNodeRadius
+        }
+        else if (d.type === 'secondary' && d.totalFundingUsd != null) {
+          return sizeScale(d.totalFundingUsd); // Dynamic size for secondary nodes
+        } else {
+          return 10; // Default size secondary nodes without funding info
+        }
+      })
       .attr("fill", d => d.type === 'primary' ? `url(#node-image-${d.id})` : "#ffab00"); // Use pattern for primary nodes to populate profile pictures
 
     // Append text to the `g` elements, positioning it next to the circles
