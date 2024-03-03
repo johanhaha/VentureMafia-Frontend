@@ -178,8 +178,8 @@ const D3NetworkGraph = () => {
     function forceTowardsCenter(alpha) {
       data.nodes.forEach((node) => {
         if (node.type === "secondary") {
-          node.vx += (center.x - node.x) * alpha * pullStrength; // Adjust pullStrength as needed
-          node.vy += (center.y - node.y) * alpha * pullStrength; // Adjust pullStrength as needed
+          node.vx += (center.x - node.x) * alpha * pullStrength;
+          node.vy += (center.y - node.y) * alpha * pullStrength;
         }
       });
     }
@@ -267,6 +267,10 @@ const D3NetworkGraph = () => {
       // Adjust the opacity to emphasise/de-emphasise nodes
       linkElements.style("stroke-opacity", link => {
         return isConnected(clickedNode, link.target) ? 1.0 : 0.02
+      })
+      // Adjust the stroke colour for directly connected nodes
+      linkElements.style("stroke", link => {
+        return (link.source === clickedNode || link.target === clickedNode) ? "red" : "#737373"
       })
     }
 
