@@ -258,7 +258,7 @@ const D3NetworkGraph = () => {
       .enter()
       .append("g");
 
-    // Event handler for clicking nodes
+    // Event handler for selecting nodes
     function clickNode(event, clickedNode) {
       // Adjust the opacity to emphasise/de-emphasise nodes
       nodeElements.style("opacity", node => {
@@ -272,7 +272,15 @@ const D3NetworkGraph = () => {
       linkElements.style("stroke", link => {
         return (link.source === clickedNode || link.target === clickedNode) ? "red" : "#737373"
       })
+      event.stopPropagation();
     }
+
+    // Event listener and handler for deselecting nodes. Resets styling
+    d3.select(document).on('click', function() {
+      nodeElements.style('opacity', 1);
+      linkElements.style('stroke', '#737373');
+      linkElements.style('stroke-opacity', 0.3);
+    });
 
     // Append circles to those `g` elements and set the node size
     nodeElements
