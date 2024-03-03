@@ -47,7 +47,8 @@ const D3NetworkGraph = () => {
   const d3Container = useRef(null);
   const width = 3000,
     height = 1600,
-    nodeRadius = 10, // Node radius
+    primaryNodeRadius = 50,
+    secondaryNodeRadius = 10,
     mafiaRadius = 800,
     center = { x: width / 2, y: height / 2 },
     pullStrength = 0.1, // Increase to make the pull towards the center stronger
@@ -199,14 +200,14 @@ const D3NetworkGraph = () => {
     // Append circles to those `g` elements
     nodeElements
       .append("circle")
-      .attr("r", nodeRadius)
+      .attr("r", d => d.type === 'primary' ? primaryNodeRadius : secondaryNodeRadius)
       .style("fill", (d) => (d.type === "primary" ? "#69b3a2" : "#ffab00")); // Primary nodes in green, secondary in orange
 
     // Append text to the `g` elements, positioning it next to the circles
     nodeElements
       .append("text")
       .text((d) => d.name)
-      .attr("dx", nodeRadius + 5) // Offset on the x-axis from the circle center
+      .attr("dx", d => d.type === 'primary' ? primaryNodeRadius + 5 : secondaryNodeRadius + 5) // Offset on the x-axis from the circle center
       .attr("dy", ".35em") // Vertically center the text relative to the circle's center
       .style("text-anchor", "start") // Anchor the text starting from its current position
       .style("fill", "#000000"); // Text color
