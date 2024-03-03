@@ -56,6 +56,15 @@ const sizeScale = d3.scalePow()
   .domain(fundingExtent)
   .range([3, 60]);
 
+
+const getSourceId = (link) => {
+  return typeof link.source === "object" ? link.source.id : link.source;
+}
+
+const getTargetId = (link) => {
+  return typeof link.target === "object" ? link.target.id : link.target;
+}
+
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
   const width = 3000,
@@ -82,9 +91,8 @@ const D3NetworkGraph = () => {
 
     // Go through each link to count connections for primary nodes
     data.links.forEach((link) => {
-      const sourceId = typeof link.source === "object" ? link.source.id : link.source;
-      const targetId = typeof link.target === "object" ? link.target.id : link.target;
-
+      let sourceId = getSourceId(link)
+      let targetId = getTargetId(link)
       let sourceNode = nodeMap.get(sourceId);
       let targetNode = nodeMap.get(targetId);
 
@@ -125,6 +133,25 @@ const D3NetworkGraph = () => {
       d.fx = center.x + mafiaRadius * Math.cos(i * angleStep);
       d.fy = center.y + mafiaRadius * Math.sin(i * angleStep);
     });
+
+
+    let linkedByIndex = {};
+
+    // Create lookup structure to map connected nodes (for highlighting)
+    data.links.forEach(link => {
+      // Required to check type as the link is a string prior to simulation and an object afterwards
+      let sourceId = getSourceId(link)
+      let targetId = getTargetId(link)
+
+      // If there is a link, add entry with the source and target id and true
+      linkedByIndex[`${sourceId},${targetId}`] = true;
+      linkedByIndex[`${targetId},${sourceId}`] = true; // Ensure the connection is bidirectional
+    });
+
+    // Helper function to check if two nodes are linked
+    function isConnected(a, b) {
+      return linkedByIndex[`${a.id},${b.id}`] || linkedByIndex[`${b.id},${a.id}`] || a.id === b.id;
+    }
 
     function forceSecondaryNodes(alpha) {
       const k = alpha * pullStrength;
@@ -214,14 +241,14 @@ const D3NetworkGraph = () => {
       
 
     // Draw lines for the links
-    const link = svg
+    const linkElements = svg
       .append("g")
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.6)
+      .attr("stroke", "#737373")
+      .attr("stroke-opacity", 0.3)
       .selectAll("line")
       .data(data.links)
       .join("line")
-      .attr("stroke-width", (d) => Math.sqrt(d.value));
+      .attr("stroke-width", 1);
 
     // Create a `g` element for each node that will contain the circle and the text
     const nodeElements = svg
@@ -230,6 +257,18 @@ const D3NetworkGraph = () => {
       .data(data.nodes)
       .enter()
       .append("g");
+
+    // Event handler for clicking nodes
+    function clickNode(event, clickedNode) {
+      // Adjust the opacity to emphasise/de-emphasise nodes
+      nodeElements.style("opacity", node => {
+        return isConnected(clickedNode, node) ? 1.0 : 0.1
+      })
+      // Adjust the opacity to emphasise/de-emphasise nodes
+      linkElements.style("stroke-opacity", link => {
+        return isConnected(clickedNode, link.target) ? 1.0 : 0.02
+      })
+    }
 
     // Append circles to those `g` elements and set the node size
     nodeElements
@@ -244,7 +283,8 @@ const D3NetworkGraph = () => {
           return 10; // Default size secondary nodes without funding info
         }
       })
-      .attr("fill", d => d.type === 'primary' ? `url(#node-image-${d.id})` : "#ffab00"); // Use pattern for primary nodes to populate profile pictures
+      .attr("fill", d => d.type === 'primary' ? `url(#node-image-${d.id})` : "#ffab00") // Use pattern for primary nodes to populate profile pictures
+      .on("click", clickNode);
 
     // Append text to the `g` elements, positioning it next to the circles
     nodeElements
@@ -257,7 +297,7 @@ const D3NetworkGraph = () => {
 
     // Update configurations
     simulation.on("tick", () => {
-      link
+      linkElements
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
