@@ -179,6 +179,25 @@ const D3NetworkGraph = () => {
       .force("secondaryNodes", forceSecondaryNodes)
       .force("forceTowardsCenter", forceTowardsCenter);
 
+      const defs = svg.append("defs");
+
+      // Creating a pattern for profile pictures
+      defs.selectAll(".node-pattern")
+        .data(data.nodes.filter(d => d.type === 'primary'))
+        .enter()
+        .append("pattern")
+          .attr("class", "node-pattern")
+          .attr("id", d => `node-image-${d.id}`)
+          .attr("height", "100%")
+          .attr("width", "100%")
+          .attr("patternContentUnits", "objectBoundingBox")
+        .append("image")
+          .attr("height", 1)
+          .attr("width", 1)
+          .attr("preserveAspectRatio", "xMidYMid slice")
+          .attr("xlink:href", d => d.personLogoUrl);
+      
+
     // Draw lines for the links
     const link = svg
       .append("g")
@@ -201,7 +220,7 @@ const D3NetworkGraph = () => {
     nodeElements
       .append("circle")
       .attr("r", d => d.type === 'primary' ? primaryNodeRadius : secondaryNodeRadius)
-      .style("fill", (d) => (d.type === "primary" ? "#69b3a2" : "#ffab00")); // Primary nodes in green, secondary in orange
+      .attr("fill", d => d.type === 'primary' ? `url(#node-image-${d.id})` : "#ffab00"); // Use pattern for primary nodes to populate profile pictures
 
     // Append text to the `g` elements, positioning it next to the circles
     nodeElements
