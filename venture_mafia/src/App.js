@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
 
-import targetOrg from "./data/targetOrg.json";
+//import targetOrg from "./data/targetOrg.json";
 import alumniInfo from "./data/alumniInfo.json";
 import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
 import relations from "./data/relations.json";
@@ -70,7 +70,7 @@ const getTargetId = (link) => {
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
   const width = 3000,
-    height = 1600,
+    height = 1700,
     primaryNodeRadius = 50,
     secondaryNodeRadius = 10,
     mafiaRadius = 800,
@@ -130,7 +130,9 @@ const D3NetworkGraph = () => {
 
     // Sort nodes based on number of common connections
     primaryNodes.sort((a, b) => {
-      return commonConnectionsScore.get(b.id) - commonConnectionsScore.get(a.id);
+      return (
+        commonConnectionsScore.get(b.id) - commonConnectionsScore.get(a.id)
+      );
     });
 
     primaryNodes.forEach((d, i) => {
@@ -299,7 +301,7 @@ const D3NetworkGraph = () => {
       .append("circle")
       .attr("r", (d) => {
         // Set node size
-        if (d.type == "primary") {
+        if (d.type === "primary") {
           return primaryNodeRadius;
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
           return sizeScale(d.totalFundingUsd); // Dynamic size for secondary nodes based on funding amount
@@ -333,7 +335,7 @@ const D3NetworkGraph = () => {
 
       nodeElements.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
     });
-  }, []); // Ensures effect is only run on mount and unmount
+  }); // Ensures effect is only run on mount and unmount
 
   return <div ref={d3Container}></div>;
 };
