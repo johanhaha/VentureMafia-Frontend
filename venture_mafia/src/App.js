@@ -360,16 +360,32 @@ const D3NetworkGraph = () => {
       ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
-    // Append text to the 'g' elements, positioning it next to the circles
+    // Append text to nodes and add general styling
     nodeElements
       .append("text")
       .text((d) => d.name)
-      .attr("dx", (d) =>
-        d.type === "primary" ? primaryNodeRadius + 5 : secondaryNodeRadius + 5
-      ) // Offset on the x-axis from the circle center
       .attr("dy", ".35em")
-      .style("text-anchor", "start")
       .style("fill", colours.main.text);
+
+    // Update primary node text styling
+    nodeElements
+      .filter((d) => d.type === "primary")
+      .select("text")
+      .attr("dx", primaryNodeRadius + 5) // Offset on the x-axis from the circle center
+      .style("text-anchor", "start")
+
+    // Update secondary node text styling
+    nodeElements
+      .filter((d) => d.type === "secondary")
+      .select("text")
+      .style("text-anchor", "middle")
+
+    d3.selectAll("text")
+      .style("user-select", "none")
+      .style("-webkit-user-select", "none")
+      .style("-moz-user-select", "none")
+      .style("-ms-user-select", "none")
+      .style("pointer-events", "none");
 
     // Update configurations
     simulation.on("tick", () => {
