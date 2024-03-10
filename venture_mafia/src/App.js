@@ -82,6 +82,13 @@ const D3NetworkGraph = () => {
   const primaryNodes = data.nodes.filter((d) => d.type === "primary");
   const angleStep = (2 * Math.PI) / primaryNodes.length;
 
+  const relationColours = {
+    executive: "#1f77b4",
+    board_member: "#ff7f0e",
+    advisor: "#2ca02c",
+    investor: "#d62728",
+  };
+
   useEffect(() => {
     if (!d3Container.current) return;
 
@@ -286,12 +293,33 @@ const D3NetworkGraph = () => {
           ? "red"
           : "#737373";
       });
+
+      // Colouring logic
+      nodeElements.selectAll("circle").style("fill", (node) => {
+        if (
+          clickedNode.type === "primary" &&
+          node.type === "secondary" &&
+          isConnected(clickedNode, node)
+        ) {
+          // Find if there's a direct link between the clickedNode and this secondary node
+          const directLink = data.links.find(
+            (link) =>
+              (link.source === clickedNode && link.target === node) ||
+              (link.target === clickedNode && link.source === node)
+          );
+          // Use the relationType from the direct link to determine the fill color
+          return relationColours[directLink.relationType];
+        }
+      });
       event.stopPropagation();
     }
 
     // Event listener and handler for deselecting nodes. Resets styling
     d3.select(document).on("click", function () {
       nodeElements.style("opacity", 1);
+      nodeElements.selectAll("circle").style("fill", (node) => {
+        return node.type == "secondary" && "#ffab00";
+      });
       linkElements.style("stroke", "#737373");
       linkElements.style("stroke-opacity", 0.3);
     });
