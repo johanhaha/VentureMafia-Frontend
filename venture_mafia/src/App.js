@@ -282,10 +282,14 @@ const D3NetworkGraph = () => {
         .style("stroke-opacity", (link) =>
           isConnected(clickedNode, link.target) ? 1 : opacity.deselectLink
         )
+        // Adjust the stroke weight to emphasise/de-emphasise nodes
+        .style("stroke-width", (link) =>
+          isConnected(clickedNode, link.target) ? "2px" : "1px"
+        )
         // Adjust the stroke colour for directly connected nodes
         .style("stroke", (link) =>
           link.source === clickedNode || link.target === clickedNode
-            ? colours.main.accent1 : colours.main.secondary1
+            ? colours.main.accent1 : colours.main.secondary2
         );
 
       // Secondary nodes colouring logic
