@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
+import { colours, opacity } from './styling.js';
 
 //import targetOrg from "./data/targetOrg.json";
 import alumniInfo from "./data/alumniInfo.json";
@@ -81,13 +82,6 @@ const D3NetworkGraph = () => {
 
   const primaryNodes = data.nodes.filter((d) => d.type === "primary");
   const angleStep = (2 * Math.PI) / primaryNodes.length;
-
-  const relationColours = {
-    executive: "#1f77b4",
-    board_member: "#ff7f0e",
-    advisor: "#2ca02c",
-    investor: "#d62728",
-  };
 
   useEffect(() => {
     if (!d3Container.current) return;
@@ -262,8 +256,7 @@ const D3NetworkGraph = () => {
     // Draw lines for the links
     const linkElements = svg
       .append("g")
-      .attr("stroke", "#737373")
-      .attr("stroke-opacity", 0.3)
+      .attr("stroke", colours.main.secondary1)
       .selectAll("line")
       .data(data.links)
       .join("line")
@@ -281,19 +274,18 @@ const D3NetworkGraph = () => {
     function clickNode(event, clickedNode) {
       // Adjust the opacity to emphasise/de-emphasise nodes
       nodeElements.style("opacity", (node) => {
-        return isConnected(clickedNode, node) ? 1.0 : 0.1;
+        return isConnected(clickedNode, node) ? 1 : opacity.deselectNode;
       });
 
       linkElements
         // Adjust the opacity to emphasise/de-emphasise nodes
         .style("stroke-opacity", (link) =>
-          isConnected(clickedNode, link.target) ? 1.0 : 0.02
+          isConnected(clickedNode, link.target) ? 1 : opacity.deselectLink
         )
         // Adjust the stroke colour for directly connected nodes
         .style("stroke", (link) =>
-          link.source === clickedNode || link.target === clickedNode
-            ? "red"
-            : "#737373"
+          (link.source === clickedNode || link.target === clickedNode)
+            && colours.main.accent1
         );
 
       // Secondary nodes colouring logic
@@ -308,7 +300,7 @@ const D3NetworkGraph = () => {
             (link) => link.source === clickedNode && link.target === node
           );
           // Use the relationType from the direct link to determine the fill color
-          return relationColours[directLink.relationType];
+          return colours.relations[directLink.relationType];
         }
       });
 
@@ -324,7 +316,7 @@ const D3NetworkGraph = () => {
               link.target.id === clickedNode.id && link.source.id === node.id
           );
           if (link) {
-            const color = relationColours[link.relationType];
+            const color = colours.relations[link.relationType];
             d3.select(this).style("stroke", color);
             d3.select(this).style("stroke-width", "4px");
           }
@@ -338,10 +330,10 @@ const D3NetworkGraph = () => {
       nodeElements.style("opacity", 1);
       nodeElements.selectAll("circle").style("stroke", "none");
       nodeElements.selectAll("circle").style("fill", (node) => {
-        return node.type == "secondary" && "#ffab00";
+        return node.type == "secondary" && colours.main.primary1;
       });
-      linkElements.style("stroke", "#737373");
-      linkElements.style("stroke-opacity", 0.3);
+      linkElements.style("stroke", colours.main.secondary1);
+      linkElements.style("stroke-opacity", 1);
     });
 
     // Append circles to the 'g' elements and set the node size
@@ -358,7 +350,7 @@ const D3NetworkGraph = () => {
         }
       })
       .attr("fill", (d) =>
-        d.type === "primary" ? `url(#node-image-${d.id})` : "#ffab00"
+        d.type === "primary" ? `url(#node-image-${d.id})` : colours.main.primary1
       ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
@@ -371,7 +363,7 @@ const D3NetworkGraph = () => {
       ) // Offset on the x-axis from the circle center
       .attr("dy", ".35em")
       .style("text-anchor", "start")
-      .style("fill", "#000000");
+      .style("fill", colours.main.text);
 
     // Update configurations
     simulation.on("tick", () => {
