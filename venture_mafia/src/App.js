@@ -283,16 +283,18 @@ const D3NetworkGraph = () => {
       nodeElements.style("opacity", (node) => {
         return isConnected(clickedNode, node) ? 1.0 : 0.1;
       });
-      // Adjust the opacity to emphasise/de-emphasise nodes
-      linkElements.style("stroke-opacity", (link) => {
-        return isConnected(clickedNode, link.target) ? 1.0 : 0.02;
-      });
-      // Adjust the stroke colour for directly connected nodes
-      linkElements.style("stroke", (link) => {
-        return link.source === clickedNode || link.target === clickedNode
-          ? "red"
-          : "#737373";
-      });
+
+      linkElements
+        // Adjust the opacity to emphasise/de-emphasise nodes
+        .style("stroke-opacity", (link) =>
+          isConnected(clickedNode, link.target) ? 1.0 : 0.02
+        )
+        // Adjust the stroke colour for directly connected nodes
+        .style("stroke", (link) =>
+          link.source === clickedNode || link.target === clickedNode
+            ? "red"
+            : "#737373"
+        );
 
       // Secondary nodes colouring logic
       nodeElements.selectAll("circle").style("fill", (node) => {
