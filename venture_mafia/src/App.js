@@ -294,7 +294,7 @@ const D3NetworkGraph = () => {
           : "#737373";
       });
 
-      // Colouring logic
+      // Secondary nodes colouring logic
       nodeElements.selectAll("circle").style("fill", (node) => {
         if (
           clickedNode.type === "primary" &&
@@ -309,12 +309,32 @@ const D3NetworkGraph = () => {
           return relationColours[directLink.relationType];
         }
       });
+
+      // Primary nodes colouring logic
+      nodeElements.selectAll("circle").each(function (node) {
+        if (
+          clickedNode.type === "secondary" &&
+          node.type === "primary" &&
+          isConnected(clickedNode, node)
+        ) {
+          const link = data.links.find(
+            (link) =>
+              link.target.id === clickedNode.id && link.source.id === node.id
+          );
+          if (link) {
+            const color = relationColours[link.relationType];
+            d3.select(this).style("stroke", color);
+            d3.select(this).style("stroke-width", "4px");
+          }
+        }
+      });
       event.stopPropagation();
     }
 
     // Event listener and handler for deselecting nodes. Resets styling
     d3.select(document).on("click", function () {
       nodeElements.style("opacity", 1);
+      nodeElements.selectAll("circle").style("stroke", "none");
       nodeElements.selectAll("circle").style("fill", (node) => {
         return node.type == "secondary" && "#ffab00";
       });
