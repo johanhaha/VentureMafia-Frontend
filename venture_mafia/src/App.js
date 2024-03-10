@@ -303,9 +303,7 @@ const D3NetworkGraph = () => {
         ) {
           // Find if there's a direct link between the clickedNode and this secondary node
           const directLink = data.links.find(
-            (link) =>
-              (link.source === clickedNode && link.target === node) ||
-              (link.target === clickedNode && link.source === node)
+            (link) => link.source === clickedNode && link.target === node
           );
           // Use the relationType from the direct link to determine the fill color
           return relationColours[directLink.relationType];
