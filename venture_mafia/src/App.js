@@ -284,8 +284,8 @@ const D3NetworkGraph = () => {
         )
         // Adjust the stroke colour for directly connected nodes
         .style("stroke", (link) =>
-          (link.source === clickedNode || link.target === clickedNode)
-            && colours.main.accent1
+          link.source === clickedNode || link.target === clickedNode
+            ? colours.main.accent1 : colours.main.secondary1
         );
 
       // Secondary nodes colouring logic
@@ -316,10 +316,11 @@ const D3NetworkGraph = () => {
               link.target.id === clickedNode.id && link.source.id === node.id
           );
           if (link) {
-            const color = colours.relations[link.relationType];
-            d3.select(this).style("stroke", color);
+            d3.select(this).style("stroke", colours.relations[link.relationType]);
             d3.select(this).style("stroke-width", "4px");
           }
+        } else {
+          d3.select(this).style("stroke", "none");
         }
       });
       event.stopPropagation();
