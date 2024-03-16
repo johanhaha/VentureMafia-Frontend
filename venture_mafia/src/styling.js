@@ -22,3 +22,12 @@ export const opacity = {
   deselectNode: 0.1,
   deselectLink: 0.2,
 };
+
+export const margins = {
+  segment: {
+    top: 50,
+    right: 50,
+    bottom: 50,
+    left: 50,
+  }
+}
