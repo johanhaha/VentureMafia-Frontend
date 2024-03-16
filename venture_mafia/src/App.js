@@ -403,6 +403,11 @@ const D3NetworkGraph = () => {
 
     // Append text to nodes and add general styling
     nodeElements
+      .filter(
+        (d) =>
+          (d.type === "primary") |
+          (d.type === "secondary" && d.totalFundingUsd > 50000000)
+      ) // Only show text for primary nodes and secondary nodes with $50m+ in funding
       .append("text")
       .text((d) => d.name)
       .attr("dy", ".35em")
