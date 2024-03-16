@@ -71,18 +71,18 @@ const getTargetId = (link) => {
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
-  const width = 3000,
-    height = 1700,
+  const width = '100%',
+    height = '100%',
     primaryNodeRadius = 50,
     secondaryNodeRadius = 10,
     mafiaRadius = 800,
-    center = { x: width / 2, y: height / 2 },
     pullStrength = 0.3, // Increase to make forces stronger
     baseDistance = 200, // Base distance between primary and secondary nodes
     minDistance = 150; // Minimum desired distance between secondary nodes
 
   const primaryNodes = data.nodes.filter((d) => d.type === "primary");
   const angleStep = (2 * Math.PI) / primaryNodes.length;
+  var center = { x: 0, y: 0 }; // Placeholder value
 
   useEffect(() => {
     if (!d3Container.current) return;
@@ -136,6 +136,18 @@ const D3NetworkGraph = () => {
         commonConnectionsScore.get(b.id) - commonConnectionsScore.get(a.id)
       );
     });
+
+    // Helper function to calculate the center
+    function resize() {
+      center = {
+        x: d3Container.current.parentNode.clientWidth / 2,
+        y: d3Container.current.parentNode.clientHeight / 2,
+      };
+      console.log("center set", center);
+    }
+
+    // Initialise the center value
+    resize();
 
     primaryNodes.forEach((d, i) => {
       d.fx = center.x + mafiaRadius * Math.cos(i * angleStep);
@@ -448,14 +460,18 @@ const D3NetworkGraph = () => {
 
       nodeElements.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
     });
+
+    // Updates SVG size based on window size
+    window.addEventListener("resize", resize);
+
   }); // Ensures effect is only run on mount and unmount
 
-  return <div ref={d3Container}></div>;
+  return <div ref={d3Container} style = {{height: '100%', width: '100%'}}></div>;
 };
 
 function App() {
   return (
-    <div>
+    <div style = {{height: window.innerHeight, width: window.innerWidth}}>
       <D3NetworkGraph />
     </div>
   );
