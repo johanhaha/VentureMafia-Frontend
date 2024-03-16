@@ -412,8 +412,8 @@ const D3NetworkGraph = () => {
     nodeElements
       .filter((d) => d.type === "primary")
       .select("text")
-      .attr("dx", primaryNodeRadius + 5) // Offset on the x-axis from the circle center
-      .style("text-anchor", "start")
+      .attr("dy", primaryNodeRadius + 20) // Offset on the x-axis from the circle center
+      .style("text-anchor", "middle");
 
     // Update secondary node text styling
     nodeElements
