@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./App.css";
 import * as d3 from "d3";
-import { colours, opacity } from './styling.js';
+import { colours, opacity } from "./styling.js";
 
 //import targetOrg from "./data/targetOrg.json";
 // import alumniInfo from "./data/alumniInfo.json";
@@ -162,6 +162,47 @@ const D3NetworkGraph = () => {
         linkedByIndex[`${b.id},${a.id}`] ||
         a.id === b.id
       );
+    }
+
+    // Helper function for text wrapping
+    function wrapText(selection, width, lineHeight = 1.1) {
+      selection.each(function () {
+        const text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy") || 0);
+
+        let word,
+          line = [],
+          lineNumber = 0,
+          tspan = text
+            .text(null)
+            .append("tspan")
+            .attr("x", 0)
+            .attr("y", y)
+            .attr("dy", `${dy}em`);
+
+        while ((word = words.pop())) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop(); // Remove last word
+            tspan.text(line.join(" ")); // Set text without last word
+            line = [word]; // Start new line with last word
+            tspan = text
+              .append("tspan")
+              .attr("x", 0)
+              .attr("y", y)
+              .attr("dy", `${++lineNumber * lineHeight}em`)
+              .text(word);
+          }
+        }
+      });
+    }
+
+    // Helper function to get node radius
+    function getNodeRadius(node) {
+      return sizeScale(node.totalFundingUsd) / 2;
     }
 
     function forceSecondaryNodes(alpha) {
@@ -378,7 +419,12 @@ const D3NetworkGraph = () => {
     nodeElements
       .filter((d) => d.type === "secondary")
       .select("text")
-      .style("text-anchor", "middle")
+      .each(function (d) {
+        const nodeRadius = getNodeRadius(d); // Calculate radius dynamically
+        const maxWidth = nodeRadius * 2 - 5; // Subtract some padding
+        wrapText(d3.select(this), maxWidth);
+      })
+      .style("text-anchor", "middle");
 
     d3.selectAll("text")
       .style("user-select", "none")
