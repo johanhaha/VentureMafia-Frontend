@@ -475,12 +475,10 @@ const D3NetworkGraph = () => {
   );
 };
 
-function App() {
+function NetworkGraph() {
   return (
-    <div style={{ height: window.innerHeight, width: window.innerWidth }}>
-      <D3NetworkGraph />
-    </div>
+    <D3NetworkGraph />
   );
 }
 
-export default App;
+export default NetworkGraph;
