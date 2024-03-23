@@ -71,10 +71,9 @@ const getTargetId = (link) => {
 
 const D3NetworkGraph = () => {
   const d3Container = useRef(null);
-  const width = '100%',
-    height = '100%',
+  const width = "100%",
+    height = "100%",
     primaryNodeRadius = 50,
-    secondaryNodeRadius = 10,
     mafiaRadius = 800,
     pullStrength = 0.3, // Increase to make forces stronger
     baseDistance = 200, // Base distance between primary and secondary nodes
@@ -343,7 +342,8 @@ const D3NetworkGraph = () => {
         // Adjust the stroke colour for directly connected nodes
         .style("stroke", (link) =>
           link.source === clickedNode || link.target === clickedNode
-            ? colours.main.accent1 : colours.main.secondary2
+            ? colours.main.accent1
+            : colours.main.secondary2
         );
 
       // Secondary nodes colouring logic
@@ -374,7 +374,10 @@ const D3NetworkGraph = () => {
               link.target.id === clickedNode.id && link.source.id === node.id
           );
           if (link) {
-            d3.select(this).style("stroke", colours.relations[link.relationType]);
+            d3.select(this).style(
+              "stroke",
+              colours.relations[link.relationType]
+            );
             d3.select(this).style("stroke-width", "4px");
           }
         } else {
@@ -389,7 +392,7 @@ const D3NetworkGraph = () => {
       nodeElements.style("opacity", 1);
       nodeElements.selectAll("circle").style("stroke", "none");
       nodeElements.selectAll("circle").style("fill", (node) => {
-        return node.type == "secondary" && colours.main.primary1;
+        return node.type === "secondary" && colours.main.primary1;
       });
       linkElements.style("stroke", colours.main.secondary1);
       linkElements.style("stroke-opacity", 1);
@@ -409,7 +412,9 @@ const D3NetworkGraph = () => {
         }
       })
       .attr("fill", (d) =>
-        d.type === "primary" ? `url(#node-image-${d.id})` : colours.main.primary1
+        d.type === "primary"
+          ? `url(#node-image-${d.id})`
+          : colours.main.primary1
       ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
@@ -463,15 +468,16 @@ const D3NetworkGraph = () => {
 
     // Updates SVG size based on window size
     window.addEventListener("resize", resize);
-
   }); // Ensures effect is only run on mount and unmount
 
-  return <div ref={d3Container} style = {{height: '100%', width: '100%'}}></div>;
+  return (
+    <div ref={d3Container} style={{ height: "100%", width: "100%" }}></div>
+  );
 };
 
 function App() {
   return (
-    <div style = {{height: window.innerHeight, width: window.innerWidth}}>
+    <div style={{ height: window.innerHeight, width: window.innerWidth }}>
       <D3NetworkGraph />
     </div>
   );
