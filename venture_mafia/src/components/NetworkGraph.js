@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import "./App.css";
 import * as d3 from "d3";
-import { colours, opacity } from "./styling.js";
+import { colours, opacity } from "../styling.js";
 
 //import targetOrg from "./data/targetOrg.json";
 // import alumniInfo from "./data/alumniInfo.json";
-import alumniLogos from "./data/alumniLogos.json";
-import subsequentOrgsInfo from "./data/subsequentOrgsInfo.json";
-import relations from "./data/relations.json";
+import alumniLogos from "../data/alumniLogos.json";
+import subsequentOrgsInfo from "../data/subsequentOrgsInfo.json";
+import relations from "../data/relations.json";
 
 // Combining datasets and mapping them to the correct attribute names
 const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {

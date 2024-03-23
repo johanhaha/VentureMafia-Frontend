@@ -1,5 +1,5 @@
 import "./App.css";
-import NetworkGraph from "./NetworkGraph.js";
+import NetworkGraph from "./components/NetworkGraph.js";
 
 function App() {
   return (
