@@ -61,6 +61,20 @@ function Sidebar({ selectedNodeData }) {
           </ul>
         </div>
       )}
+      {/* Displaying information about selected secondary nodes */}
+      {selectedNodeData && selectedNodeData.type === "secondary" && (
+        <div>
+          <h1>{selectedNodeData.name}</h1>
+          <p>{selectedNodeData.shortDescription}</p>
+          <ul>
+          <li>
+            HQ: {selectedNodeData.orgCity}, {selectedNodeData.orgCountryCode}
+          </li>
+          <li>Total funding: {formatToUSD(selectedNodeData.totalFundingUsd)}</li>
+          <li>Founded: {epochToDate(selectedNodeData.foundedOn)}</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
