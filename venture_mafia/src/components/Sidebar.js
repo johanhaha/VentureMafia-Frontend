@@ -1,5 +1,5 @@
+import React, { useEffect } from "react";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
-
 import targetOrg from "../data/targetOrg.json";
 
 // Helper function to format as USD
@@ -21,7 +21,12 @@ function epochToDate(epoch) {
   });
 }
 
-function Sidebar() {
+function Sidebar({ selectedNodeData }) {
+  useEffect(() => {
+    // Update sidebar based on nodeData
+    console.log("Node Data Updated:", selectedNodeData);
+  }, [selectedNodeData]);
+
   return (
     <div
       style={{
@@ -45,6 +50,17 @@ function Sidebar() {
           <li>Founded: {epochToDate(targetOrg.foundedOn)}</li>
         </ul>
       </div>
+      {/* Displaying information about selected primary nodes */}
+      {selectedNodeData && selectedNodeData.type === "primary" && (
+        <div>
+          <h1>{selectedNodeData.name}</h1>
+          <ul>
+            <li>Job title: {selectedNodeData.jobTitle}</li>
+            <li>Start date: {epochToDate(selectedNodeData.startedOn)}</li>
+            <li>End date: {epochToDate(selectedNodeData.endedOn)}</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

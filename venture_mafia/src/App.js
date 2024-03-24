@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
 
 function App() {
+  const [selectedNode, setSelectedNode] = useState(null);
+
+  const handleNodeSelect = (nodeData) => {
+    setSelectedNode(nodeData);
+  };
+  
   return (
     <div
       style={{
@@ -19,11 +25,11 @@ function App() {
           backgroundColor: "#f0f0f0",
         }}
       >
-        <Sidebar />
+        <Sidebar selectedNodeData={selectedNode} />
       </div>
       {/* NetworkGraph */}
       <div>
-        <NetworkGraph />
+        <NetworkGraph onNodeSelect={handleNodeSelect} />
       </div>
     </div>
   );

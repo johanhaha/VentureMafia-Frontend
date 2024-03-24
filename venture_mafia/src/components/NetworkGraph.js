@@ -2,9 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colours, opacity } from "../styling.js";
 
-//import targetOrg from "./data/targetOrg.json";
-// import alumniInfo from "./data/alumniInfo.json";
-import alumniLogos from "../data/alumniLogos.json";
+import alumniInfo from "../data/alumniInfo.json";
 import subsequentOrgsInfo from "../data/subsequentOrgsInfo.json";
 import relations from "../data/relations.json";
 
@@ -40,7 +38,7 @@ const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
   return data;
 };
 
-const data = combineAndProcessData(alumniLogos, subsequentOrgsInfo, relations);
+const data = combineAndProcessData(alumniInfo, subsequentOrgsInfo, relations);
 
 console.log(data);
 
@@ -68,7 +66,7 @@ const getTargetId = (link) => {
   return typeof link.target === "object" ? link.target.id : link.target;
 };
 
-const NetworkGraph = () => {
+const NetworkGraph = ({ onNodeSelect }) => {
   const d3Container = useRef(null);
   const width = "100%",
     height = "100%",
@@ -324,6 +322,7 @@ const NetworkGraph = () => {
 
     // Event handler for selecting nodes
     function clickNode(event, clickedNode) {
+      onNodeSelect(clickedNode);
       // Adjust the opacity to emphasise/de-emphasise nodes
       nodeElements.style("opacity", (node) => {
         return isConnected(clickedNode, node) ? 1 : opacity.deselectNode;
@@ -388,6 +387,7 @@ const NetworkGraph = () => {
 
     // Event listener and handler for deselecting nodes. Resets styling
     d3.select(document).on("click", function () {
+      onNodeSelect(null);
       nodeElements.style("opacity", 1);
       nodeElements.selectAll("circle").style("stroke", "none");
       nodeElements.selectAll("circle").style("fill", (node) => {
@@ -467,7 +467,7 @@ const NetworkGraph = () => {
 
     // Updates SVG size based on window size
     window.addEventListener("resize", resize);
-  }); // Ensures effect is only run on mount and unmount
+  }, []); // Ensures effect is only run on mount and unmount
 
   return (
     <div ref={d3Container} style={{ height: "100%", width: "100%" }}></div>
