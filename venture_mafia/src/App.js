@@ -1,28 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 import "./App.css";
 import NetworkGraph from "./components/NetworkGraph.js";
-import { ReactComponent as VMlogo } from "./VMlogo.svg";
-
-import targetOrg from "./data/targetOrg.json";
-
-// Helper function to format as USD
-function formatToUSD(value) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0, // No decimal points
-    maximumFractionDigits: 0, // No decimal points
-  }).format(value);
-}
-
-// Helper function to format epoch to date
-function epochToDate(epoch) {
-  return new Date(epoch).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
+import Sidebar from "./components/Sidebar.js";
 
 function App() {
   return (
@@ -37,35 +16,13 @@ function App() {
       {/* Left panel */}
       <div
         style={{
-          gridArea: "1 / 1 / 2 / 2",
           backgroundColor: "#f0f0f0",
-          display: "flex",
-          flexDirection: "column", // Adjusted to stack the logo and text vertically
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          padding: "30px 50px 30px 50px",
         }}
       >
-        <VMlogo style={{ width: "60%", height: "auto" }} />
-        <div>
-          <h1>{targetOrg.orgName}</h1>
-          <p>{targetOrg.shortDescription}</p>
-          <ul>
-            <li>
-              HQ: {targetOrg.orgCity}, {targetOrg.orgCountryCode}
-            </li>
-            <li>
-              Total funding: {formatToUSD(targetOrg.totalFundingUsd)}
-            </li>
-            <li>
-              Founded: {epochToDate(targetOrg.foundedOn)}
-            </li>
-          </ul>
-        </div>
+        <Sidebar />
       </div>
       {/* NetworkGraph */}
-      <div
-      >
+      <div>
         <NetworkGraph />
       </div>
     </div>
