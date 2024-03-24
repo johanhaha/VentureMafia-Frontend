@@ -68,7 +68,7 @@ const getTargetId = (link) => {
   return typeof link.target === "object" ? link.target.id : link.target;
 };
 
-const D3NetworkGraph = () => {
+const NetworkGraph = () => {
   const d3Container = useRef(null);
   const width = "100%",
     height = "100%",
@@ -473,11 +473,5 @@ const D3NetworkGraph = () => {
     <div ref={d3Container} style={{ height: "100%", width: "100%" }}></div>
   );
 };
-
-function NetworkGraph() {
-  return (
-    <D3NetworkGraph />
-  );
-}
 
 export default NetworkGraph;
