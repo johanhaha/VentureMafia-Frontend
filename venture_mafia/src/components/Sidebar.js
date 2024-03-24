@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { ReactComponent as VMlogo } from "../VMlogo.svg";
+import { colours, opacity } from "../styling.js";
 import targetOrg from "../data/targetOrg.json";
+import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
 // Helper function to format as USD
 function formatToUSD(value) {
@@ -38,7 +39,7 @@ function Sidebar({ selectedNodeData }) {
         padding: "30px 50px 30px 50px",
       }}
     >
-      <VMlogo style={{ width: "60%", height: "auto" }} />
+      <VMlogo style={{ stroke: colours.main.primary1, width: "60%", height: "auto" }} />
       <div>
         <h1>{targetOrg.orgName}</h1>
         <p>{targetOrg.shortDescription}</p>
