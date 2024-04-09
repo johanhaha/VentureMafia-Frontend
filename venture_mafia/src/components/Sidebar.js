@@ -65,7 +65,15 @@ function Sidebar({ selectedNodeData }) {
       {/* Displaying information about selected secondary nodes */}
       {selectedNodeData && selectedNodeData.type === "secondary" && (
         <div>
-          <h1>{selectedNodeData.name}</h1>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={selectedNodeData.orgLogoUrl}
+              alt={selectedNodeData.name + " logo"}
+              style={{ width: "auto", height: "90px", borderRadius: "45px" }}
+            />
+            <h1 style={{ marginLeft: "20px" }}>{selectedNodeData.name}</h1>
+          </div>
+
           <p>{selectedNodeData.shortDescription}</p>
           <ul>
           <li>
