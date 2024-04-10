@@ -18,7 +18,6 @@ function epochToDate(epoch) {
   return new Date(epoch).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
-    day: "numeric",
   });
 }
 
@@ -48,7 +47,7 @@ function Sidebar({ selectedNodeData }) {
                 alt={targetOrg.orgName + " logo"}
                 style={{ width: "90px", height: "90px", objectFit: "cover", borderRadius: "45px" }}
                 />
-                <h1 style={{ marginLeft: "20px" }}>{"The " + targetOrg.orgName + " Mafia"}</h1>
+                <h1 style={{ marginLeft: "20px" }}>The {targetOrg.orgName} Mafia</h1>
             </div>
             <p>{targetOrg.shortDescription}</p>
             <ul>
@@ -71,11 +70,8 @@ function Sidebar({ selectedNodeData }) {
             />
             <h1 style={{ marginLeft: "20px" }}>{selectedNodeData.name}</h1>
           </div>
-          <ul>
-            <li>Job title: {selectedNodeData.jobTitle}</li>
-            <li>Start date: {epochToDate(selectedNodeData.startedOn)}</li>
-            <li>End date: {epochToDate(selectedNodeData.endedOn)}</li>
-          </ul>
+          <h2>Role at {targetOrg.orgName}</h2>
+          {selectedNodeData.jobTitle}, {epochToDate(selectedNodeData.startedOn)} to {epochToDate(selectedNodeData.endedOn)}
         </div>
       )}
       {/* Displaying information about selected secondary nodes */}
