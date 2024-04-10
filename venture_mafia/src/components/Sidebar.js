@@ -54,7 +54,14 @@ function Sidebar({ selectedNodeData }) {
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
         <div>
-          <h1>{selectedNodeData.name}</h1>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={selectedNodeData.personLogoUrl}
+              alt={selectedNodeData.name + " logo"}
+              style={{ width: "90px", height: "90px", objectFit: "cover", borderRadius: "45px" }}
+            />
+            <h1 style={{ marginLeft: "20px" }}>{selectedNodeData.name}</h1>
+          </div>
           <ul>
             <li>Job title: {selectedNodeData.jobTitle}</li>
             <li>Start date: {epochToDate(selectedNodeData.startedOn)}</li>
