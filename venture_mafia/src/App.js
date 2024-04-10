@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
+import Footer from "./components/Footer.js";
 
 function App() {
   const [selectedNode, setSelectedNode] = useState(null);
@@ -9,27 +10,32 @@ function App() {
   const handleNodeSelect = (nodeData) => {
     setSelectedNode(nodeData);
   };
-  
+
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 3fr", // ratio between left panel and NetworkGraph
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
-      {/* Left panel */}
+    <div>
       <div
         style={{
-          backgroundColor: "#f0f0f0",
+          display: "grid",
+          gridTemplateColumns: "1fr 3fr",
+          height: "calc(100vh - 50px)", // Adjust height to account for footer
+          width: "100vw",
         }}
       >
-        <Sidebar selectedNodeData={selectedNode} />
+        {/* Left panel */}
+        <div style={{ backgroundColor: "#f0f0f0" }}>
+          <Sidebar selectedNodeData={selectedNode} />
+        </div>
+        {/* NetworkGraph */}
+        <div>
+          <NetworkGraph onNodeSelect={handleNodeSelect} />
+        </div>
       </div>
-      {/* NetworkGraph */}
-      <div>
-        <NetworkGraph onNodeSelect={handleNodeSelect} />
+      {/* Footer */}
+      <div style={{ width: "100vw", height: "50px", overflow: "hidden" }}>
+        Johan Torssell
+        <div style={{ width: "75%", float: "right", height: "100%" }}>
+          <Footer selectedNodeData={selectedNode} />
+        </div>
       </div>
     </div>
   );
