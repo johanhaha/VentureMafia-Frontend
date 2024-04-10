@@ -39,18 +39,27 @@ function Sidebar({ selectedNodeData }) {
         padding: "30px 50px 30px 50px",
       }}
     >
-      <VMlogo style={{ stroke: colours.main.primary1, width: "60%", height: "auto" }} />
-      <div>
-        <h1>{targetOrg.orgName}</h1>
-        <p>{targetOrg.shortDescription}</p>
-        <ul>
-          <li>
-            HQ: {targetOrg.orgCity}, {targetOrg.orgCountryCode}
-          </li>
-          <li>Total funding: {formatToUSD(targetOrg.totalFundingUsd)}</li>
-          <li>Founded: {epochToDate(targetOrg.foundedOn)}</li>
-        </ul>
-      </div>
+      <VMlogo style={{ stroke: colours.main.primary1, width: "60%", height: "auto", marginBottom: "100px" }} />
+      {!selectedNodeData && (
+        <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                src={targetOrg.orgLogoUrl}
+                alt={targetOrg.orgName + " logo"}
+                style={{ width: "90px", height: "90px", objectFit: "cover", borderRadius: "45px" }}
+                />
+                <h1 style={{ marginLeft: "20px" }}>{"The " + targetOrg.orgName + " Mafia"}</h1>
+            </div>
+            <p>{targetOrg.shortDescription}</p>
+            <ul>
+            <li>
+                HQ: {targetOrg.orgCity}, {targetOrg.orgCountryCode}
+            </li>
+            <li>Total funding: {formatToUSD(targetOrg.totalFundingUsd)}</li>
+            <li>Founded: {epochToDate(targetOrg.foundedOn)}</li>
+            </ul>
+        </div>
+      )}
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
         <div>
