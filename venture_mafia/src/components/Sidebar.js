@@ -3,6 +3,8 @@ import { colours } from "../styling.js";
 import targetOrg from "../data/targetOrg.json";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
+console.log(targetOrg);
+
 // Helper function to format as USD and abbreviate
 function formatToUSD(value) {
   let prefix = "$";
@@ -85,6 +87,24 @@ function Sidebar({ selectedNodeData }) {
             <li>Total funding: {formatToUSD(targetOrg.totalFundingUsd)}</li>
             <li>Founded: {epochToDate(targetOrg.foundedOn)}</li>
           </ul>
+          {/* Display IPO info */}
+          {targetOrg.exitType === "ipo" && targetOrg.exitDate && (
+            <div>
+              {targetOrg.orgName} went public {epochToDate(targetOrg.exitDate)}
+              {targetOrg.exitValuation &&
+                " at a value of " + formatToUSD(targetOrg.exitValuation)}
+            </div>
+          )}
+          {/* Display acquisition info */}
+          {targetOrg.exitType === "acquisition" && targetOrg.exitDate && (
+            <div>
+              {targetOrg.orgName} was acquired on{" "}
+              {epochToDate(targetOrg.exitDate)} by{" "}
+              {targetOrg.acquirerName}
+              {targetOrg.exitValuation &&
+                " for " + formatToUSD(targetOrg.exitValuation)}
+            </div>
+          )}
         </div>
       )}
       {/* Displaying information about selected primary nodes */}
