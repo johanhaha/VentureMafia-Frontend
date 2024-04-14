@@ -130,6 +130,7 @@ function Sidebar({ selectedNodeData }) {
             </li>
             <li>Founded: {epochToDate(selectedNodeData.foundedOn)}</li>
           </ul>
+          {/* Displaying IPO info */}
           {selectedNodeData &&
             selectedNodeData.type === "secondary" &&
             selectedNodeData.exitType === "ipo" && (
@@ -141,14 +142,16 @@ function Sidebar({ selectedNodeData }) {
                     formatToUSD(selectedNodeData.exitValuation)}
               </div>
             )}
+          {/* Displaying acquisition info */}
           {selectedNodeData &&
             selectedNodeData.type === "secondary" &&
             selectedNodeData.exitType === "acquisition" && (
               <div>
                 {selectedNodeData.name} was acquired on{" "}
                 {epochToDate(selectedNodeData.exitDate)} by{" "}
-                {selectedNodeData.acquirerName} for{" "}
-                {formatToUSD(selectedNodeData.exitValuation)}
+                {selectedNodeData.acquirerName}
+                {selectedNodeData.exitValuation &&
+                  " for " + formatToUSD(selectedNodeData.exitValuation)}
               </div>
             )}
         </div>
