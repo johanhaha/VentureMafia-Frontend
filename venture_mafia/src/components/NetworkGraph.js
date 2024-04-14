@@ -340,7 +340,7 @@ const NetworkGraph = ({ onNodeSelect }) => {
         // Adjust the stroke colour for directly connected nodes
         .style("stroke", (link) =>
           link.source === clickedNode || link.target === clickedNode
-            ? colours.main.accent1
+            ? colours.relations[link.relationType]
             : colours.main.secondary2
         );
 
