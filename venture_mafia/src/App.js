@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { colours } from "./styling.js";
+import { colours, text } from "./styling.js";
 import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
@@ -13,7 +13,7 @@ function App() {
   };
 
   return (
-    <div style={{backgroundColor: colours.neutrals.background}}>
+    <div style={{ backgroundColor: colours.neutrals.background }}>
       <div
         style={{
           display: "grid",
@@ -33,9 +33,25 @@ function App() {
         </div>
       </div>
       {/* Footer */}
-      <div style={{ width: "100vw", height: "50px", overflow: "hidden" }}>
-        Johan Torssell
-        <div style={{ width: "75%", float: "right", height: "100%" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 3fr",
+          width: "100vw",
+          height: "50px",
+          overflow: "hidden",
+        }}
+      >
+        <p
+          style={{
+            ...text.contentFocus,
+            paddingLeft: "20px",
+            fontSize: "20px",
+          }}
+        >
+          Johan Torssell
+        </p>
+        <div style={{ height: "100%" }}>
           <Footer selectedNodeData={selectedNode} />
         </div>
       </div>
