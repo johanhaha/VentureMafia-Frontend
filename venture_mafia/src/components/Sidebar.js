@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { colours } from "../styling.js";
+import { colours, text } from "../styling.js";
 import targetOrg from "../data/targetOrg.json";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
@@ -75,12 +75,12 @@ function Sidebar({ selectedNodeData }) {
                 borderRadius: "45px",
               }}
             />
-            <h1 style={{ marginLeft: "20px" }}>
+            <h1 style={{ ...text.header, marginLeft: "20px" }}>
               The {targetOrg.orgName} Mafia
             </h1>
           </div>
-          <p>{targetOrg.shortDescription}</p>
-          <ul>
+          <p style={text.contentFocus}>{targetOrg.shortDescription}</p>
+          <ul style={text.content}>
             <li>
               HQ: {targetOrg.orgCity}, {targetOrg.orgCountryCode}
             </li>
@@ -89,7 +89,7 @@ function Sidebar({ selectedNodeData }) {
           </ul>
           {/* Display IPO info */}
           {targetOrg.exitType === "ipo" && targetOrg.exitDate && (
-            <div>
+            <div style={text.content}>
               {targetOrg.orgName} went public {epochToDate(targetOrg.exitDate)}
               {targetOrg.exitValuation &&
                 " at a value of " + formatToUSD(targetOrg.exitValuation)}
@@ -97,10 +97,9 @@ function Sidebar({ selectedNodeData }) {
           )}
           {/* Display acquisition info */}
           {targetOrg.exitType === "acquisition" && targetOrg.exitDate && (
-            <div>
+            <div style={text.content}>
               {targetOrg.orgName} was acquired on{" "}
-              {epochToDate(targetOrg.exitDate)} by{" "}
-              {targetOrg.acquirerName}
+              {epochToDate(targetOrg.exitDate)} by {targetOrg.acquirerName}
               {targetOrg.exitValuation &&
                 " for " + formatToUSD(targetOrg.exitValuation)}
             </div>
@@ -121,11 +120,16 @@ function Sidebar({ selectedNodeData }) {
                 borderRadius: "45px",
               }}
             />
-            <h1 style={{ marginLeft: "20px" }}>{selectedNodeData.name}</h1>
+            <h1 style={{ ...text.header, marginLeft: "20px" }}>
+              {selectedNodeData.name}
+            </h1>
           </div>
-          <h2>Role at {targetOrg.orgName}</h2>
-          {selectedNodeData.jobTitle}, {epochToDate(selectedNodeData.startedOn)}{" "}
-          to {epochToDate(selectedNodeData.endedOn)}
+          <h2 style={text.subHeader}>Role at {targetOrg.orgName}</h2>
+          <p style={text.contentFocus}>
+            {selectedNodeData.jobTitle},{" "}
+            {epochToDate(selectedNodeData.startedOn)} to{" "}
+            {epochToDate(selectedNodeData.endedOn)}
+          </p>
         </div>
       )}
       {/* Displaying information about selected secondary nodes */}
@@ -137,11 +141,13 @@ function Sidebar({ selectedNodeData }) {
               alt={selectedNodeData.name + " logo"}
               style={{ width: "auto", height: "90px", borderRadius: "45px" }}
             />
-            <h1 style={{ marginLeft: "20px" }}>{selectedNodeData.name}</h1>
+            <h1 style={{ ...text.header, marginLeft: "20px" }}>
+              {selectedNodeData.name}
+            </h1>
           </div>
 
-          <p>{selectedNodeData.shortDescription}</p>
-          <ul>
+          <p style={text.contentFocus}>{selectedNodeData.shortDescription}</p>
+          <ul style={text.content}>
             <li>
               HQ: {selectedNodeData.orgCity}, {selectedNodeData.orgCountryCode}
             </li>
@@ -154,7 +160,7 @@ function Sidebar({ selectedNodeData }) {
           {selectedNodeData &&
             selectedNodeData.type === "secondary" &&
             selectedNodeData.exitType === "ipo" && (
-              <div>
+              <div style={text.content}>
                 {selectedNodeData.name} went public{" "}
                 {epochToDate(selectedNodeData.exitDate)}
                 {selectedNodeData.exitValuation &&
@@ -166,7 +172,7 @@ function Sidebar({ selectedNodeData }) {
           {selectedNodeData &&
             selectedNodeData.type === "secondary" &&
             selectedNodeData.exitType === "acquisition" && (
-              <div>
+              <div style={text.content}>
                 {selectedNodeData.name} was acquired on{" "}
                 {epochToDate(selectedNodeData.exitDate)} by{" "}
                 {selectedNodeData.acquirerName}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { colours } from "../styling.js";
+import { colours, text } from "../styling.js";
 
 function Footer({ selectedNodeData }) {
   useEffect(() => {
@@ -32,14 +32,14 @@ function Footer({ selectedNodeData }) {
         >
           <div
             style={{
-              width: "30px",
-              height: "30px",
+              width: "25px",
+              height: "25px",
               borderRadius: "50%",
               backgroundColor: colours.relations[key],
             }}
           ></div>
           {/* Use the mapping for display text */}
-          <span style={{ fontSize: "20px" }}>
+          <span style={text.content}>
             {attributeDisplayMapping[key]}
           </span>
         </div>
@@ -54,14 +54,14 @@ function Footer({ selectedNodeData }) {
       >
         <div
           style={{
-            width: "30px",
-            height: "30px",
+            width: "25px",
+            height: "25px",
             borderRadius: "50%",
             backgroundColor: "#737373",
           }}
         ></div>
         {/* Use the mapping for display text */}
-        <span style={{ fontSize: "20px" }}>Size represents funding amount</span>
+        <span style={text.content}>Size represents funding amount</span>
       </div>
     </div>
   );

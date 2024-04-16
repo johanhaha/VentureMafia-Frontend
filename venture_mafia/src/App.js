@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
+import { colours } from "./styling.js";
 import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
@@ -12,7 +13,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div style={{backgroundColor: colours.neutrals.background}}>
       <div
         style={{
           display: "grid",
@@ -22,7 +23,8 @@ function App() {
         }}
       >
         {/* Left panel */}
-        <div style={{ backgroundColor: "#f0f0f0" }}>
+        {/* <div style={{ backgroundColor: "#f0f0f0" }}> */}
+        <div>
           <Sidebar selectedNodeData={selectedNode} />
         </div>
         {/* NetworkGraph */}
