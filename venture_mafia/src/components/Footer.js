@@ -57,7 +57,7 @@ function Footer({ selectedNodeData }) {
             width: "25px",
             height: "25px",
             borderRadius: "50%",
-            backgroundColor: "#737373",
+            backgroundColor: colours.neutrals.background2,
           }}
         ></div>
         {/* Use the mapping for display text */}
