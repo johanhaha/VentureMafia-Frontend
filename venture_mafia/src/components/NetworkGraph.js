@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { colours, opacity } from "../styling.js";
+import { colours, opacity, text } from "../styling.js";
 
 import alumniInfo from "../data/alumniInfo.json";
 import subsequentOrgsInfo from "../data/subsequentOrgsInfo.json";
@@ -71,10 +71,10 @@ const NetworkGraph = ({ onNodeSelect }) => {
   const width = "100%",
     height = "100%",
     primaryNodeRadius = 50,
-    mafiaRadius = 800,
-    pullStrength = 0.3, // Increase to make forces stronger
-    baseDistance = 200, // Base distance between primary and secondary nodes
-    minDistance = 150; // Minimum desired distance between secondary nodes
+    mafiaRadius = 550,
+    pullStrength = 0.1, // Increase to make forces stronger
+    baseDistance = 120, // Base distance between primary and secondary nodes
+    minDistance = 100; // Minimum desired distance between secondary nodes
 
   const primaryNodes = data.nodes.filter((d) => d.type === "primary");
   const angleStep = (2 * Math.PI) / primaryNodes.length;
@@ -241,8 +241,8 @@ const NetworkGraph = ({ onNodeSelect }) => {
     function forceTowardsCenter(alpha) {
       data.nodes.forEach((node) => {
         if (node.type === "secondary") {
-          node.vx += (center.x - node.x) * alpha * pullStrength;
-          node.vy += (center.y - node.y) * alpha * pullStrength;
+          node.vx += (center.x - node.x) * alpha * pullStrength * 2;
+          node.vy += (center.y - node.y) * alpha * pullStrength * 2;
         }
       });
     }
@@ -268,16 +268,16 @@ const NetworkGraph = ({ onNodeSelect }) => {
                 return baseDistance * 1; // Closest distance for executives
 
               case "board_member":
-                return baseDistance * 2; // Farthest for board members
+                return baseDistance * 1.5; // Farthest for board members
 
               case "advisor":
-                return baseDistance * 3; // Slightly farther for advisors
+                return baseDistance * 2; // Slightly farther for advisors
 
               case "investor":
-                return baseDistance * 4; // Farther for investors
+                return baseDistance * 3; // Farther for investors
 
               default:
-                return baseDistance * 3; // Default distance if relationType is unknown
+                return baseDistance * 4; // Default distance if relationType is unknown
             }
           })
       )
@@ -427,7 +427,7 @@ const NetworkGraph = ({ onNodeSelect }) => {
       .append("text")
       .text((d) => d.name)
       .attr("dy", ".35em")
-      .style("fill", colours.main.text);
+      .style("fill", (d) => (d.type === "primary" ? text.contentFocus.color : text.content.color));
 
     // Update primary node text styling
     nodeElements
