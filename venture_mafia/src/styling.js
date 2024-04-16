@@ -15,18 +15,19 @@ export const colours = {
     success: "hsl(140, 47%, 42%)",
     info: "hsl(200, 49%, 62%)",
     warning: "hsl(40, 100%, 67%)",
-    error: "hsl(12, 60%, 50%)",
+    error: "hsl(5, 89%, 60%)",
   },
   neutrals: {
     text: "hsl(220, 15%, 20%)",
     textFocus: "hsl(220, 15%, 5%)",
     background: "hsl(38, 100%, 93%)",
+    background2: "hsl(0, 0%, 45%)",
   },
   relations: {
-    executive: "#1f77b4",
-    board_member: "#ff7f0e",
-    advisor: "#2ca02c",
-    investor: "#d62728",
+    executive: "hsl(48, 96%, 45%)",
+    investor: "hsl(12, 60%, 50%)",
+    board_member: "hsl(317, 39%, 75%)",
+    advisor: "hsl(98, 23%, 55%)",
   },
 };
 
