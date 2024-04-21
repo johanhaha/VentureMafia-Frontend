@@ -49,7 +49,7 @@ function App() {
             fontSize: "20px",
           }}
         >
-          Johan Torssell
+          &copy;Johan Torssell
         </p>
         <div style={{ height: "100%" }}>
           <Footer selectedNodeData={selectedNode} />
