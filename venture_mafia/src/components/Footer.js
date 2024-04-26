@@ -20,15 +20,20 @@ function Footer({ selectedNodeData }) {
     <div
       style={{
         display: "flex",
-        justifyContent: "space-evenly",
+        justifyContent: "center",
         alignItems: "center",
-        padding: "10px 450px",
+        padding: "10px 2vw",
       }}
     >
       {relationKeys.map((key) => (
         <div
           key={key}
-          style={{ display: "flex", alignItems: "center", gap: "10px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5vw",
+            paddingLeft: "2vw",
+          }}
         >
           <div
             style={{
@@ -36,20 +41,20 @@ function Footer({ selectedNodeData }) {
               height: "25px",
               borderRadius: "50%",
               backgroundColor: colours.relations[key],
+              flexShrink: 0,
             }}
           ></div>
           {/* Use the mapping for display text */}
-          <span style={text.content}>
-            {attributeDisplayMapping[key]}
-          </span>
+          <span style={text.content}>{attributeDisplayMapping[key]}</span>
         </div>
       ))}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "10px",
-          paddingLeft: "50px",
+          justifyContent: "center",
+          gap: "0.5vw",
+          paddingLeft: "1vw",
         }}
       >
         <div
@@ -58,6 +63,7 @@ function Footer({ selectedNodeData }) {
             height: "25px",
             borderRadius: "50%",
             backgroundColor: colours.neutrals.background2,
+            flexShrink: 0,
           }}
         ></div>
         {/* Use the mapping for display text */}
