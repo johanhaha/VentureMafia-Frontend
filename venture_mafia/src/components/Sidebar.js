@@ -110,7 +110,7 @@ function Sidebar({ selectedNodeData }) {
                 width: "90px",
                 height: "90px",
                 objectFit: "cover",
-                borderRadius: "45px",
+                borderRadius: "50%",
               }}
             />
             <h1 style={{ ...text.header, marginLeft: "20px" }}>
@@ -132,7 +132,14 @@ function Sidebar({ selectedNodeData }) {
             <img
               src={selectedNodeData.orgLogoUrl}
               alt={selectedNodeData.name + " logo"}
-              style={{ width: "auto", height: "90px", borderRadius: "45px" }}
+              style={{
+                maxWidth: "12vw",
+                maxHeight: "90px",
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
+                borderRadius: "45px",
+              }}
             />
             <h1 style={{ ...text.header, marginLeft: "20px" }}>
               {selectedNodeData.name}
