@@ -129,6 +129,7 @@ function Sidebar({ selectedNodeData }) {
       {selectedNodeData && selectedNodeData.type === "secondary" && (
         <div>
           <div style={{ display: "flex", alignItems: "center" }}>
+            {selectedNodeData.orgLogoUrl && (
             <img
               src={selectedNodeData.orgLogoUrl}
               alt={selectedNodeData.name + " logo"}
@@ -141,6 +142,7 @@ function Sidebar({ selectedNodeData }) {
                 borderRadius: "45px",
               }}
             />
+            )}
             <h1 style={{ ...text.header, marginLeft: "20px" }}>
               {selectedNodeData.name}
             </h1>
