@@ -57,7 +57,7 @@ function Sidebar({ selectedNodeData }) {
       />
       {!selectedNodeData && (
         <div>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "left" }}>
             <img
               src={targetOrg.orgLogoUrl}
               alt={targetOrg.orgName + " logo"}
@@ -66,9 +66,10 @@ function Sidebar({ selectedNodeData }) {
                 height: "90px",
                 objectFit: "cover",
                 borderRadius: "45px",
+                marginRight: "20px"
               }}
             />
-            <h1 style={{ ...text.header, marginLeft: "20px" }}>
+            <h1 style={{ ...text.header }}>
               The {targetOrg.orgName} Mafia
             </h1>
           </div>
@@ -102,7 +103,7 @@ function Sidebar({ selectedNodeData }) {
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
         <div>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "left" }}>
             <img
               src={selectedNodeData.personLogoUrl}
               alt={selectedNodeData.name + " logo"}
@@ -111,9 +112,10 @@ function Sidebar({ selectedNodeData }) {
                 height: "90px",
                 objectFit: "cover",
                 borderRadius: "50%",
+                marginRight: "20px"
               }}
             />
-            <h1 style={{ ...text.header, marginLeft: "20px" }}>
+            <h1 style={{ ...text.header }}>
               {selectedNodeData.name}
             </h1>
           </div>
@@ -128,7 +130,7 @@ function Sidebar({ selectedNodeData }) {
       {/* Displaying information about selected secondary nodes */}
       {selectedNodeData && selectedNodeData.type === "secondary" && (
         <div>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "left" }}>
             {selectedNodeData.orgLogoUrl && (
             <img
               src={selectedNodeData.orgLogoUrl}
@@ -140,10 +142,11 @@ function Sidebar({ selectedNodeData }) {
                 height: "auto",
                 objectFit: "contain",
                 borderRadius: "45px",
+                marginRight: "20px"
               }}
             />
             )}
-            <h1 style={{ ...text.header, marginLeft: "20px" }}>
+            <h1 style={{ ...text.header }}>
               {selectedNodeData.name}
             </h1>
           </div>
