@@ -6,6 +6,9 @@ import alumniInfo from "../data/alumniInfo.json";
 import subsequentOrgsInfo from "../data/subsequentOrgsInfo.json";
 import relations from "../data/relations.json";
 
+const secondaryNodeRadiusFlex = 4, // Stated in vw
+  secondaryNodeRadiusMax = 50;
+
 // Combining datasets and mapping them to the correct attribute names
 const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
   const combinedNodes = [
@@ -40,8 +43,6 @@ const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
 
 const data = combineAndProcessData(alumniInfo, subsequentOrgsInfo, relations);
 
-console.log(data);
-
 // Normalise data for secondary node sizes
 const fundingValues = data.nodes
   .filter((d) => d.type === "secondary")
@@ -54,7 +55,13 @@ const sizeScale = d3
   .scalePow()
   .exponent(0.45) // Tune this for good secondary node sizes
   .domain(fundingExtent)
-  .range([3, 60]);
+  .range([
+    3,
+    Math.min(
+      (window.innerWidth * secondaryNodeRadiusFlex) / 100,
+      secondaryNodeRadiusMax
+    ),
+  ]); // Dynamically setting maximum secondary node size
 
 // Support function to get the ID of the source element of a link
 const getSourceId = (link) => {
@@ -66,18 +73,19 @@ const getTargetId = (link) => {
   return typeof link.target === "object" ? link.target.id : link.target;
 };
 
-const NetworkGraph = ({ onNodeSelect }) => {
+const NetworkGraph = ({ onNodeSelect, networkGraphDimensions }) => {
   const d3Container = useRef(null);
-  const width = "100%",
-    height = "100%",
-    primaryNodeRadius = 50,
-    mafiaRadius = 550,
+  var primaryNodeRadius = "min(2vw, 50px)",
+    mafiaRadius =
+      networkGraphDimensions.height <= networkGraphDimensions.width
+        ? (networkGraphDimensions.height * 0.8) / 2
+        : (networkGraphDimensions.width * 0.8) / 2, // Radius based on parent container dimensions
     pullStrength = 0.1, // Increase to make forces stronger
-    baseDistance = 120, // Base distance between primary and secondary nodes
-    minDistance = 100; // Minimum desired distance between secondary nodes
+    baseDistance = (window.innerWidth * 5) / 100, // Base distance between primary and secondary nodes
+    minDistance = Math.min((window.innerWidth * secondaryNodeRadiusFlex) / 100), // Minimum desired distance between secondary nodes
+    primaryNodes = data.nodes.filter((d) => d.type === "primary"),
+    angleStep = (2 * Math.PI) / primaryNodes.length;
 
-  const primaryNodes = data.nodes.filter((d) => d.type === "primary");
-  const angleStep = (2 * Math.PI) / primaryNodes.length;
   var center = { x: 0, y: 0 }; // Placeholder value
 
   useEffect(() => {
@@ -139,7 +147,6 @@ const NetworkGraph = ({ onNodeSelect }) => {
         x: d3Container.current.parentNode.clientWidth / 2,
         y: d3Container.current.parentNode.clientHeight / 2,
       };
-      console.log("center set", center);
     }
 
     // Initialise the center value
@@ -221,8 +228,8 @@ const NetworkGraph = ({ onNodeSelect }) => {
             // Adjust minDistance based on node sizes
             const adjustedMinDistance =
               minDistance +
-              sizeScale(a.totalFundingUsd) +
-              sizeScale(b.totalFundingUsd);
+              (sizeScale(a.totalFundingUsd) + sizeScale(b.totalFundingUsd)) *
+                1.3;
             let dx = a.x - b.x;
             let dy = a.y - b.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
@@ -250,8 +257,8 @@ const NetworkGraph = ({ onNodeSelect }) => {
     const svg = d3
       .select(d3Container.current)
       .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", "100%")
+      .attr("height", "100%");
 
     // Simulation setup with all forces
     const simulation = d3
@@ -268,13 +275,13 @@ const NetworkGraph = ({ onNodeSelect }) => {
                 return baseDistance * 1; // Closest distance for executives
 
               case "board_member":
-                return baseDistance * 1.5; // Farthest for board members
+                return baseDistance * 2; // Farthest for board members
 
               case "advisor":
-                return baseDistance * 2; // Slightly farther for advisors
+                return baseDistance * 3; // Slightly farther for advisors
 
               case "investor":
-                return baseDistance * 3; // Farther for investors
+                return baseDistance * 4; // Farther for investors
 
               default:
                 return baseDistance * 4; // Default distance if relationType is unknown
@@ -427,13 +434,23 @@ const NetworkGraph = ({ onNodeSelect }) => {
       .append("text")
       .text((d) => d.name)
       .attr("dy", ".35em")
-      .style("fill", (d) => (d.type === "primary" ? text.contentFocus.color : text.content.color));
+      .style("fill", (d) =>
+        d.type === "primary" ? text.contentFocus.color : text.content.color
+      );
 
     // Update primary node text styling
     nodeElements
       .filter((d) => d.type === "primary")
       .select("text")
-      .attr("dy", primaryNodeRadius + 20) // Offset on the x-axis from the circle center
+      .attr(
+        "dy",
+        nodeElements
+          .filter((d) => d.type === "primary")
+          .node()
+          .getBBox().height /
+          2 +
+          20
+      ) // Offset on the x-axis from the circle center
       .style("text-anchor", "middle");
 
     // Update secondary node text styling

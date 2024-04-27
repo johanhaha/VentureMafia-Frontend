@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { colours, text } from "./styling.js";
 import NetworkGraph from "./components/NetworkGraph.js";
@@ -7,6 +7,17 @@ import Footer from "./components/Footer.js";
 
 function App() {
   const [selectedNode, setSelectedNode] = useState(null);
+  const [networkGraphDimensions, setNetworkGraphDimensions] = useState(null); // Used for passing down container dimensions for flex
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setNetworkGraphDimensions({
+        width: containerRef.current.offsetWidth,
+        height: containerRef.current.offsetHeight,
+      });
+    }
+  }, []); // Empty dependency array to ensure this runs only once
 
   const handleNodeSelect = (nodeData) => {
     setSelectedNode(nodeData);
@@ -23,13 +34,19 @@ function App() {
         }}
       >
         {/* Left panel */}
-        {/* <div style={{ backgroundColor: "#f0f0f0" }}> */}
         <div>
           <Sidebar selectedNodeData={selectedNode} />
         </div>
         {/* NetworkGraph */}
-        <div>
-          <NetworkGraph onNodeSelect={handleNodeSelect} />
+        <div ref={containerRef}>
+          {networkGraphDimensions ? ( // Checks if networkGraphDimensions has been set to ensure proper size of graph
+            <NetworkGraph
+              onNodeSelect={handleNodeSelect}
+              networkGraphDimensions={networkGraphDimensions}
+            />
+          ) : (
+            <div> Loading graph... </div>
+          )}
         </div>
       </div>
       {/* Footer */}

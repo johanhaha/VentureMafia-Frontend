@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { colours, text } from "../styling.js";
 import targetOrg from "../data/targetOrg.json";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
-
-console.log(targetOrg);
 
 // Helper function to format as USD and abbreviate
 function formatToUSD(value) {
@@ -38,11 +36,6 @@ function epochToDate(epoch) {
 }
 
 function Sidebar({ selectedNodeData }) {
-  useEffect(() => {
-    // Update sidebar based on nodeData
-    console.log("Node Data Updated:", selectedNodeData);
-  }, [selectedNodeData]);
-
   return (
     <div
       style={{
@@ -51,7 +44,7 @@ function Sidebar({ selectedNodeData }) {
         flexDirection: "column", // Adjusted to stack the logo and text vertically
         justifyContent: "flex-start",
         alignItems: "flex-start",
-        padding: "30px 50px 30px 50px",
+        padding: "2vw",
       }}
     >
       <VMlogo
@@ -59,7 +52,7 @@ function Sidebar({ selectedNodeData }) {
           stroke: colours.main.primary1,
           width: "60%",
           height: "auto",
-          marginBottom: "100px",
+          marginBottom: "4vw",
         }}
       />
       {!selectedNodeData && (
