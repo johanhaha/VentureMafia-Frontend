@@ -61,7 +61,7 @@ const sizeScale = d3
       (window.innerWidth * secondaryNodeRadiusFlex) / 100,
       secondaryNodeRadiusMax
     ),
-  ]); // Dynamically setting maximum secondary node size
+  ]); // Dynamically setting maximum secondary node radius
 
 // Support function to get the ID of the source element of a link
 const getSourceId = (link) => {
@@ -180,44 +180,65 @@ const NetworkGraph = ({ onNodeSelect, networkGraphDimensions }) => {
     }
 
     // Helper function for text wrapping
-    function wrapText(selection, width, lineHeight = 1.1) {
+    function wrapText(selection, width) {
       selection.each(function () {
         const text = d3.select(this),
           words = text.text().split(/\s+/).reverse(),
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy") || 0);
+          dy = parseFloat(text.attr("dy") || 0.35);
 
-        let word,
-          line = [],
-          lineNumber = 0,
-          tspan = text
-            .text(null)
+        text.text(null); // Clear the text once and manage via tspans
+
+        if (words.length === 1) {
+          let word = words[0];
+          text
             .append("tspan")
             .attr("x", 0)
-            .attr("y", y)
-            .attr("dy", `${dy}em`);
-
-        while ((word = words.pop())) {
-          line.push(word);
-          tspan.text(line.join(" "));
-          if (tspan.node().getComputedTextLength() > width) {
-            line.pop(); // Remove last word
-            tspan.text(line.join(" ")); // Set text without last word
-            line = [word]; // Start new line with last word
+            .attr("y", 0)
+            .attr("dy", `${dy}em`)
+            .text(word);
+        } else {
+          let word,
+            line = [],
             tspan = text
               .append("tspan")
               .attr("x", 0)
-              .attr("y", y)
-              .attr("dy", `${++lineNumber * lineHeight}em`)
-              .text(word);
+              .attr("y", 0)
+              .attr("dy", `${dy}em`);
+
+          while (words.length > 0) {
+            word = words.pop();
+            line.push(word);
+            tspan.text(line.join(" ")); // Update text in the existing tspan
+
+            if (
+              tspan.node().getComputedTextLength() > width &&
+              line.length > 1
+            ) {
+              line.pop(); // Remove last word that caused overflow
+              tspan.text(line.join(" ")); // Set text to previous valid line
+              line = [word]; // Start new line with last word
+              tspan = text.append("tspan").attr("x", 0).attr("y", 0).text(word); // Append new tspan for the new line
+            }
           }
         }
+
+        // Recalculate dy for each tspan to vertically center them
+        let tspans = text.selectAll("tspan");
+        let lineCount = tspans.size();
+        let lineNumber = 0;
+        tspans.each(function () {
+          d3.select(this).attr(
+            "dy",
+            `${(lineNumber - lineCount / 2 + 0.5) * 1.1 + dy}em`
+          );
+          lineNumber++;
+        });
       });
     }
 
     // Helper function to get node radius
     function getNodeRadius(node) {
-      return sizeScale(node.totalFundingUsd) / 2;
+      return sizeScale(node.totalFundingUsd);
     }
 
     function forceSecondaryNodes(alpha) {
@@ -433,7 +454,7 @@ const NetworkGraph = ({ onNodeSelect, networkGraphDimensions }) => {
       ) // Only show text for primary nodes and secondary nodes with $50m+ in funding
       .append("text")
       .text((d) => d.name)
-      .attr("dy", ".35em")
+      // .attr("dy", ".35em")
       .style("fill", (d) =>
         d.type === "primary" ? text.contentFocus.color : text.content.color
       );
