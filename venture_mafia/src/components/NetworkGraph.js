@@ -50,19 +50,6 @@ const fundingValues = data.nodes
 
 const fundingExtent = d3.extent(fundingValues); // [min, max] of funding
 
-// Scaling function
-const sizeScale = d3
-  .scalePow()
-  .exponent(0.45) // Tune this for good secondary node sizes
-  .domain(fundingExtent)
-  .range([
-    3,
-    Math.min(
-      (window.innerWidth * secondaryNodeRadiusFlex) / 100,
-      secondaryNodeRadiusMax
-    ),
-  ]); // Dynamically setting maximum secondary node radius
-
 // Support function to get the ID of the source element of a link
 const getSourceId = (link) => {
   return typeof link.source === "object" ? link.source.id : link.source;
@@ -81,12 +68,27 @@ const NetworkGraph = ({ onNodeSelect, networkGraphDimensions }) => {
         ? (networkGraphDimensions.height * 0.8) / 2
         : (networkGraphDimensions.width * 0.8) / 2, // Radius based on parent container dimensions
     pullStrength = 0.1, // Increase to make forces stronger
-    baseDistance = (window.innerWidth * 5) / 100, // Base distance between primary and secondary nodes
-    minDistance = Math.min((window.innerWidth * secondaryNodeRadiusFlex) / 100), // Minimum desired distance between secondary nodes
+    baseDistance = (networkGraphDimensions.width * 5) / 100, // Base distance between primary and secondary nodes
+    minDistance = Math.min(
+      (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100
+    ), // Minimum desired distance between secondary nodes
     primaryNodes = data.nodes.filter((d) => d.type === "primary"),
     angleStep = (2 * Math.PI) / primaryNodes.length;
 
   var center = { x: 0, y: 0 }; // Placeholder value
+
+  // Scaling function
+  const sizeScale = d3
+    .scalePow()
+    .exponent(0.45) // Tune this for good secondary node sizes
+    .domain(fundingExtent)
+    .range([
+      3,
+      Math.min(
+        (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
+        secondaryNodeRadiusMax
+      ),
+    ]); // Dynamically setting maximum secondary node radius
 
   useEffect(() => {
     if (!d3Container.current) return;
