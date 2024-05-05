@@ -2,10 +2,6 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colours, opacity, text } from "../styling.js";
 
-import alumniInfo from "../data/alumniInfo.json";
-import subsequentOrgsInfo from "../data/subsequentOrgsInfo.json";
-import relations from "../data/relations.json";
-
 const secondaryNodeRadiusFlex = 4, // Stated in vw
   secondaryNodeRadiusMax = 50;
 
@@ -41,15 +37,6 @@ const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
   return data;
 };
 
-const data = combineAndProcessData(alumniInfo, subsequentOrgsInfo, relations);
-
-// Normalise data for secondary node sizes
-const fundingValues = data.nodes
-  .filter((d) => d.type === "secondary")
-  .map((d) => d.totalFundingUsd);
-
-const fundingExtent = d3.extent(fundingValues); // [min, max] of funding
-
 // Support function to get the ID of the source element of a link
 const getSourceId = (link) => {
   return typeof link.source === "object" ? link.source.id : link.source;
@@ -60,40 +47,57 @@ const getTargetId = (link) => {
   return typeof link.target === "object" ? link.target.id : link.target;
 };
 
-const NetworkGraph = ({ targetOrgUuid, onNodeSelect, networkGraphDimensions }) => {
+function NetworkGraph({
+  targetOrg,
+  alumniInfo,
+  subsequentOrgsInfo,
+  relations,
+  onNodeSelect,
+  networkGraphDimensions,
+}) {
   const d3Container = useRef(null);
-  var primaryNodeRadius = "min(2vw, 50px)",
-    mafiaRadius =
-      networkGraphDimensions.height <= networkGraphDimensions.width
-        ? (networkGraphDimensions.height * 0.8) / 2
-        : (networkGraphDimensions.width * 0.8) / 2, // Radius based on parent container dimensions
-    pullStrength = 0.1, // Increase to make forces stronger
-    baseDistance = (networkGraphDimensions.width * 5) / 100, // Base distance between primary and secondary nodes
-    minDistance = Math.min(
-      (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100
-    ), // Minimum desired distance between secondary nodes
-    primaryNodes = data.nodes.filter((d) => d.type === "primary"),
-    angleStep = (2 * Math.PI) / primaryNodes.length;
 
-  var center = { x: 0, y: 0 }; // Placeholder value
-
-  // Scaling function
-  const sizeScale = d3
-    .scalePow()
-    .exponent(0.45) // Tune this for good secondary node sizes
-    .domain(fundingExtent)
-    .range([
-      3,
-      Math.min(
-        (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
-        secondaryNodeRadiusMax
-      ),
-    ]); // Dynamically setting maximum secondary node radius
+  const [data, setData] = React.useState(null);
+  const [error, setError] = React.useState(false);
 
   useEffect(() => {
-    if (!d3Container.current) return;
+    if (!alumniInfo || !subsequentOrgsInfo || !relations) {
+      console.log("Waiting for data...");
+      return; // Early return if data is not available
+    }
+
+    try {
+      const processedData = combineAndProcessData(
+        alumniInfo,
+        subsequentOrgsInfo,
+        relations
+      );
+      setData(processedData);
+      console.log("Data processed network graph");
+    } catch (error) {
+      console.error("Error processing data (NetworkGraph):", error);
+      setError(true);
+    }
+  }, [alumniInfo, subsequentOrgsInfo, relations]); // Depend on these data pieces
+
+  useEffect(() => {
+    if (!d3Container.current || !data) return;
 
     d3.select(d3Container.current).selectAll("*").remove(); // Clear before rendeting to avoid multiple graphs
+
+    var primaryNodeRadius = "min(2vw, 50px)",
+      mafiaRadius =
+        networkGraphDimensions.height <= networkGraphDimensions.width
+          ? (networkGraphDimensions.height * 0.8) / 2
+          : (networkGraphDimensions.width * 0.8) / 2, // Radius based on parent container dimensions
+      pullStrength = 0.1, // Increase to make forces stronger
+      baseDistance = (networkGraphDimensions.width * 5) / 100, // Base distance between primary and secondary nodes
+      minDistance = Math.min(
+        (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100
+      ), // Minimum desired distance between secondary nodes
+      primaryNodes = data.nodes.filter((d) => d.type === "primary"),
+      angleStep = (2 * Math.PI) / primaryNodes.length,
+      center = { x: 0, y: 0 }; // Placeholder value
 
     const nodeMap = new Map(data.nodes.map((node) => [node.id, node])); // Map with all nodes
     let secondaryToPrimaryMap = new Map(); // Mapping between secondary and primary nodes to calculate number of common nodes
@@ -142,6 +146,25 @@ const NetworkGraph = ({ targetOrgUuid, onNodeSelect, networkGraphDimensions }) =
         commonConnectionsScore.get(b.id) - commonConnectionsScore.get(a.id)
       );
     });
+
+    const fundingExtent = d3.extent(
+      data.nodes
+        .filter((d) => d.type === "secondary")
+        .map((d) => d.totalFundingUsd)
+    ); // [min, max] of funding
+
+    // Scaling function
+    const sizeScale = d3
+      .scalePow()
+      .exponent(0.45) // Tune this for good secondary node sizes
+      .domain(fundingExtent)
+      .range([
+        3,
+        Math.min(
+          (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
+          secondaryNodeRadiusMax
+        ),
+      ]); // Dynamically setting maximum secondary node radius
 
     // Helper function to calculate the center
     function resize() {
@@ -507,11 +530,19 @@ const NetworkGraph = ({ targetOrgUuid, onNodeSelect, networkGraphDimensions }) =
 
     // Updates SVG size based on window size
     window.addEventListener("resize", resize);
-  }, []); // Ensures effect is only run on mount and unmount
+  }, [data, networkGraphDimensions]); // Ensures effect is only run on mount and unmount
+
+  if (error) {
+    return <div>Error processing data</div>;
+  }
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div ref={d3Container} style={{ height: "100%", width: "100%" }}></div>
   );
-};
+}
 
 export default NetworkGraph;

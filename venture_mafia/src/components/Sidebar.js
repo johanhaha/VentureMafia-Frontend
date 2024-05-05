@@ -2,7 +2,6 @@ import React from "react";
 import { colours, text } from "../styling.js";
 import Select from "react-select";
 
-import targetOrg from "../data/targetOrg.json";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
 const options = [
@@ -45,7 +44,7 @@ function epochToDate(epoch) {
   });
 }
 
-function Sidebar({ selectedNodeData, targetOrgUuid, onTargetOrgSelect }) {
+function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
   // Callback function to set tartget organisation
   function setTargetOrg(newTargetOrgUuid) {
     onTargetOrgSelect(newTargetOrgUuid);
@@ -100,7 +99,8 @@ function Sidebar({ selectedNodeData, targetOrgUuid, onTargetOrgSelect }) {
                 options={options}
                 isSearchable={true}
                 defaultValue={options.filter(
-                  (option) => option.value === targetOrgUuid
+                  (option) =>
+                    option.value === "96ab87ca-00b5-2ebc-f218-86262954e320" // Should be set to targetOrg.orgUuid but requires lifecycle management I haven't implemented
                 )}
                 components={{
                   IndicatorsContainer: () => null,
