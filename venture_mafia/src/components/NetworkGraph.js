@@ -60,7 +60,7 @@ const getTargetId = (link) => {
   return typeof link.target === "object" ? link.target.id : link.target;
 };
 
-const NetworkGraph = ({ onNodeSelect, networkGraphDimensions }) => {
+const NetworkGraph = ({ targetOrgUuid, onNodeSelect, networkGraphDimensions }) => {
   const d3Container = useRef(null);
   var primaryNodeRadius = "min(2vw, 50px)",
     mafiaRadius =

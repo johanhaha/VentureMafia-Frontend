@@ -6,7 +6,7 @@ import targetOrg from "../data/targetOrg.json";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
 const options = [
-  { value: "payPal", label: "PayPal" },
+  { value: "96ab87ca-00b5-2ebc-f218-86262954e320", label: "PayPal" },
   { value: "option2", label: "Tesla" },
   { value: "option3", label: "Meta" },
   { value: "option4", label: "Palantir Technologies" },
@@ -45,12 +45,12 @@ function epochToDate(epoch) {
   });
 }
 
-// Callback function to set tartget organisation
-function setTargetOrg(newTarget) {
-  console.log("New target: ", newTarget);
-}
+function Sidebar({ selectedNodeData, targetOrgUuid, onTargetOrgSelect }) {
+  // Callback function to set tartget organisation
+  function setTargetOrg(newTargetOrgUuid) {
+    onTargetOrgSelect(newTargetOrgUuid);
+  }
 
-function Sidebar({ selectedNodeData }) {
   return (
     <div
       style={{
@@ -100,7 +100,7 @@ function Sidebar({ selectedNodeData }) {
                 options={options}
                 isSearchable={true}
                 defaultValue={options.filter(
-                  (option) => option.value === "payPal"
+                  (option) => option.value === targetOrgUuid
                 )}
                 components={{
                   IndicatorsContainer: () => null,
