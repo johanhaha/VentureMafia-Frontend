@@ -1,7 +1,17 @@
 import React from "react";
 import { colours, text } from "../styling.js";
+import Select from "react-select";
+
 import targetOrg from "../data/targetOrg.json";
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
+
+const options = [
+  { value: "payPal", label: "PayPal" },
+  { value: "option2", label: "Tesla" },
+  { value: "option3", label: "Meta" },
+  { value: "option4", label: "Palantir Technologies" },
+  { value: "option5", label: "X (formerly Twitter)" },
+];
 
 // Helper function to format as USD and abbreviate
 function formatToUSD(value) {
@@ -35,6 +45,11 @@ function epochToDate(epoch) {
   });
 }
 
+// Callback function to set tartget organisation
+function setTargetOrg(newTarget) {
+  console.log("New target: ", newTarget);
+}
+
 function Sidebar({ selectedNodeData }) {
   return (
     <div
@@ -52,12 +67,20 @@ function Sidebar({ selectedNodeData }) {
           stroke: colours.main.primary1,
           width: "60%",
           height: "auto",
-          marginBottom: "4vw",
+          marginBottom: "2vw",
         }}
       />
+
       {!selectedNodeData && (
         <div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "left" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "left",
+            }}
+          >
             <img
               src={targetOrg.orgLogoUrl}
               alt={targetOrg.orgName + " logo"}
@@ -66,11 +89,72 @@ function Sidebar({ selectedNodeData }) {
                 height: "90px",
                 objectFit: "cover",
                 borderRadius: "45px",
-                marginRight: "20px"
+                marginRight: "20px",
               }}
             />
-            <h1 style={{ ...text.header }}>
-              The {targetOrg.orgName} Mafia
+            <h1
+              style={{ ...text.header, display: "flex", alignItems: "center" }}
+            >
+              <span>The</span>
+              <Select
+                options={options}
+                isSearchable={true}
+                defaultValue={options.filter(
+                  (option) => option.value === "payPal"
+                )}
+                components={{
+                  IndicatorsContainer: () => null,
+                }}
+                noOptionsMessage={() => "Unavailable"}
+                styles={{
+                  container: (base) => ({
+                    ...base,
+                    flex: "1 0 auto",
+                    margin: "0 10px",
+                  }),
+                  control: (base) => ({
+                    ...base,
+                    borderColor: colours.main.primary1,
+                    borderRadius: "10px",
+                    boxShadow: "none",
+                    backgroundColor: "none",
+                    "&:hover": { borderColor: colours.main.primary1 },
+                    minHeight: "initial", // Ensure it matches the line-height of the surrounding text
+                  }),
+                  option: (base) => ({
+                    ...base,
+                    fontSize: 12,
+                  }),
+                  noOptionsMessage: (base) => ({
+                    ...base,
+                    fontSize: 12,
+                  }),
+                  menu: (base) => ({
+                    ...base,
+                    backgroundColor: colours.neutrals.background,
+                    borderRadius: "10px",
+                    padding: 0,
+                  }),
+                  menuList: (base) => ({
+                    ...base,
+                    borderRadius: "10px",
+                    margin: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                  }),
+                }}
+                theme={(theme) => ({
+                  ...theme,
+                  colors: {
+                    ...theme.colors,
+                    primary: colours.main.primary1,
+                    primary25: colours.main.secondary1,
+                    primary50: colours.main.secondary1,
+                  },
+                })}
+                onChange={(selection) => setTargetOrg(selection.value)}
+              />
+              <span>Mafia</span>
             </h1>
           </div>
           <p style={text.contentFocus}>{targetOrg.shortDescription}</p>
@@ -103,7 +187,14 @@ function Sidebar({ selectedNodeData }) {
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
         <div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "left" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "left",
+            }}
+          >
             <img
               src={selectedNodeData.personLogoUrl}
               alt={selectedNodeData.name + " logo"}
@@ -112,12 +203,10 @@ function Sidebar({ selectedNodeData }) {
                 height: "90px",
                 objectFit: "cover",
                 borderRadius: "50%",
-                marginRight: "20px"
+                marginRight: "20px",
               }}
             />
-            <h1 style={{ ...text.header }}>
-              {selectedNodeData.name}
-            </h1>
+            <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
           </div>
           <h2 style={text.subHeader}>Role at {targetOrg.orgName}</h2>
           <p style={text.contentFocus}>
@@ -130,25 +219,30 @@ function Sidebar({ selectedNodeData }) {
       {/* Displaying information about selected secondary nodes */}
       {selectedNodeData && selectedNodeData.type === "secondary" && (
         <div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "left" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "left",
+            }}
+          >
             {selectedNodeData.orgLogoUrl && (
-            <img
-              src={selectedNodeData.orgLogoUrl}
-              alt={selectedNodeData.name + " logo"}
-              style={{
-                maxWidth: "12vw",
-                maxHeight: "90px",
-                width: "auto",
-                height: "auto",
-                objectFit: "contain",
-                borderRadius: "45px",
-                marginRight: "20px"
-              }}
-            />
+              <img
+                src={selectedNodeData.orgLogoUrl}
+                alt={selectedNodeData.name + " logo"}
+                style={{
+                  maxWidth: "12vw",
+                  maxHeight: "90px",
+                  width: "auto",
+                  height: "auto",
+                  objectFit: "contain",
+                  borderRadius: "45px",
+                  marginRight: "20px",
+                }}
+              />
             )}
-            <h1 style={{ ...text.header }}>
-              {selectedNodeData.name}
-            </h1>
+            <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
           </div>
 
           <p style={text.contentFocus}>{selectedNodeData.shortDescription}</p>
