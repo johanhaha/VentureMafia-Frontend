@@ -6,10 +6,26 @@ import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
 const options = [
   { value: "96ab87ca-00b5-2ebc-f218-86262954e320", label: "PayPal" },
-  { value: "option2", label: "Tesla" },
-  { value: "option3", label: "Meta" },
-  { value: "option4", label: "Palantir Technologies" },
-  { value: "option5", label: "X (formerly Twitter)" },
+  { value: "a367b036-5952-5435-7541-ad7ee8869e24", label: "Tesla" },
+  { value: "df662812-7f97-0b43-9d3e-12f64f504fbb", label: "Meta" },
+  { value: "022417b5-4980-6c54-0f3c-6736bbbb1a5e", label: "Spotify" },
+  { value: "2cc3a5de-2303-aa00-cd1a-50bd96420392", label: "Klarna" },
+  { value: "34035c51-8f16-4836-8f02-103392479a92", label: "Northvolt" },
+  { value: "76e0d11a-3e6b-12b4-7b0b-b4a5a34fba35", label: "Tink" },
+  { value: "7b74b50c-4468-b7ec-2ff9-bf3286a399c9", label: "Kry" },
+  { value: "fc4f7ed5-f7c8-34ef-3a8c-42e5d90b4ffb", label: "Einride" },
+  { value: "f7ffcd56-1ca4-42af-848f-be1f72814ec8", label: "Voi" },
+  { value: "439d3478-40fa-e6bc-9b71-f1bfa8296f52", label: "Epidemic Sound" },
+  { value: "294302fb-089f-42eb-624a-8ed32494c6b6", label: "Sinch" },
+  { value: "617ac9c3-1c6b-d675-e545-dc2ae4771e44", label: "Stillfront Group" },
+  { value: "71c346d0-0889-486f-aae6-d4463772c13a", label: "Embracer Group" },
+  { value: "ff4c39cb-f45b-5cdc-36a6-d9111767c351", label: "Lendify" },
+  { value: "6093de34-5382-f34c-a207-efa92470048b", label: "iZettle" },
+  { value: "9a6c8417-c918-40fb-aa7e-bdfd7b4c2273", label: "Volta Trucks" },
+  { value: "bb6d18e9-fb01-c5d2-d11f-bb24f7eae221", label: "Storytel" },
+  { value: "496cfef9-15f4-d1d7-ea21-b98ce7cdb26c", label: "Budbee" },
+  { value: "c2c4c27f-f185-49a1-b418-26e258d158db", label: "Instabox" },
+  { value: "6f8f114c-8df6-49de-a301-62242a78efa1", label: "Anyfin" },
 ];
 
 // Helper function to format as USD and abbreviate
@@ -98,10 +114,8 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
               <Select
                 options={options}
                 isSearchable={true}
-                defaultValue={options.filter(
-                  (option) =>
-                    option.value === "96ab87ca-00b5-2ebc-f218-86262954e320" // Should be set to targetOrg.orgUuid but requires lifecycle management I haven't implemented
-                )}
+                value={options.find((option) => option.value === targetOrg.orgUuid)}
+                onChange={(selection) => setTargetOrg(selection.value)}
                 components={{
                   IndicatorsContainer: () => null,
                 }}
@@ -152,7 +166,6 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
                     primary50: colours.main.secondary1,
                   },
                 })}
-                onChange={(selection) => setTargetOrg(selection.value)}
               />
               <span>Mafia</span>
             </h1>
