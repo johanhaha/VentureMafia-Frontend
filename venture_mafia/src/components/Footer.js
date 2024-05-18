@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import { colours, text } from "../styling.js";
 
-function Footer({ selectedNodeData }) {
-  useEffect(() => {
-    console.log("Node Data Updated:", selectedNodeData);
-  }, [selectedNodeData]);
+function Footer() {
 
   // Manual mapping between attribute keys and display text
   const attributeDisplayMapping = {
