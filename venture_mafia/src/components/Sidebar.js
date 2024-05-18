@@ -114,7 +114,9 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
               <Select
                 options={options}
                 isSearchable={true}
-                value={options.find((option) => option.value === targetOrg.orgUuid)}
+                value={options.find(
+                  (option) => option.value === targetOrg.orgUuid
+                )}
                 onChange={(selection) => setTargetOrg(selection.value)}
                 components={{
                   IndicatorsContainer: () => null,
@@ -223,9 +225,21 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
           </div>
           <h2 style={text.subHeader}>Role at {targetOrg.orgName}</h2>
           <p style={text.contentFocus}>
-            {selectedNodeData.jobTitle},{" "}
-            {epochToDate(selectedNodeData.startedOn)} to{" "}
-            {epochToDate(selectedNodeData.endedOn)}
+            {selectedNodeData.jobTitle}
+            {/* If both start and end dates exist */}
+            {selectedNodeData.startedOn &&
+              selectedNodeData.endedOn &&
+              ", " + epochToDate(selectedNodeData.startedOn) +
+                " to " +
+                epochToDate(selectedNodeData.endedOn)}
+            {/* If only start date exist */}
+            {selectedNodeData.startedOn &&
+              !selectedNodeData.endedOn &&
+              ", since " + epochToDate(selectedNodeData.startedOn)}
+            {/* If only end date exist */}
+            {!selectedNodeData.startedOn &&
+              selectedNodeData.endedOn &&
+              ", until " + epochToDate(selectedNodeData.endedOn)}
           </p>
         </div>
       )}
