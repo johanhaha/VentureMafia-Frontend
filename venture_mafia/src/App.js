@@ -159,7 +159,7 @@ function App() {
           &copy;Johan Torssell
         </p>
         <div style={{ height: "100%" }}>
-          <Footer selectedNodeData={selectedNode} />
+          <Footer/>
         </div>
       </div>
     </div>
