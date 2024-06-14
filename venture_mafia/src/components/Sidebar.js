@@ -230,7 +230,8 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
                 style={{
                   width: "70px",
                   height: "70px",
-                  marginRight: "40px",
+                  marginLeft: "10px",
+                  marginRight: "30px",
                   marginTop: "10px",
                   marginBottom: "10px",
                 }}
@@ -281,6 +282,19 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
                   height: "auto",
                   objectFit: "contain",
                   borderRadius: "45px",
+                  marginRight: "20px",
+                }}
+              />
+            )}
+            {!selectedNodeData.orgLogoUrl && (
+              <FontAwesomeIcon
+                icon={["far", "building"]}
+                style={{
+                  maxWidth: "12vw",
+                  maxHeight: "90px",
+                  width: "auto",
+                  height: "auto",
+                  marginLeft: "10px",
                   marginRight: "20px",
                 }}
               />
