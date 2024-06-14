@@ -1,6 +1,7 @@
 import React from "react";
 import { colours, text } from "../styling.js";
 import Select from "react-select";
+import { FontAwesomeIcon } from "../fontAwesome";
 
 import { ReactComponent as VMlogo } from "../VMlogo.svg";
 
@@ -210,17 +211,31 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
               justifyContent: "left",
             }}
           >
-            <img
-              src={selectedNodeData.personLogoUrl}
-              alt={selectedNodeData.name + " logo"}
-              style={{
-                width: "90px",
-                height: "90px",
-                objectFit: "cover",
-                borderRadius: "50%",
-                marginRight: "20px",
-              }}
-            />
+            {selectedNodeData.personLogoUrl && (
+              <img
+                src={selectedNodeData.personLogoUrl}
+                alt={selectedNodeData.name + " logo"}
+                style={{
+                  width: "90px",
+                  height: "90px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  marginRight: "20px",
+                }}
+              />
+            )}
+            {!selectedNodeData.personLogoUrl && (
+              <FontAwesomeIcon
+                icon={["far", "user"]}
+                style={{
+                  width: "70px",
+                  height: "70px",
+                  marginRight: "40px",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+              />
+            )}
             <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
           </div>
           <h2 style={text.subHeader}>Role at {targetOrg.orgName}</h2>
@@ -229,7 +244,8 @@ function Sidebar({ selectedNodeData, targetOrg, onTargetOrgSelect }) {
             {/* If both start and end dates exist */}
             {selectedNodeData.startedOn &&
               selectedNodeData.endedOn &&
-              ", " + epochToDate(selectedNodeData.startedOn) +
+              ", " +
+                epochToDate(selectedNodeData.startedOn) +
                 " to " +
                 epochToDate(selectedNodeData.endedOn)}
             {/* If only start date exist */}
