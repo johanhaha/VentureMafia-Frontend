@@ -3,7 +3,7 @@ import { colours, text } from "../styling.js";
 import Select from "react-select";
 import { FontAwesomeIcon } from "../fontAwesome";
 
-import { ReactComponent as VMlogo } from "../VMlogo.svg";
+import { ReactComponent as VMlogo } from "../assets/VMlogo.svg";
 
 const options = [
   { value: "96ab87ca-00b5-2ebc-f218-86262954e320", label: "PayPal" },
