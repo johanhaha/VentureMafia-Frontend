@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colours, opacity, text } from "../styling.js";
+import farUserIcon from "../assets/farUserIcon.svg";
 
 const secondaryNodeRadiusFlex = 4, // Stated in vw
   secondaryNodeRadiusMax = 50;
@@ -350,11 +351,31 @@ function NetworkGraph({
       .attr("height", "100%")
       .attr("width", "100%")
       .attr("patternContentUnits", "objectBoundingBox")
-      .append("image")
-      .attr("height", 1)
-      .attr("width", 1)
-      .attr("preserveAspectRatio", "xMidYMid slice")
-      .attr("xlink:href", (d) => d.personLogoUrl);
+      .each(function (d) {
+        if (d.personLogoUrl) {
+          d3.select(this)
+            .append("image")
+            .attr("height", 1)
+            .attr("width", 1)
+            .attr("preserveAspectRatio", "xMidYMid slice")
+            .attr("xlink:href", d.personLogoUrl);
+        } else { // Adding user icon if no logo is available
+          d3.select(this)
+            .append("rect")
+            .attr("width", 1)
+            .attr("height", 1)
+            .attr("fill", colours.neutrals.background);
+
+          d3.select(this)
+            .append("image")
+            .attr("height", 0.7)
+            .attr("width", 0.7)
+            .attr("x", 0.15)
+            .attr("y", 0.15)
+            .attr("preserveAspectRatio", "xMidYMid slice")
+            .attr("xlink:href", farUserIcon);
+        }
+      });
 
     // Draw lines for the links
     const linkElements = svg
