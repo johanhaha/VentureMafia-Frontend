@@ -45,7 +45,7 @@ function App() {
           subsequentOrgsInfo,
           relations,
         ]) => {
-          setTargetOrg(targetOrg);
+          setTargetOrg(targetOrg[0]);
           setAlumniInfo(alumniInfo);
           setSubsequentOrgsInfo(subsequentOrgsInfo);
           setRelations(relations); // Update state with content from data2.json
@@ -84,7 +84,9 @@ function App() {
           subsequentOrgsInfo,
           relations,
         ]) => {
-          setTargetOrg(targetOrg);
+          console.log('targetOrg', targetOrg)
+          console.log('targetOrg[0]', targetOrg[0])
+          setTargetOrg(targetOrg[0]);
           setAlumniInfo(alumniInfo);
           setSubsequentOrgsInfo(subsequentOrgsInfo);
           setRelations(relations);
