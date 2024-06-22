@@ -82,7 +82,10 @@ function NetworkGraph({
   }, [alumniInfo, subsequentOrgsInfo, relations]); // Depend on these data pieces
 
   useEffect(() => {
-    if (!d3Container.current || !data) return;
+    if (!d3Container.current || !data || data.nodes.length === 0) {
+      d3.select(d3Container.current).selectAll("*").remove(); // Clear graph
+      return;
+    }
 
     d3.select(d3Container.current).selectAll("*").remove(); // Clear before rendeting to avoid multiple graphs
 
@@ -359,7 +362,8 @@ function NetworkGraph({
             .attr("width", 1)
             .attr("preserveAspectRatio", "xMidYMid slice")
             .attr("xlink:href", d.personLogoUrl);
-        } else { // Adding user icon if no logo is available
+        } else {
+          // Adding user icon if no logo is available
           d3.select(this)
             .append("rect")
             .attr("width", 1)
