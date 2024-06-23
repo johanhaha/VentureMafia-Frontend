@@ -38,20 +38,13 @@ function App() {
 
   useEffect(() => {
     loadData(targetOrgUuid)
-      .then(
-        ([
-          targetOrg,
-          alumniInfo,
-          subsequentOrgsInfo,
-          relations,
-        ]) => {
-          setTargetOrg(targetOrg[0]);
-          setAlumniInfo(alumniInfo);
-          setSubsequentOrgsInfo(subsequentOrgsInfo);
-          setRelations(relations); // Update state with content from data2.json
-          setLoading(false); // Set loading to false once data is loaded
-        }
-      )
+      .then(([targetOrg, alumniInfo, subsequentOrgsInfo, relations]) => {
+        setTargetOrg(targetOrg[0]);
+        setAlumniInfo(alumniInfo);
+        setSubsequentOrgsInfo(subsequentOrgsInfo);
+        setRelations(relations); // Update state with content from data2.json
+        setLoading(false); // Set loading to false once data is loaded
+      })
       .catch((err) => {
         console.error("Failed to fetch data:", err);
         setError(true);
@@ -77,22 +70,13 @@ function App() {
   // Handler for setting new target organisation
   const handleTargetOrgSelect = (newTargetOrgUuid) => {
     loadData(newTargetOrgUuid)
-      .then(
-        ([
-          targetOrg,
-          alumniInfo,
-          subsequentOrgsInfo,
-          relations,
-        ]) => {
-          console.log('targetOrg', targetOrg)
-          console.log('targetOrg[0]', targetOrg[0])
-          setTargetOrg(targetOrg[0]);
-          setAlumniInfo(alumniInfo);
-          setSubsequentOrgsInfo(subsequentOrgsInfo);
-          setRelations(relations);
-          setLoading(false); // Set loading to false once data is loaded
-        }
-      )
+      .then(([targetOrg, alumniInfo, subsequentOrgsInfo, relations]) => {
+        setTargetOrg(targetOrg[0]);
+        setAlumniInfo(alumniInfo);
+        setSubsequentOrgsInfo(subsequentOrgsInfo);
+        setRelations(relations);
+        setLoading(false); // Set loading to false once data is loaded
+      })
       .catch((err) => {
         console.error("Failed to fetch data:", err);
         setError(true);
@@ -161,7 +145,7 @@ function App() {
           &copy;Johan Torssell
         </p>
         <div style={{ height: "100%" }}>
-          <Footer/>
+          <Footer />
         </div>
       </div>
     </div>
