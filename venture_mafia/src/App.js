@@ -6,24 +6,7 @@ import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
 
 var targetOrgUuid = "96ab87ca-00b5-2ebc-f218-86262954e320"; // Set the default target uuid
-
-// Helper fucntion to import data
-function loadData(targetOrgUuid) {
-  return Promise.all([
-    fetch("/data/targetOrg_" + targetOrgUuid + ".json").then((res) =>
-      res.json()
-    ),
-    fetch("/data/alumniInfo_" + targetOrgUuid + ".json").then((res) =>
-      res.json()
-    ),
-    fetch("/data/subsequentOrgsInfo_" + targetOrgUuid + ".json").then((res) =>
-      res.json()
-    ),
-    fetch("/data/relations_" + targetOrgUuid + ".json").then((res) =>
-      res.json()
-    ),
-  ]);
-}
+const BASE_URL = 'http://localhost:3000';
 
 function App() {
   const [selectedNode, setSelectedNode] = useState(null);
@@ -36,21 +19,29 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  // Helper fucntion to import data
+  async function loadData(targetOrgUuid) {
+    try {
+      var [targetOrg, alumniInfo, subsequentOrgsInfo, relations] = await Promise.all([
+        fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) => res.json()),
+        fetch(`${BASE_URL}/alumni_info/${targetOrgUuid}`).then((res) => res.json()),
+        fetch(`${BASE_URL}/subsequent_orgs_info/${targetOrgUuid}`).then((res) => res.json()),
+        fetch(`${BASE_URL}/relations/${targetOrgUuid}`).then((res) => res.json()),
+      ]);
+      setTargetOrg(targetOrg.data[0]);
+      setAlumniInfo(alumniInfo.data);
+      setSubsequentOrgsInfo(subsequentOrgsInfo.data);
+      setRelations(relations.data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch data:", err);
+      setError(true);
+    }
+  }
+
   useEffect(() => {
     loadData(targetOrgUuid)
-      .then(([targetOrg, alumniInfo, subsequentOrgsInfo, relations]) => {
-        setTargetOrg(targetOrg[0]);
-        setAlumniInfo(alumniInfo);
-        setSubsequentOrgsInfo(subsequentOrgsInfo);
-        setRelations(relations); // Update state with content from data2.json
-        setLoading(false); // Set loading to false once data is loaded
-      })
-      .catch((err) => {
-        console.error("Failed to fetch data:", err);
-        setError(true);
-        setLoading(false);
-      });
-
+  
     if (containerRef.current) {
       setNetworkGraphDimensions({
         width: containerRef.current.offsetWidth,
@@ -70,18 +61,6 @@ function App() {
   // Handler for setting new target organisation
   const handleTargetOrgSelect = (newTargetOrgUuid) => {
     loadData(newTargetOrgUuid)
-      .then(([targetOrg, alumniInfo, subsequentOrgsInfo, relations]) => {
-        setTargetOrg(targetOrg[0]);
-        setAlumniInfo(alumniInfo);
-        setSubsequentOrgsInfo(subsequentOrgsInfo);
-        setRelations(relations);
-        setLoading(false); // Set loading to false once data is loaded
-      })
-      .catch((err) => {
-        console.error("Failed to fetch data:", err);
-        setError(true);
-        setLoading(false);
-      });
 
     if (containerRef.current) {
       setNetworkGraphDimensions({
