@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
 
 var targetOrgUuid = "96ab87ca-00b5-2ebc-f218-86262954e320"; // Set the default target uuid
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = "http://localhost:3000";
 
 function App() {
   const [selectedNode, setSelectedNode] = useState(null);
@@ -22,16 +22,25 @@ function App() {
   // Helper fucntion to import data
   async function loadData(targetOrgUuid) {
     try {
-      var [targetOrg, alumniInfo, subsequentOrgsInfo, relations] = await Promise.all([
-        fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) => res.json()),
-        fetch(`${BASE_URL}/alumni_info/${targetOrgUuid}`).then((res) => res.json()),
-        fetch(`${BASE_URL}/subsequent_orgs_info/${targetOrgUuid}`).then((res) => res.json()),
-        fetch(`${BASE_URL}/relations/${targetOrgUuid}`).then((res) => res.json()),
-      ]);
-      setTargetOrg(targetOrg.data[0]);
-      setAlumniInfo(alumniInfo.data);
-      setSubsequentOrgsInfo(subsequentOrgsInfo.data);
-      setRelations(relations.data);
+      var [targetOrgRaw, alumniInfoRaw, subsequentOrgsInfoRaw, relationsRaw] =
+        await Promise.all([
+          fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) =>
+            res.json()
+          ),
+          fetch(`${BASE_URL}/alumni_info/${targetOrgUuid}`).then((res) =>
+            res.json()
+          ),
+          fetch(`${BASE_URL}/subsequent_orgs_info/${targetOrgUuid}`).then(
+            (res) => res.json()
+          ),
+          fetch(`${BASE_URL}/relations/${targetOrgUuid}`).then((res) =>
+            res.json()
+          ),
+        ]);
+      setTargetOrg(targetOrgRaw.data);
+      setAlumniInfo(alumniInfoRaw.data);
+      setSubsequentOrgsInfo(subsequentOrgsInfoRaw.data);
+      setRelations(relationsRaw.data);
       setLoading(false);
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -40,8 +49,8 @@ function App() {
   }
 
   useEffect(() => {
-    loadData(targetOrgUuid)
-  
+    loadData(targetOrgUuid);
+
     if (containerRef.current) {
       setNetworkGraphDimensions({
         width: containerRef.current.offsetWidth,
@@ -60,7 +69,7 @@ function App() {
 
   // Handler for setting new target organisation
   const handleTargetOrgSelect = (newTargetOrgUuid) => {
-    loadData(newTargetOrgUuid)
+    loadData(newTargetOrgUuid);
 
     if (containerRef.current) {
       setNetworkGraphDimensions({
