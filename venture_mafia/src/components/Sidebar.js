@@ -35,6 +35,20 @@ const options = [
   { value: "1966bb69-4bc9-1077-c181-fe3d67509160", label: "Pobts" },
   { value: "86da6213-5b43-6419-4047-472102ccf66f", label: "LinkedIn" },
   { value: "f5c477fa-6e8c-3d64-4f2d-3603e5cc3340", label: "Salesforce" },
+  { value: "31fc3998-a1f1-2e5b-6358-f8d068fa9f71", label: "Delivery Hero" },
+  { value: "6f7ea63a-f820-733a-702b-82e75d0ac15f", label: "Wimdu" },
+  { value: "70756e51-3859-a1ae-8edb-d7eeaf5ed342", label: "Xing" },
+  { value: "ffd3825c-ac83-fa1e-0d5b-538c08904cb6", label: "Wunderlist" },
+  { value: "04f52814-77e2-b2c9-2d9a-4299dbb62455", label: "Rocket Internet" },
+  { value: "dd92791e-2081-c3fc-f0a1-f1e2633dadcd", label: "dreamfab" },
+  {
+    value: "a6f5492b-1215-6c03-205f-1efb9913f2e2",
+    label: "Infineon Technologies",
+  },
+  { value: "988b8953-a085-8de4-babb-fae5bb895761", label: "Foodpanda" },
+  { value: "36027bbe-4f12-f224-f90f-2ff31c0294af", label: "Team Global" },
+  { value: "0a9eae4d-a269-646c-0cad-cf5b559b74b6", label: "Zalando" },
+  { value: "251270ba-b3b8-6135-ed82-6657e1c8b046", label: "N26" },
 ];
 
 // Helper function to format as USD and abbreviate
