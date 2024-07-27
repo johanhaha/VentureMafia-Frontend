@@ -277,9 +277,7 @@ function NetworkGraph({
           if (i !== j && a.type === "secondary" && b.type === "secondary") {
             // Adjust minDistance based on node sizes
             const adjustedMinDistance =
-              minDistance +
-              (getNodeRadius(a) + getNodeRadius(b)) *
-                1.3;
+              minDistance + (getNodeRadius(a) + getNodeRadius(b)) * 1.3;
             let dx = a.x - b.x;
             let dy = a.y - b.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
@@ -509,20 +507,83 @@ function NetworkGraph({
         d.type === "primary" ? text.contentFocus.color : text.content.color
       );
 
-    // Update primary node text styling
+    // Update primary node text styling, including splitting names into multiple lines
     nodeElements
       .filter((d) => d.type === "primary")
       .select("text")
-      .attr(
-        "dy",
-        nodeElements
-          .filter((d) => d.type === "primary")
-          .node()
-          .getBBox().height /
-          2 +
-          20
-      ) // Offset on the x-axis from the circle center
-      .style("text-anchor", "middle");
+      .each(function () {
+        const text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          dy = parseFloat(text.attr("dy") || 0.35);
+
+        text.text(null); // Clear the text once and manage via tspans
+
+        if (words.length === 1) {
+          let word = words[0];
+          text
+            .append("tspan")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("dy", `${dy}em`)
+            .text(word);
+        } else {
+          let word,
+            line = [],
+            vw = window.innerWidth,
+            scaleWidth = {x: vw * 0.02 + 60, y: vw * 0.02 + 24},
+            tspan = text
+              .append("tspan")
+              .attr("x", (d) => {
+                const angle = Math.atan2(d.y - center.y, d.x - center.x);
+                return Math.cos(angle) * scaleWidth.x;
+              })
+              .attr("y", (d) => {
+                const angle = Math.atan2(d.y - center.y, d.x - center.x);
+                return Math.sin(angle) * scaleWidth.y;
+              })
+              .style("text-anchor", "middle")
+              .attr("dy", `${dy}em`);
+              console.log('x', vw * 0.047)
+              console.log('y', vw * 0.032)
+
+          while (words.length > 0) {
+            word = words.pop();
+            line.push(word);
+            tspan.text(line.join(" ")); // Update text in the existing tspan
+
+            // Append new tspan for the new line
+            if (tspan.node().getComputedTextLength() > 100 && line.length > 1) {
+              line.pop(); // Remove last word that caused overflow
+              tspan.text(line.join(" ")); // Set text to previous valid line
+              line = [word]; // Start new line with last word
+              tspan = text
+                .append("tspan")
+                .attr("x", (d) => {
+                  const angle = Math.atan2(d.y - center.y, d.x - center.x);
+                  return Math.cos(angle) * scaleWidth.x;
+                })
+                .attr("y", (d) => {
+                  const angle = Math.atan2(d.y - center.y, d.x - center.x);
+                  return Math.sin(angle) * scaleWidth.y;
+                })
+                .style("text-anchor", "middle")
+                .text(word);
+            }
+          }
+        }
+
+        // Recalculate dy for each tspan to vertically center them
+        let tspans = text.selectAll("tspan");
+        let lineCount = tspans.size();
+        let lineNumber = 0;
+        tspans.each(function () {
+          d3.select(this).attr(
+            "dy",
+            `${(lineNumber - lineCount / 2 + 0.5) * 1.1 + dy}em`
+          );
+          lineNumber++;
+        });
+      });
 
     // Update secondary node text styling
     nodeElements
