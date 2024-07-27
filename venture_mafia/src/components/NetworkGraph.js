@@ -278,7 +278,7 @@ function NetworkGraph({
             // Adjust minDistance based on node sizes
             const adjustedMinDistance =
               minDistance +
-              (sizeScale(a.totalFundingUsd) + sizeScale(b.totalFundingUsd)) *
+              (getNodeRadius(a) + getNodeRadius(b)) *
                 1.3;
             let dx = a.x - b.x;
             let dy = a.y - b.y;
@@ -483,7 +483,7 @@ function NetworkGraph({
         if (d.type === "primary") {
           return primaryNodeRadius;
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
-          return sizeScale(d.totalFundingUsd); // Dynamic size for secondary nodes based on funding amount
+          return getNodeRadius(d); // Dynamic size for secondary nodes based on funding amount
         } else {
           return 10; // Default size secondary nodes without funding info
         }
