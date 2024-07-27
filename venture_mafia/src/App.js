@@ -12,6 +12,7 @@ function App() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [networkGraphDimensions, setNetworkGraphDimensions] = useState(null); // Used for passing down container dimensions for flex
   const containerRef = useRef(null);
+  const [availableOrgs, setAvailableOrgs] = useState("");
   const [targetOrg, setTargetOrg] = useState("");
   const [alumniInfo, setAlumniInfo] = useState("");
   const [subsequentOrgsInfo, setSubsequentOrgsInfo] = useState("");
@@ -22,8 +23,11 @@ function App() {
   // Helper fucntion to import data
   async function loadData(targetOrgUuid) {
     try {
-      var [targetOrgRaw, alumniInfoRaw, subsequentOrgsInfoRaw, relationsRaw] =
+      var [availableOrgsRaw, targetOrgRaw, alumniInfoRaw, subsequentOrgsInfoRaw, relationsRaw] =
         await Promise.all([
+          fetch(`${BASE_URL}/available_orgs`).then((res) =>
+            res.json()
+          ),
           fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) =>
             res.json()
           ),
@@ -37,6 +41,7 @@ function App() {
             res.json()
           ),
         ]);
+      setAvailableOrgs(availableOrgsRaw.data);
       setTargetOrg(targetOrgRaw.data);
       setAlumniInfo(alumniInfoRaw.data);
       setSubsequentOrgsInfo(subsequentOrgsInfoRaw.data);
@@ -92,6 +97,7 @@ function App() {
         {/* Left panel */}
         <div>
           <Sidebar
+            availableOrgs={availableOrgs}
             targetOrg={targetOrg}
             onTargetOrgSelect={handleTargetOrgSelect}
             selectedNodeData={selectedNode}
