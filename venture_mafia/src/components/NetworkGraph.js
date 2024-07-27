@@ -500,8 +500,8 @@ function NetworkGraph({
       .filter(
         (d) =>
           (d.type === "primary") |
-          (d.type === "secondary" && d.totalFundingUsd > 50000000)
-      ) // Only show text for primary nodes and secondary nodes with $50m+ in funding
+          (d.type === "secondary" && getNodeRadius(d) >= 10)
+      ) // Only show text for primary nodes and secondary nodes with larger than a certain size
       .append("text")
       .text((d) => d.name)
       // .attr("dy", ".35em")
