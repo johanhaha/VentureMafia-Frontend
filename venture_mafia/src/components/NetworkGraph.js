@@ -501,11 +501,21 @@ function NetworkGraph({
           (d.type === "secondary" && getNodeRadius(d) >= 10)
       ) // Only show text for primary nodes and secondary nodes with larger than a certain size
       .append("text")
-      .text((d) => d.name)
-      // .attr("dy", ".35em")
-      .style("fill", (d) =>
-        d.type === "primary" ? text.contentFocus.color : text.content.color
-      );
+      .text((d) => d.name);
+
+    nodeElements
+      .filter((d) => d.type === "primary")
+      .style("font-family", text.contentFocus.fontFamily)
+      .style("font-size", text.contentFocus.fontSize)
+      .style("font-weight", text.contentFocus.fontWeight)
+      .style("fill", text.contentFocus.color);
+
+    nodeElements
+      .filter((d) => d.type === "secondary")
+      .style("font-family", text.content.fontFamily)
+      .style("font-size", text.content.fontSize)
+      .style("font-weight", text.content.fontWeight)
+      .style("fill", text.content.color);
 
     // Update primary node text styling, including splitting names into multiple lines
     nodeElements
@@ -530,7 +540,7 @@ function NetworkGraph({
           let word,
             line = [],
             vw = window.innerWidth,
-            scaleWidth = {x: vw * 0.02 + 60, y: vw * 0.02 + 24},
+            scaleWidth = { x: vw * 0.02 + 65, y: vw * 0.02 + 24 },
             tspan = text
               .append("tspan")
               .attr("x", (d) => {
@@ -543,8 +553,6 @@ function NetworkGraph({
               })
               .style("text-anchor", "middle")
               .attr("dy", `${dy}em`);
-              console.log('x', vw * 0.047)
-              console.log('y', vw * 0.032)
 
           while (words.length > 0) {
             word = words.pop();

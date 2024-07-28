@@ -1,3 +1,5 @@
+import './assets/fonts.css';
+
 export const colours = {
   main: {
     primary1: "hsl(200, 49%, 62%)", // blueish
@@ -39,26 +41,31 @@ export const opacity = {
 
 export const text = {
   header: {
-    fontSize: "32px",
+    fontFamily: "Jura",
+    fontSize: "38px",
     fontWeight: "bold",
     color: colours.neutrals.textFocus,
   },
   subHeader: {
+    fontFamily: "Jura",
     fontSize: "24px",
     fontWeight: "bold",
     color: colours.neutrals.text,
   },
   contentFocus: {
-    fontSize: "14px",
+    fontFamily: "Jura",
+    fontSize: "16px",
     fontWeight: "normal",
     color: colours.neutrals.textFocus,
   },
   content: {
+    fontFamily: "Jura",
     fontSize: "14px",
     fontWeight: "normal",
     color: colours.neutrals.text,
   },
   contentUnfocus: {
+    fontFamily: "Jura",
     fontSize: "14px",
     fontWeight: "normal",
     color: colours.neutrals.textUnfocus,
