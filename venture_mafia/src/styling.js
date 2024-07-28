@@ -20,6 +20,7 @@ export const colours = {
   neutrals: {
     text: "hsl(220, 15%, 20%)",
     textFocus: "hsl(220, 15%, 5%)",
+    textUnfocus: "hsl(220, 15%, 50%)",
     background: "hsl(38, 100%, 93%)",
     background2: "hsl(0, 0%, 45%)",
   },
@@ -56,6 +57,11 @@ export const text = {
     fontSize: "14px",
     fontWeight: "normal",
     color: colours.neutrals.text,
+  },
+  contentUnfocus: {
+    fontSize: "14px",
+    fontWeight: "normal",
+    color: colours.neutrals.textUnfocus,
   },
 };
 

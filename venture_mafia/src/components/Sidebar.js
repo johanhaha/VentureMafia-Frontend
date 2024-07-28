@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { colours, text } from "../styling.js";
 import Select from "react-select";
 import { FontAwesomeIcon } from "../fontAwesome";
+import { Tooltip } from "react-tooltip";
 
 import { ReactComponent as VMlogo } from "../assets/VMlogo.svg";
 
@@ -44,6 +45,7 @@ function Sidebar({
   selectedNodeData,
 }) {
   const [isOrgsLoaded, setIsOrgsLoaded] = useState(false);
+  const [tooltipDefaultOpen, setTooltipDefaultOpen] = useState(true); // Used for only showing the tooltip if the user hasn't picked a company
 
   useEffect(() => {
     if (availableOrgs && availableOrgs.length > 0) {
@@ -111,11 +113,15 @@ function Sidebar({
               <span>The</span>
               <Select
                 options={availableOrgs}
+                classNamePrefix="react-select"
                 isSearchable={true}
                 value={availableOrgs.find(
                   (option) => option.value === targetOrg.orgUuid
                 )}
-                onChange={(selection) => setTargetOrg(selection.value)}
+                onChange={(selection) => {
+                  setTargetOrg(selection.value);
+                  setTooltipDefaultOpen(false); // Default have tooltip closed after user selection
+                }}
                 components={{
                   IndicatorsContainer: () => null,
                 }}
@@ -133,7 +139,7 @@ function Sidebar({
                     boxShadow: "none",
                     backgroundColor: "none",
                     "&:hover": { borderColor: colours.main.primary1 },
-                    minHeight: "initial", // Ensure it matches the line-height of the surrounding text
+                    minHeight: "initial",
                   }),
                   option: (base) => ({
                     ...base,
@@ -166,6 +172,18 @@ function Sidebar({
                     primary50: colours.main.secondary1,
                   },
                 })}
+              />
+              <Tooltip
+                anchorSelect=".react-select__control"
+                content="Select company here!"
+                border="1px solid grey"
+                defaultIsOpen={tooltipDefaultOpen}
+                style={{
+                  padding: "7px",
+                  backgroundColor: "transparent",
+                  borderRadius: "10px",
+                  ...text.contentUnfocus,
+                }}
               />
               <span>Mafia</span>
             </h1>
