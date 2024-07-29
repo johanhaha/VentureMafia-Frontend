@@ -60,6 +60,7 @@ function NetworkGraph({
 
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(false);
+  const simulationRef = useRef(null);
 
   useEffect(() => {
     if (!alumniInfo || !subsequentOrgsInfo || !relations) {
@@ -87,7 +88,14 @@ function NetworkGraph({
       return;
     }
 
+    console.log("clearing");
     d3.select(d3Container.current).selectAll("*").remove(); // Clear before rendeting to avoid multiple graphs
+
+    // Stop simulation when reloading
+    if (simulationRef.current) {
+      console.log("stopping simulation");
+      simulationRef.current.stop();
+    }
 
     var primaryNodeRadius = "min(2vw, 50px)",
       mafiaRadius =
@@ -338,6 +346,8 @@ function NetworkGraph({
       )
       .force("secondaryNodes", forceSecondaryNodes)
       .force("forceTowardsCenter", forceTowardsCenter);
+
+    simulationRef.current = simulation; // Store the simulation reference to stop simulation when needed
 
     const defs = svg.append("defs");
 
