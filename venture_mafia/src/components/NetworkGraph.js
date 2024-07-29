@@ -49,7 +49,6 @@ const getTargetId = (link) => {
 };
 
 function NetworkGraph({
-  targetOrg,
   alumniInfo,
   subsequentOrgsInfo,
   relations,

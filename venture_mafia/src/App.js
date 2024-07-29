@@ -107,7 +107,6 @@ function App() {
         <div ref={containerRef}>
           {networkGraphDimensions ? ( // Checks if networkGraphDimensions has been set to ensure proper size of graph
             <NetworkGraph
-              targetOrg={targetOrg}
               alumniInfo={alumniInfo}
               subsequentOrgsInfo={subsequentOrgsInfo}
               relations={relations}
