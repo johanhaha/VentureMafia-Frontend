@@ -78,7 +78,7 @@ function Sidebar({
           stroke: colours.main.primary1,
           width: "60%",
           height: "auto",
-          marginBottom: "2vw",
+          marginBottom: "3vw",
         }}
       />
 
