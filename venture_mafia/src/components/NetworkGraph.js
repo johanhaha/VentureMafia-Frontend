@@ -86,13 +86,10 @@ function NetworkGraph({
       d3.select(d3Container.current).selectAll("*").remove(); // Clear graph
       return;
     }
-
-    console.log("clearing");
     d3.select(d3Container.current).selectAll("*").remove(); // Clear before rendeting to avoid multiple graphs
 
     // Stop simulation when reloading
     if (simulationRef.current) {
-      console.log("stopping simulation");
       simulationRef.current.stop();
     }
 
@@ -110,53 +107,52 @@ function NetworkGraph({
       angleStep = (2 * Math.PI) / primaryNodes.length,
       center = { x: 0, y: 0 }; // Placeholder value
 
-    const nodeMap = new Map(data.nodes.map((node) => [node.id, node])); // Map with all nodes
-    let secondaryToPrimaryMap = new Map(); // Mapping between secondary and primary nodes to calculate number of common nodes
-    let commonConnectionsScore = new Map(); // Map of the number of common secondary nodes between primary nodes
-
-    // Go through each link to count connections for primary nodes
-    data.links.forEach((link) => {
-      let sourceId = getSourceId(link);
-      let targetId = getTargetId(link);
-      let sourceNode = nodeMap.get(sourceId);
-      let targetNode = nodeMap.get(targetId);
-
-      // Since primary nodes can't connect to other primary nodes, only one check is needed
-      if (sourceNode.type === "primary" && targetNode.type === "secondary") {
-        if (!secondaryToPrimaryMap.has(targetId)) {
-          secondaryToPrimaryMap.set(targetId, new Set());
-        }
-        secondaryToPrimaryMap.get(targetId).add(sourceId);
-      }
-    });
-
-    // Initialise score map
-    primaryNodes.forEach((node) => commonConnectionsScore.set(node.id, 0));
-
-    // Calculate the score based on common secondary connections
-    primaryNodes.forEach((nodeA, indexA) => {
-      primaryNodes.forEach((nodeB, indexB) => {
-        if (indexA !== indexB) {
-          let sharedConnections = 0;
-          secondaryToPrimaryMap.forEach((primaryIds, secondaryId) => {
-            if (primaryIds.has(nodeA.id) && primaryIds.has(nodeB.id)) {
-              sharedConnections += 1; // Increment if both primary nodes are connected to the same secondary node
-            }
-          });
-          commonConnectionsScore.set(
-            nodeA.id,
-            commonConnectionsScore.get(nodeA.id) + sharedConnections
-          );
-        }
+    const calculateNodeDegree = (nodes, links) => {
+      const degreeMap = {};
+      nodes.forEach((node) => {
+        degreeMap[node.id] = 0;
       });
-    });
+      links.forEach((link) => {
+        degreeMap[link.source] = (degreeMap[link.source] || 0) + 1;
+        degreeMap[link.target] = (degreeMap[link.target] || 0) + 1;
+      });
+      return degreeMap;
+    };
 
-    // Sort nodes based on number of common connections
-    primaryNodes.sort((a, b) => {
-      return (
-        commonConnectionsScore.get(b.id) - commonConnectionsScore.get(a.id)
+    const sortNodesByDegree = (nodes, degreeMap) => {
+      return nodes.sort((a, b) => degreeMap[b.id] - degreeMap[a.id]);
+    };
+
+    // Evenly distribute the nodes in the list based on degree
+    function reorderNodes(nodes, numBins) {
+      // Calculate the size of each bin
+      const binSize = Math.ceil(nodes.length / numBins);
+      let bins = Array.from({ length: numBins }, (_, index) =>
+        nodes.slice(index * binSize, (index + 1) * binSize)
       );
-    });
+
+      // Create a new array by alternating between the bins
+      let reorderedArray = [];
+      for (let i = 0; i < binSize; i++) {
+        for (let j = 0; j < numBins; j++) {
+          if (j % 2 === 0 && i < bins[j].length) {
+            reorderedArray.push(bins[j][i]);
+          } else if (j % 2 !== 0 && i < bins[j].length) {
+            reorderedArray.push(bins[j][bins[j].length - 1 - i]);
+          }
+        }
+      }
+
+      return reorderedArray;
+    }
+
+    // Evenly distribute the nodes in the list based on degree
+    const degreeMap = calculateNodeDegree(primaryNodes, data.links);
+    const sortedNodes = sortNodesByDegree(primaryNodes, degreeMap);
+    primaryNodes = reorderNodes(
+      sortedNodes,
+      Math.ceil(primaryNodes.length / 6)
+    );
 
     const fundingExtent = d3.extent(
       data.nodes
