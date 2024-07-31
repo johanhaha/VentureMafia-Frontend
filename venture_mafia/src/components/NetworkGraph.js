@@ -340,7 +340,8 @@ function NetworkGraph({
           })
       )
       .force("secondaryNodes", forceSecondaryNodes)
-      .force("forceTowardsCenter", forceTowardsCenter);
+      .force("forceTowardsCenter", forceTowardsCenter)
+      .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) * 1.1));
 
     simulationRef.current = simulation; // Store the simulation reference to stop simulation when needed
 
