@@ -273,77 +273,11 @@ function NetworkGraph({
       return sizeScale(node.totalFundingUsd);
     }
 
-    function forceSecondaryNodes(alpha) {
-      const k = alpha * pullStrength;
-      data.nodes.forEach((a, i) => {
-        data.nodes.forEach((b, j) => {
-          if (i !== j && a.type === "secondary" && b.type === "secondary") {
-            // Adjust minDistance based on node sizes
-            const adjustedMinDistance =
-              minDistance + (getNodeRadius(a) + getNodeRadius(b)) * 1.3;
-            let dx = a.x - b.x;
-            let dy = a.y - b.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < adjustedMinDistance) {
-              let strength = ((adjustedMinDistance - distance) / distance) * k;
-              a.vx += dx * strength;
-              a.vy += dy * strength;
-              b.vx -= dx * strength;
-              b.vy -= dy * strength;
-            }
-          }
-        });
-      });
-    }
-
-    function forceTowardsCenter(alpha) {
-      data.nodes.forEach((node) => {
-        if (node.type === "secondary") {
-          node.vx += (center.x - node.x) * alpha * pullStrength * 2;
-          node.vy += (center.y - node.y) * alpha * pullStrength * 2;
-        }
-      });
-    }
-
     const svg = d3
       .select(d3Container.current)
       .append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
-
-    // Simulation setup with all forces
-    const simulation = d3
-      .forceSimulation(data.nodes)
-      .force(
-        "link",
-        d3
-          .forceLink(data.links)
-          .id((d) => d.id)
-          .distance((link) => {
-            // Determine the distance based on the relationType
-            switch (link.relationType) {
-              case "executive":
-                return baseDistance * 1; // Closest distance for executives
-
-              case "board_member":
-                return baseDistance * 2; // Farthest for board members
-
-              case "advisor":
-                return baseDistance * 3; // Slightly farther for advisors
-
-              case "investor":
-                return baseDistance * 4; // Farther for investors
-
-              default:
-                return baseDistance * 4; // Default distance if relationType is unknown
-            }
-          })
-      )
-      .force("secondaryNodes", forceSecondaryNodes)
-      .force("forceTowardsCenter", forceTowardsCenter)
-      .force('collision', d3.forceCollide().radius(d => getNodeRadius(d) * 1.1));
-
-    simulationRef.current = simulation; // Store the simulation reference to stop simulation when needed
 
     const defs = svg.append("defs");
 
@@ -485,12 +419,13 @@ function NetworkGraph({
       .attr("r", (d) => {
         // Set node size
         if (d.type === "primary") {
-          return primaryNodeRadius;
+          d.radius = primaryNodeRadius;
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
-          return getNodeRadius(d); // Dynamic size for secondary nodes based on funding amount
+          d.radius = getNodeRadius(d); // Dynamic size for secondary nodes based on funding amount
         } else {
-          return 10; // Default size secondary nodes without funding info
+          d.radius = 10; // Default size secondary nodes without funding info
         }
+        return d.radius;
       })
       .attr("fill", (d) =>
         d.type === "primary"
@@ -499,12 +434,80 @@ function NetworkGraph({
       ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
+    function forceSecondaryNodes(alpha) {
+      const k = alpha * pullStrength;
+      data.nodes.forEach((a, i) => {
+        data.nodes.forEach((b, j) => {
+          if (i !== j && a.type === "secondary" && b.type === "secondary") {
+            // Adjust minDistance based on node sizes
+            const adjustedMinDistance =
+              minDistance + (a.radius + b.radius) * 1.3;
+            let dx = a.x - b.x;
+            let dy = a.y - b.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < adjustedMinDistance) {
+              let strength = ((adjustedMinDistance - distance) / distance) * k;
+              a.vx += dx * strength;
+              a.vy += dy * strength;
+              b.vx -= dx * strength;
+              b.vy -= dy * strength;
+            }
+          }
+        });
+      });
+    }
+
+    function forceTowardsCenter(alpha) {
+      data.nodes.forEach((node) => {
+        if (node.type === "secondary") {
+          node.vx += (center.x - node.x) * alpha * pullStrength * 2;
+          node.vy += (center.y - node.y) * alpha * pullStrength * 2;
+        }
+      });
+    }
+
+    // Simulation setup with all forces
+    const simulation = d3
+      .forceSimulation(data.nodes)
+      .force(
+        "link",
+        d3
+          .forceLink(data.links)
+          .id((d) => d.id)
+          .distance((link) => {
+            // Determine the distance based on the relationType
+            switch (link.relationType) {
+              case "executive":
+                return baseDistance * 1; // Closest distance for executives
+
+              case "board_member":
+                return baseDistance * 2; // Farthest for board members
+
+              case "advisor":
+                return baseDistance * 3; // Slightly farther for advisors
+
+              case "investor":
+                return baseDistance * 4; // Farther for investors
+
+              default:
+                return baseDistance * 4; // Default distance if relationType is unknown
+            }
+          })
+      )
+      .force("secondaryNodes", forceSecondaryNodes)
+      .force("forceTowardsCenter", forceTowardsCenter)
+      .force(
+        "collision",
+        d3.forceCollide().radius((d) => d.radius * 1.1)
+      );
+
+    simulationRef.current = simulation; // Store the simulation reference to stop simulation when needed
+
     // Append text to nodes and add general styling
     nodeElements
       .filter(
         (d) =>
-          (d.type === "primary") |
-          (d.type === "secondary" && getNodeRadius(d) >= 10)
+          (d.type === "primary") | (d.type === "secondary" && d.radius > 10)
       ) // Only show text for primary nodes and secondary nodes with larger than a certain size
       .append("text")
       .text((d) => d.name);
@@ -604,7 +607,7 @@ function NetworkGraph({
       .filter((d) => d.type === "secondary")
       .select("text")
       .each(function (d) {
-        const nodeRadius = getNodeRadius(d); // Calculate radius dynamically
+        const nodeRadius = d.radius; // Calculate radius dynamically
         const maxWidth = nodeRadius * 2 - 5; // Subtract some padding
         wrapText(d3.select(this), maxWidth);
       })
