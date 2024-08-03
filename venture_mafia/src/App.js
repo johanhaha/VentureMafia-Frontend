@@ -135,7 +135,13 @@ function App() {
             fontSize: "20px",
           }}
         >
-          &copy;Johan Torssell
+          <a
+            href="https://www.linkedin.com/in/johan-torssell/"
+            target="_blank"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            &copy;Johan Torssell
+          </a>
         </p>
         <div style={{ height: "100%" }}>
           <Footer />
