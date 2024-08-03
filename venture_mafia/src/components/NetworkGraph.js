@@ -600,7 +600,9 @@ function NetworkGraph({
           );
           lineNumber++;
         });
-      });
+      })
+      .style("pointer-events", "all")
+      .on("click", clickNode); // Enable click on text
 
     // Update secondary node text styling
     nodeElements
@@ -611,14 +613,14 @@ function NetworkGraph({
         const maxWidth = nodeRadius * 2 - 5; // Subtract some padding
         wrapText(d3.select(this), maxWidth);
       })
-      .style("text-anchor", "middle");
+      .style("text-anchor", "middle")
+      .style("user-select", "none") // Disable click on text
+      .style("pointer-events", "none");
 
     d3.selectAll("text")
-      .style("user-select", "none")
       .style("-webkit-user-select", "none")
       .style("-moz-user-select", "none")
-      .style("-ms-user-select", "none")
-      .style("pointer-events", "none");
+      .style("-ms-user-select", "none");
 
     // Update configurations
     simulation.on("tick", () => {
