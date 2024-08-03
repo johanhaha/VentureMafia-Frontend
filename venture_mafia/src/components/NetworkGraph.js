@@ -166,7 +166,7 @@ function NetworkGraph({
       .exponent(0.45) // Tune this for good secondary node sizes
       .domain(fundingExtent)
       .range([
-        3,
+        3.5,
         Math.min(
           (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
           secondaryNodeRadiusMax
@@ -423,7 +423,7 @@ function NetworkGraph({
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
           d.radius = getNodeRadius(d); // Dynamic size for secondary nodes based on funding amount
         } else {
-          d.radius = 10; // Default size secondary nodes without funding info
+          d.radius = 3; // Default size secondary nodes without funding info
         }
         return d.radius;
       })
