@@ -76,7 +76,7 @@ function Sidebar({
       <VMlogo
         style={{
           stroke: colours.main.primary1,
-          width: "60%",
+          width: "70%",
           height: "auto",
           marginBottom: "3vw",
         }}
