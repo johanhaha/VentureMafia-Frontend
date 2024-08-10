@@ -5,7 +5,7 @@ import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
 
-var targetOrgUuid = "96ab87ca-00b5-2ebc-f218-86262954e320"; // Set the default target uuid
+var targetOrgUuid = "f7a3ff7d-5a7c-71c7-383d-6883b355f8b0"; // Set the default target uuid
 const BASE_URL = "http://localhost:3000";
 
 function App() {
