@@ -639,6 +639,11 @@ function NetworkGraph({
       .style("user-select", "none") // Disable click on text
       .style("pointer-events", "none");
 
+    // Add secondary node aria-label for SEO
+    nodeElements
+      .filter((d) => d.type === "secondary")
+      .attr("aria-label", (d) => d.name);
+
     d3.selectAll("text")
       .style("-webkit-user-select", "none")
       .style("-moz-user-select", "none")
