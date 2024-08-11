@@ -49,6 +49,7 @@ const getTargetId = (link) => {
 };
 
 function NetworkGraph({
+  targetOrg,
   alumniInfo,
   subsequentOrgsInfo,
   relations,
@@ -62,7 +63,7 @@ function NetworkGraph({
   const simulationRef = useRef(null);
 
   useEffect(() => {
-    if (!alumniInfo || !subsequentOrgsInfo || !relations) {
+    if (!targetOrg || !alumniInfo || !subsequentOrgsInfo || !relations) {
       console.log("Waiting for data...");
       return; // Early return if data is not available
     }
@@ -79,7 +80,7 @@ function NetworkGraph({
       console.error("Error processing data (NetworkGraph):", error);
       setError(true);
     }
-  }, [alumniInfo, subsequentOrgsInfo, relations]); // Depend on these data pieces
+  }, [targetOrg, alumniInfo, subsequentOrgsInfo, relations]); // Depend on these data pieces
 
   useEffect(() => {
     if (!d3Container.current || !data || data.nodes.length === 0) {
@@ -277,7 +278,21 @@ function NetworkGraph({
       .select(d3Container.current)
       .append("svg")
       .attr("width", "100%")
-      .attr("height", "100%");
+      .attr("height", "100%")
+      .attr("role", "img") // For SEO
+      .attr(
+        "aria-label",
+        "Network graph of successful startup alumni networks"
+      ); // For SEO
+
+    svg
+      .append("title")
+      .text("Interactive Network Graph of Startup Alumni Networks");
+    svg
+      .append("desc")
+      .text(
+        "This network graph illustrates the founders and early executives of successful startups and the companies they have subsequently started, worked at, invested in, advised, or served on the board of. It includes the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia with people such as Elon Musk, Peter Thiel, Reid Hoffman, and Niklas Zennström."
+      );
 
     const defs = svg.append("defs");
 
@@ -588,6 +603,13 @@ function NetworkGraph({
             }
           }
         }
+
+        // Add primary node aria-label for SEO
+        nodeElements
+          .filter((d) => d.type === "primary")
+          .attr("aria-label", (d) => {
+            return `${d.name}, ${d.jobTitle}, ${targetOrg.orgName}`;
+          });
 
         // Recalculate dy for each tspan to vertically center them
         let tspans = text.selectAll("tspan");
