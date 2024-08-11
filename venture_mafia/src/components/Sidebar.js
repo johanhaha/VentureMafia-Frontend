@@ -80,6 +80,7 @@ function Sidebar({
           height: "auto",
           marginBottom: "3vw",
         }}
+        alt="Venture Mafia logo"
       />
 
       {!selectedNodeData && (
@@ -94,7 +95,7 @@ function Sidebar({
           >
             <img
               src={targetOrg.orgLogoUrl}
-              alt={targetOrg.orgName + " logo"}
+              alt={`${targetOrg.orgName} logo`}
               style={{
                 width: "90px",
                 height: "90px",
@@ -109,6 +110,8 @@ function Sidebar({
                 display: "flex",
                 alignItems: "center",
               }}
+              alt={`The ${targetOrg.orgName} Mafia`}
+              aria-label={`The ${targetOrg.orgName} Mafia`}
             >
               <span>The</span>
               <Select
@@ -172,6 +175,7 @@ function Sidebar({
                     primary50: colours.main.secondary1,
                   },
                 })}
+                aria-label={`Venture Mafia selector, options include ${availableOrgs.map(org => org.label).join(', ')}`}
               />
               <Tooltip
                 anchorSelect=".react-select__control"
@@ -229,7 +233,7 @@ function Sidebar({
             {selectedNodeData.personLogoUrl && (
               <img
                 src={selectedNodeData.personLogoUrl}
-                alt={selectedNodeData.name + " logo"}
+                alt={`${selectedNodeData.name} profile picture`}
                 style={{
                   width: "90px",
                   height: "90px",
@@ -289,7 +293,7 @@ function Sidebar({
             {selectedNodeData.orgLogoUrl && (
               <img
                 src={selectedNodeData.orgLogoUrl}
-                alt={selectedNodeData.name + " logo"}
+                alt={`${selectedNodeData.name} logo`}
                 style={{
                   maxWidth: "12vw",
                   maxHeight: "90px",
