@@ -280,19 +280,11 @@ function NetworkGraph({
       .attr("width", "100%")
       .attr("height", "100%")
       .attr("role", "img") // For SEO
+      .attr("aria-label", "Network graph of successful startup alumni networks")
       .attr(
-        "aria-label",
-        "Network graph of successful startup alumni networks"
-      ); // For SEO
-
-    svg
-      .append("title")
-      .text("Interactive Network Graph of Startup Alumni Networks");
-    svg
-      .append("desc")
-      .text(
+        "desc",
         "This network graph illustrates the founders and early executives of successful startups and the companies they have subsequently started, worked at, invested in, advised, or served on the board of. It includes the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia with people such as Elon Musk, Peter Thiel, Reid Hoffman, and Niklas Zennström."
-      );
+      ); // For SEO
 
     const defs = svg.append("defs");
 
