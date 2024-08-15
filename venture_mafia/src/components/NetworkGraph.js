@@ -100,10 +100,6 @@ function NetworkGraph({
           ? (networkGraphDimensions.height * 0.8) / 2
           : (networkGraphDimensions.width * 0.8) / 2, // Radius based on parent container dimensions
       pullStrength = 0.1, // Increase to make forces stronger
-      baseDistance = (networkGraphDimensions.width * 5) / 100, // Base distance between primary and secondary nodes
-      minDistance = Math.min(
-        (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100
-      ), // Minimum desired distance between secondary nodes
       primaryNodes = data.nodes.filter((d) => d.type === "primary"),
       angleStep = (2 * Math.PI) / primaryNodes.length,
       center = { x: 0, y: 0 }; // Placeholder value
@@ -188,6 +184,14 @@ function NetworkGraph({
     primaryNodes.forEach((d, i) => {
       d.fx = center.x + mafiaRadius * Math.cos(i * angleStep);
       d.fy = center.y + mafiaRadius * Math.sin(i * angleStep);
+    });
+
+    // Make secondary nodes start in the center for a nice entry simulation
+    data.nodes.forEach((node) => {
+      if (node.type === "secondary") {
+        node.x = center.x;
+        node.y = center.y;
+      }
     });
 
     let linkedByIndex = {};
