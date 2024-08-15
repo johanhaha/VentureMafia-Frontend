@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { colours, opacity, text } from "../styling.js";
 import farUserIcon from "../assets/farUserIcon.svg";
 
-const secondaryNodeRadiusFlex = 4, // Stated in vw
+const secondaryNodeRadiusFlex = 2.3, // Stated in vw
   secondaryNodeRadiusMax = 50;
 
 // Combining datasets and mapping them to the correct attribute names
@@ -441,34 +441,11 @@ function NetworkGraph({
       ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
-    function forceSecondaryNodes(alpha) {
-      const k = alpha * pullStrength;
-      data.nodes.forEach((a, i) => {
-        data.nodes.forEach((b, j) => {
-          if (i !== j && a.type === "secondary" && b.type === "secondary") {
-            // Adjust minDistance based on node sizes
-            const adjustedMinDistance =
-              minDistance + (a.radius + b.radius) * 1.3;
-            let dx = a.x - b.x;
-            let dy = a.y - b.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < adjustedMinDistance) {
-              let strength = ((adjustedMinDistance - distance) / distance) * k;
-              a.vx += dx * strength;
-              a.vy += dy * strength;
-              b.vx -= dx * strength;
-              b.vy -= dy * strength;
-            }
-          }
-        });
-      });
-    }
-
     function forceTowardsCenter(alpha) {
       data.nodes.forEach((node) => {
         if (node.type === "secondary") {
-          node.vx += (center.x - node.x) * alpha * pullStrength * 2;
-          node.vy += (center.y - node.y) * alpha * pullStrength * 2;
+          node.vx += (center.x - node.x) * alpha * pullStrength * 10;
+          node.vy += (center.y - node.y) * alpha * pullStrength * 10;
         }
       });
     }
@@ -478,35 +455,19 @@ function NetworkGraph({
       .forceSimulation(data.nodes)
       .force(
         "link",
-        d3
-          .forceLink(data.links)
-          .id((d) => d.id)
-          .distance((link) => {
-            // Determine the distance based on the relationType
-            switch (link.relationType) {
-              case "executive":
-                return baseDistance * 1; // Closest distance for executives
-
-              case "board_member":
-                return baseDistance * 2; // Farthest for board members
-
-              case "advisor":
-                return baseDistance * 3; // Slightly farther for advisors
-
-              case "investor":
-                return baseDistance * 4; // Farther for investors
-
-              default:
-                return baseDistance * 4; // Default distance if relationType is unknown
-            }
-          })
+        d3.forceLink(data.links).id((d) => d.id)
       )
-      .force("secondaryNodes", forceSecondaryNodes)
       .force("forceTowardsCenter", forceTowardsCenter)
+      .force("charge", d3.forceManyBody().strength(-20))
       .force(
         "collision",
-        d3.forceCollide().radius((d) => d.radius * 1.1)
-      );
+        d3.forceCollide().radius((d) => d.radius * 1.8)
+      )
+      .alphaDecay(0.09)
+      .alphaTarget(0.001)
+      .alpha(0.1)
+      .velocityDecay(0.4)
+      .alphaMin(0.0010001);
 
     simulationRef.current = simulation; // Store the simulation reference to stop simulation when needed
 
@@ -643,6 +604,7 @@ function NetworkGraph({
 
     // Update configurations
     simulation.on("tick", () => {
+      nodeElements.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
       linkElements
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
