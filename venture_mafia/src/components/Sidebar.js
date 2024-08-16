@@ -34,7 +34,7 @@ function formatToUSD(value) {
 function epochToDate(epoch) {
   return new Date(epoch).toLocaleDateString("en-US", {
     year: "numeric",
-    month: "long",
+    // month: "long",
   });
 }
 
@@ -211,7 +211,7 @@ function Sidebar({
           {/* Display acquisition info */}
           {targetOrg.exitType === "acquisition" && targetOrg.exitDate && (
             <div style={text.content}>
-              {targetOrg.orgName} was acquired on{" "}
+              {targetOrg.orgName} was acquired {" "}
               {epochToDate(targetOrg.exitDate)} by {targetOrg.acquirerName}
               {targetOrg.exitValuation &&
                 " for " + formatToUSD(targetOrg.exitValuation)}
