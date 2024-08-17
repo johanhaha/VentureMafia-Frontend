@@ -25,5 +25,5 @@ COPY --from=build /usr/src/app/build /usr/share/nginx/html
 # Expose port 8080
 EXPOSE 8080
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start Nginx and set it to listen on port 8080
+CMD ["sh", "-c", "sed -i 's/listen  .*/listen 8080;/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
