@@ -19,11 +19,14 @@ RUN npm run build
 # Use a lightweight web server to serve the static files
 FROM nginx:alpine
 
-# Copy the build output to the Nginx public directory
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
+# Copy the public directory to the Nginx directory
+COPY public /usr/share/nginx/html/public
+
+# Copy the custom Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 8080
 EXPOSE 8080
 
-# Override default Nginx configuration to listen on the PORT
-CMD ["sh", "-c", "sed -i 's/listen  .*/listen ${PORT};/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
