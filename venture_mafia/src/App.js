@@ -139,6 +139,7 @@ function App() {
           <a
             href="https://www.linkedin.com/in/johan-torssell/"
             target="_blank"
+            rel="noreferrer"
             style={{ textDecoration: "none", color: "inherit" }}
           >
             &copy;Johan Torssell
