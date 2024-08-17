@@ -6,7 +6,7 @@ import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
 
 var targetOrgUuid = "f7a3ff7d-5a7c-71c7-383d-6883b355f8b0"; // Set the default target uuid
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 function App() {
   const [selectedNode, setSelectedNode] = useState(null);
