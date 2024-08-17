@@ -94,7 +94,7 @@ function NetworkGraph({
       simulationRef.current.stop();
     }
 
-    var primaryNodeRadius = "min(2vw, 50px)",
+    let primaryNodeRadius = "min(2vw, 50px)",
       mafiaRadius =
         networkGraphDimensions.height <= networkGraphDimensions.width
           ? (networkGraphDimensions.height * 0.8) / 2
@@ -547,10 +547,12 @@ function NetworkGraph({
               line = [word]; // Start new line with last word
               tspan = text
                 .append("tspan")
+                // eslint-disable-next-line no-loop-func
                 .attr("x", (d) => {
                   const angle = Math.atan2(d.y - center.y, d.x - center.x);
                   return Math.cos(angle) * scaleWidth.x;
                 })
+                // eslint-disable-next-line no-loop-func
                 .attr("y", (d) => {
                   const angle = Math.atan2(d.y - center.y, d.x - center.x);
                   return Math.sin(angle) * scaleWidth.y;
@@ -620,6 +622,7 @@ function NetworkGraph({
 
     // Updates SVG size based on window size
     window.addEventListener("resize", resize);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, networkGraphDimensions]); // Ensures effect is only run on mount and unmount
 
   if (error) {

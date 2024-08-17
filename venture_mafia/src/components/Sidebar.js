@@ -231,6 +231,7 @@ function Sidebar({
             }}
           >
             {selectedNodeData.personLogoUrl && (
+              // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
                 src={selectedNodeData.personLogoUrl}
                 alt={`${selectedNodeData.name} profile picture`}

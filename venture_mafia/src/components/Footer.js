@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { colours, text } from "../styling.js";
 
 function Footer() {
