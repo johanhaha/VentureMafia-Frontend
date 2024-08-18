@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e055fac4.css",
+    "main.js": "/static/js/main.3439dca2.js",
+    "static/js/453.c6ea4e76.chunk.js": "/static/js/453.c6ea4e76.chunk.js",
+    "static/media/Jura-VariableFont_wght.ttf": "/static/media/Jura-VariableFont_wght.f4ba69633efd54401550.ttf",
+    "static/media/VMlogo.svg": "/static/media/VMlogo.9e3830deed808406471e5c84b2c3f731.svg",
+    "index.html": "/index.html",
+    "static/media/farUserIcon.svg": "/static/media/farUserIcon.6068ca9bf11e0efb606d7b3ee1b70ed0.svg",
+    "main.e055fac4.css.map": "/static/css/main.e055fac4.css.map",
+    "main.3439dca2.js.map": "/static/js/main.3439dca2.js.map",
+    "453.c6ea4e76.chunk.js.map": "/static/js/453.c6ea4e76.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e055fac4.css",
+    "static/js/main.3439dca2.js"
+  ]
+}
