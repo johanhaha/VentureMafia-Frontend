@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import { logEvent } from "../firebase.js";
 import { colours, opacity, text } from "../styling.js";
 import farUserIcon from "../assets/farUserIcon.svg";
 
@@ -55,6 +56,7 @@ function NetworkGraph({
   relations,
   onNodeSelect,
   networkGraphDimensions,
+  analytics,
 }) {
   const d3Container = useRef(null);
 
@@ -410,6 +412,12 @@ function NetworkGraph({
         }
       });
       event.stopPropagation();
+
+      logEvent(analytics, "node_select", {
+        item_id: clickedNode.id,
+        item_name: clickedNode.name,
+        item_variant: clickedNode.type,
+      }); // Log selected nodes
     }
 
     // Event listener and handler for deselecting nodes. Resets styling

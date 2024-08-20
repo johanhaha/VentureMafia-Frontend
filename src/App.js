@@ -115,6 +115,7 @@ function App() {
               relations={relations}
               onNodeSelect={handleNodeSelect}
               networkGraphDimensions={networkGraphDimensions}
+              analytics={analytics}
             />
           ) : (
             <div> Loading graph... </div>
