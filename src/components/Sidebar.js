@@ -61,6 +61,7 @@ function Sidebar({
     setTooltipDefaultOpen(false); // Default have tooltip closed after user selection
 
     logEvent(analytics, "dropdown_item_select", {
+      item_id: selection.value,
       item_name: selection.label,
       dropdown_name: "target_org_selector",
     }); // Log which item was selected
