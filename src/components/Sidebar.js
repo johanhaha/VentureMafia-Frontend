@@ -3,6 +3,7 @@ import { colours, text } from "../styling.js";
 import Select from "react-select";
 import { FontAwesomeIcon } from "../fontAwesome";
 import { Tooltip } from "react-tooltip";
+import { logEvent } from "../firebase.js";
 
 import { ReactComponent as VMlogo } from "../assets/VMlogo.svg";
 
@@ -43,6 +44,7 @@ function Sidebar({
   targetOrg,
   onTargetOrgSelect,
   selectedNodeData,
+  analytics,
 }) {
   const [isOrgsLoaded, setIsOrgsLoaded] = useState(false);
   const [tooltipDefaultOpen, setTooltipDefaultOpen] = useState(true); // Used for only showing the tooltip if the user hasn't picked a company
@@ -54,8 +56,14 @@ function Sidebar({
   }, [availableOrgs]);
 
   // Callback function to set tartget organisation
-  function setTargetOrg(newTargetOrgUuid) {
-    onTargetOrgSelect(newTargetOrgUuid);
+  function handleTargetOrgSelection(selection) {
+    onTargetOrgSelect(selection.value);
+    setTooltipDefaultOpen(false); // Default have tooltip closed after user selection
+
+    logEvent(analytics, "dropdown_item_select", {
+      item_name: selection.label,
+      dropdown_name: "target_org_selector",
+    }); // Log which item was selected
   }
 
   if (!isOrgsLoaded) {
@@ -122,8 +130,12 @@ function Sidebar({
                   (option) => option.value === targetOrg.orgUuid
                 )}
                 onChange={(selection) => {
-                  setTargetOrg(selection.value);
-                  setTooltipDefaultOpen(false); // Default have tooltip closed after user selection
+                  handleTargetOrgSelection(selection);
+                }}
+                onMenuOpen={() => {
+                  logEvent(analytics, "dropdown_press", {
+                    dropdown_name: "target_org_selector",
+                  }); // Log that the dropdown was pressed
                 }}
                 components={{
                   IndicatorsContainer: () => null,
@@ -175,7 +187,9 @@ function Sidebar({
                     primary50: colours.main.secondary1,
                   },
                 })}
-                aria-label={`Venture Mafia selector, options include ${availableOrgs.map(org => org.label).join(', ')}`}
+                aria-label={`Venture Mafia selector, options include ${availableOrgs
+                  .map((org) => org.label)
+                  .join(", ")}`}
               />
               <Tooltip
                 anchorSelect=".react-select__control"
@@ -211,8 +225,8 @@ function Sidebar({
           {/* Display acquisition info */}
           {targetOrg.exitType === "acquisition" && targetOrg.exitDate && (
             <div style={text.content}>
-              {targetOrg.orgName} was acquired {" "}
-              {epochToDate(targetOrg.exitDate)} by {targetOrg.acquirerName}
+              {targetOrg.orgName} was acquired {epochToDate(targetOrg.exitDate)}{" "}
+              by {targetOrg.acquirerName}
               {targetOrg.exitValuation &&
                 " for " + formatToUSD(targetOrg.exitValuation)}
             </div>

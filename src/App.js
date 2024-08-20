@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { colours, text } from "./styling.js";
+import { analytics } from "./firebase.js";
 import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
@@ -101,6 +102,7 @@ function App() {
             targetOrg={targetOrg}
             onTargetOrgSelect={handleTargetOrgSelect}
             selectedNodeData={selectedNode}
+            analytics={analytics}
           />
         </div>
         {/* NetworkGraph */}
