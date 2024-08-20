@@ -1,15 +1,16 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Venture Mafia",
+  "name": "Venture Mafia",
   "icons": [
     {
-      "src": "https://ffce7c96f560f2b7d9080de0df7becdfd121ea09bc74c99a73c03e8-apidata.googleusercontent.com/download/storage/v1/b/venturemafia_assets/o/VMicon.png?jk=AXZI6JxOp7Qm8nJsm7FUWlk5ZKFXTDq8WCwMjofCOyGNVKzuJRfiQpEzQCm4A5bDPcXC5cNSuSjgcUjgEjJBpf4rVfYI3b6uzdqZPV1yzUnEu7_sruGGp2qfaIUB9yoDe2e5-W7ZuN5qhXUVBXFum0_njcrw2mzvFuRoXGHP1DOFbMGFcC4FwqUxIrPGc3B2VYIkgCqDq7hSY4nhV2AD0xDOOcG3OTx-jUYiGadnlBMkwBvfh1vBAPytcLG0wQ9IE4KhsggJczN8Nkxp8hHJJryuLKu5MSj05YyhQovoMnJZa1kv4_bCYabsG6kvyQBwLpIqYpC_2x-vQJmgVai2mBMTDPtXzZ8aoax6i8KkOEoAwgRET_KG339Oztew6olRt4S92zocj1qiJq8-YLMbw3DW3AWolAi0gqdY2lNiPnvHOojSls5NZgUXomK-IU9d2tLq9JW0ufTn-yM-D8cHd2blXWqANjtqX4wQFcQGjl49L3OhJbo0-Y-HP3EngmHF9Q04bKk9rzUv3Caq3v-DD0Z--cpI7TdvvMO_Zbfqp1HWTKmhYu96o_y9j7VBCViJTSMqYhkXgmc6J3uv_vxqDvoDL8bYe_TvbEtVNTCnUOavzexUUkUTRucsFZdMuVBrQKDdeHGLutO-n_3eTaVFENtcqqBE5Ljyn6rwSTv0NtNcHdqfy1bzPPm4KFpaXuUQnp-VKc1nC2qA7Rn10GIo0X03TTkcurLzChLK9-zyxSWRdRoQQR9mwARfUqTt61MI73nNPqCTa-F7ogDRX2hD5ZqxXYGXL7IYwnT1KCgQWubgichaFOrx3eTPdh1q-2W2vITmMR2wqqNMekemtPPFU1aFrN9KBrR8b8ekdYfiB7-qXHoI3e5DRn0j5GfRt30OOUaHm7ig_Bplele1ZIVGA5WEooR9oFcofuKTGenatQ3BqFou-9EaSOU9cjjR5hvkyloWXyx5ZbdWQYH877XQPVxryOVFZlreQ5Ynqi35r2fi3uFWH8-IFsPT082umUs5Vd8fa3h75BRDMAaWw9A8rb0g_-1RaXngs93Zk9lZylLVQ_MgE8dgrqs68P230_po71wj--bvSbrK0eFiyFEUb0kGmuib8p4aY9mdsGO7Xqj4YcWPUicGyA&isca=1",
+      "src": "/VMicon.png",
       "type": "image/png",
       "sizes": "64x64 32x32 24x24 16x16"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "hsl(200, 49%, 62%)",
+  "background_color": "hsl(38, 100%, 93%)",
+  "description": "Explore the networks of founders and early executives from various successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
 }
