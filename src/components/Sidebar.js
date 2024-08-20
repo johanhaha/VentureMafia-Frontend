@@ -107,7 +107,7 @@ function Sidebar({
               style={{
                 width: "90px",
                 height: "90px",
-                objectFit: "cover",
+                objectFit: "contain",
                 borderRadius: "45px",
                 marginRight: "20px",
               }}
