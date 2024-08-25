@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { colours, text } from "./styling.js";
-import { analytics } from "./firebase.js";
+import { analytics, logEvent } from "./firebase.js";
 import NetworkGraph from "./components/NetworkGraph.js";
 import Sidebar from "./components/Sidebar.js";
 import Footer from "./components/Footer.js";
@@ -144,6 +144,9 @@ function App() {
             target="_blank"
             rel="noreferrer"
             style={{ textDecoration: "none", color: "inherit" }}
+            onClick={(event) => {
+              logEvent(analytics, "johan_linkedin_click"); // Log click to LinkedIn profile
+            }}
           >
             &copy;Johan Torssell
           </a>
