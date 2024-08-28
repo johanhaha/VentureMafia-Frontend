@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import DropdownTargetOrg from "./DropdownTargetOrg.js";
 import Tooltip from "./Tooltip.js";
-import { analytics, logEvent } from "../firebase.js";
-import { text } from "../styling.js";
+import { analytics, logEvent } from "../../firebase.js";
+import { text } from "../../styling.js";
 
 function TitleTargetOrg({ availableOrgs, targetOrg, onTargetOrgSelect }) {
   const [tooltipDefaultOpen, setTooltipDefaultOpen] = useState(true); // Used for only showing the tooltip if the user hasn't picked a company

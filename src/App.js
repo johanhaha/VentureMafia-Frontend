@@ -3,7 +3,7 @@ import "./App.css";
 import { colours, text } from "./styling.js";
 import { analytics, logEvent } from "./firebase.js";
 import NetworkGraph from "./components/NetworkGraph.js";
-import Sidebar from "./components/Sidebar.js";
+import Sidebar from "./components/Sidebar/Sidebar.js";
 import Footer from "./components/Footer.js";
 
 var targetOrgUuid = "f7a3ff7d-5a7c-71c7-383d-6883b355f8b0"; // Set the default target uuid

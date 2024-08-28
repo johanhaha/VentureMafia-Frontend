@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "react-select";
-import { colours } from "../styling.js";
-import { analytics, logEvent } from "../firebase.js";
+import { colours } from "../../styling.js";
+import { analytics, logEvent } from "../../firebase.js";
 
 function DropdownTargetOrg({ availableOrgs, targetOrg, handleTargetOrgSelection }) {
   return (

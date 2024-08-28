@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TitleTargetOrg from "./TitleTargetOrg.js"
-import { colours, text } from "../styling.js";
-import { FontAwesomeIcon } from "../fontAwesome";
-
-import { ReactComponent as VMlogo } from "../assets/VMlogo.svg";
+import { colours, text } from "../../styling.js";
+import { FontAwesomeIcon } from "../../fontAwesome.js";
+import { ReactComponent as VMlogo } from "../../assets/VMlogo.svg";
 
 // Helper function to format as USD and abbreviate
 function formatToUSD(value) {
