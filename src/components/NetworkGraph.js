@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { logEvent } from "../firebase.js";
+import { analytics, logEvent } from "../firebase.js";
 import { colours, opacity, text } from "../styling.js";
 import farUserIcon from "../assets/farUserIcon.svg";
 
@@ -56,7 +56,6 @@ function NetworkGraph({
   relations,
   onNodeSelect,
   networkGraphDimensions,
-  analytics,
 }) {
   const d3Container = useRef(null);
 

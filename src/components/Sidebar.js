@@ -42,7 +42,6 @@ function Sidebar({
   targetOrg,
   onTargetOrgSelect,
   selectedNodeData,
-  analytics,
 }) {
   const [isOrgsLoaded, setIsOrgsLoaded] = useState(false);
 
@@ -102,7 +101,6 @@ function Sidebar({
               availableOrgs={availableOrgs}
               targetOrg={targetOrg}
               onTargetOrgSelect={onTargetOrgSelect}
-              analytics={analytics}
             />
           </div>
           <p style={text.contentFocus}>{targetOrg.shortDescription}</p>

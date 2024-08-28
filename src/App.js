@@ -102,7 +102,6 @@ function App() {
             targetOrg={targetOrg}
             onTargetOrgSelect={handleTargetOrgSelect}
             selectedNodeData={selectedNode}
-            analytics={analytics}
           />
         </div>
         {/* NetworkGraph */}
@@ -115,7 +114,6 @@ function App() {
               relations={relations}
               onNodeSelect={handleNodeSelect}
               networkGraphDimensions={networkGraphDimensions}
-              analytics={analytics}
             />
           ) : (
             <div> Loading graph... </div>
