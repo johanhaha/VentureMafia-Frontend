@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { text } from "../styling.js";
 import DropdownTargetOrg from "./DropdownTargetOrg.js";
-import { Tooltip } from "react-tooltip";
+import Tooltip from "./Tooltip.js";
 import { analytics, logEvent } from "../firebase.js";
+import { text } from "../styling.js";
 
 function TitleTargetOrg({ availableOrgs, targetOrg, onTargetOrgSelect }) {
   const [tooltipDefaultOpen, setTooltipDefaultOpen] = useState(true); // Used for only showing the tooltip if the user hasn't picked a company
@@ -30,19 +30,12 @@ function TitleTargetOrg({ availableOrgs, targetOrg, onTargetOrgSelect }) {
       aria-label={`The ${targetOrg.orgName} Mafia`}
     >
       <span>The</span>
-      <DropdownTargetOrg availableOrgs={availableOrgs} targetOrg={targetOrg} handleTargetOrgSelection={handleTargetOrgSelection} />
-      <Tooltip
-        anchorSelect=".react-select__control"
-        content="Select company here!"
-        border="1px solid grey"
-        defaultIsOpen={tooltipDefaultOpen}
-        style={{
-          padding: "7px",
-          backgroundColor: "transparent",
-          borderRadius: "10px",
-          ...text.contentUnfocus,
-        }}
+      <DropdownTargetOrg
+        availableOrgs={availableOrgs}
+        targetOrg={targetOrg}
+        handleTargetOrgSelection={handleTargetOrgSelection}
       />
+      <Tooltip tooltipDefaultOpen={tooltipDefaultOpen} />
       <span>Mafia</span>
     </h1>
   );
