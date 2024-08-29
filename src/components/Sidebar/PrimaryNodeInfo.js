@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from "../../fontAwesome.js";
+import ProfileImage from "./ProfileImage.js";
 import { text } from "../../styling.js";
 
 function PrimaryNodeInfo({ targetOrg, selectedNodeData, epochToDate }) {
@@ -12,32 +12,10 @@ function PrimaryNodeInfo({ targetOrg, selectedNodeData, epochToDate }) {
           justifyContent: "left",
         }}
       >
-        {selectedNodeData.personLogoUrl && (
-          <img
-            src={selectedNodeData.personLogoUrl}
-            alt={`${selectedNodeData.name} profile picture`}
-            style={{
-              width: "90px",
-              height: "90px",
-              objectFit: "cover",
-              borderRadius: "45px",
-              marginRight: "20px",
-            }}
-          />
-        )}
-        {!selectedNodeData.personLogoUrl && (
-          <FontAwesomeIcon
-            icon={["far", "user"]}
-            style={{
-              width: "70px",
-              height: "70px",
-              marginLeft: "10px",
-              marginRight: "30px",
-              marginTop: "10px",
-              marginBottom: "10px",
-            }}
-          />
-        )}
+        <ProfileImage
+          personLogoUrl={selectedNodeData.personLogoUrl}
+          name={selectedNodeData.name}
+        />
         <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
       </div>
       <h2 style={text.subHeader}>Role at {targetOrg.orgName}</h2>
