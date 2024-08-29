@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TitleTargetOrg from "./TitleTargetOrg.js";
+import TargetOrgSidebarContent from "./TargetOrgSidebarContent.js";
 import PrimaryNodeSidebarContent from "./PrimaryNodeSidebarContent.js";
 import SecondaryNodeSidebarContent from "./SecondaryNodeSidebarContent.js";
 import { colours, text } from "../../styling.js";
@@ -77,58 +77,13 @@ function Sidebar({
       />
 
       {!selectedNodeData && (
-        <div>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "left",
-            }}
-          >
-            <img
-              src={targetOrg.orgLogoUrl}
-              alt={`${targetOrg.orgName} logo`}
-              style={{
-                width: "90px",
-                height: "90px",
-                objectFit: "contain",
-                borderRadius: "45px",
-                marginRight: "20px",
-              }}
-            />
-            <TitleTargetOrg
-              availableOrgs={availableOrgs}
-              targetOrg={targetOrg}
-              onTargetOrgSelect={onTargetOrgSelect}
-            />
-          </div>
-          <p style={text.contentFocus}>{targetOrg.shortDescription}</p>
-          <ul style={text.content}>
-            <li>
-              HQ: {targetOrg.orgCity}, {targetOrg.orgCountryCode}
-            </li>
-            <li>Total funding: {formatToUSD(targetOrg.totalFundingUsd)}</li>
-            <li>Founded: {epochToDate(targetOrg.foundedOn)}</li>
-          </ul>
-          {/* Display IPO info */}
-          {targetOrg.exitType === "ipo" && targetOrg.exitDate && (
-            <div style={text.content}>
-              {targetOrg.orgName} went public {epochToDate(targetOrg.exitDate)}
-              {targetOrg.exitValuation &&
-                " at a value of " + formatToUSD(targetOrg.exitValuation)}
-            </div>
-          )}
-          {/* Display acquisition info */}
-          {targetOrg.exitType === "acquisition" && targetOrg.exitDate && (
-            <div style={text.content}>
-              {targetOrg.orgName} was acquired {epochToDate(targetOrg.exitDate)}{" "}
-              by {targetOrg.acquirerName}
-              {targetOrg.exitValuation &&
-                " for " + formatToUSD(targetOrg.exitValuation)}
-            </div>
-          )}
-        </div>
+        <TargetOrgSidebarContent
+          targetOrg={targetOrg}
+          availableOrgs={availableOrgs}
+          onTargetOrgSelect={onTargetOrgSelect}
+          epochToDate={epochToDate}
+          formatToUSD={epochToDate}
+        />
       )}
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
