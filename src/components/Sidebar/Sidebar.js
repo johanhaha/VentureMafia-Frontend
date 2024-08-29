@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TitleTargetOrg from "./TitleTargetOrg.js";
 import PrimaryNodeSidebarContent from "./PrimaryNodeSidebarContent.js";
+import SecondaryNodeSidebarContent from "./SecondaryNodeSidebarContent.js";
 import { colours, text } from "../../styling.js";
-import { FontAwesomeIcon } from "../../fontAwesome.js";
 import { ReactComponent as VMlogo } from "../../assets/VMlogo.svg";
 
 // Helper function to format as USD and abbreviate
@@ -140,81 +140,11 @@ function Sidebar({
       )}
       {/* Displaying information about selected secondary nodes */}
       {selectedNodeData && selectedNodeData.type === "secondary" && (
-        <div>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "left",
-            }}
-          >
-            {selectedNodeData.orgLogoUrl && (
-              <img
-                src={selectedNodeData.orgLogoUrl}
-                alt={`${selectedNodeData.name} logo`}
-                style={{
-                  maxWidth: "12vw",
-                  maxHeight: "90px",
-                  width: "auto",
-                  height: "auto",
-                  objectFit: "contain",
-                  borderRadius: "45px",
-                  marginRight: "20px",
-                }}
-              />
-            )}
-            {!selectedNodeData.orgLogoUrl && (
-              <FontAwesomeIcon
-                icon={["far", "building"]}
-                style={{
-                  maxWidth: "12vw",
-                  maxHeight: "90px",
-                  width: "auto",
-                  height: "auto",
-                  marginLeft: "10px",
-                  marginRight: "20px",
-                }}
-              />
-            )}
-            <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
-          </div>
-
-          <p style={text.contentFocus}>{selectedNodeData.shortDescription}</p>
-          <ul style={text.content}>
-            <li>
-              HQ: {selectedNodeData.orgCity}, {selectedNodeData.orgCountryCode}
-            </li>
-            <li>
-              Total funding: {formatToUSD(selectedNodeData.totalFundingUsd)}
-            </li>
-            <li>Founded: {epochToDate(selectedNodeData.foundedOn)}</li>
-          </ul>
-          {/* Displaying IPO info */}
-          {selectedNodeData &&
-            selectedNodeData.type === "secondary" &&
-            selectedNodeData.exitType === "ipo" && (
-              <div style={text.content}>
-                {selectedNodeData.name} went public{" "}
-                {epochToDate(selectedNodeData.exitDate)}
-                {selectedNodeData.exitValuation &&
-                  " at a value of " +
-                    formatToUSD(selectedNodeData.exitValuation)}
-              </div>
-            )}
-          {/* Displaying acquisition info */}
-          {selectedNodeData &&
-            selectedNodeData.type === "secondary" &&
-            selectedNodeData.exitType === "acquisition" && (
-              <div style={text.content}>
-                {selectedNodeData.name} was acquired on{" "}
-                {epochToDate(selectedNodeData.exitDate)} by{" "}
-                {selectedNodeData.acquirerName}
-                {selectedNodeData.exitValuation &&
-                  " for " + formatToUSD(selectedNodeData.exitValuation)}
-              </div>
-            )}
-        </div>
+        <SecondaryNodeSidebarContent
+          selectedNodeData={selectedNodeData}
+          epochToDate={epochToDate}
+          formatToUSD={formatToUSD}
+        />
       )}
     </div>
   );
