@@ -1,7 +1,7 @@
 import ProfileImage from "./ProfileImage.js";
 import { text } from "../../styling.js";
 
-function PrimaryNodeInfo({ targetOrg, selectedNodeData, epochToDate }) {
+function PrimaryNodeSidebarContent({ targetOrg, selectedNodeData, epochToDate }) {
   return (
     <div>
       <div
@@ -40,4 +40,4 @@ function PrimaryNodeInfo({ targetOrg, selectedNodeData, epochToDate }) {
     </div>
   );
 }
-export default PrimaryNodeInfo;
+export default PrimaryNodeSidebarContent;

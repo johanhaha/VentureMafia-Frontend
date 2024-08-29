@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TitleTargetOrg from "./TitleTargetOrg.js";
-import PrimaryNodeInfo from "./PrimaryNodeInfo.js";
+import PrimaryNodeSidebarContent from "./PrimaryNodeSidebarContent.js";
 import { colours, text } from "../../styling.js";
 import { FontAwesomeIcon } from "../../fontAwesome.js";
 import { ReactComponent as VMlogo } from "../../assets/VMlogo.svg";
@@ -132,7 +132,7 @@ function Sidebar({
       )}
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
-        <PrimaryNodeInfo
+        <PrimaryNodeSidebarContent
           targetOrg={targetOrg}
           selectedNodeData={selectedNodeData}
           epochToDate={epochToDate}
