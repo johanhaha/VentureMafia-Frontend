@@ -82,7 +82,7 @@ function Sidebar({
           availableOrgs={availableOrgs}
           onTargetOrgSelect={onTargetOrgSelect}
           epochToDate={epochToDate}
-          formatToUSD={epochToDate}
+          formatToUSD={formatToUSD}
         />
       )}
       {/* Displaying information about selected primary nodes */}
