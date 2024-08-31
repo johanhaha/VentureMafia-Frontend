@@ -16,6 +16,7 @@ import {
   getNodeRadius,
   isConnected,
 } from "./utils/graphUtils.js";
+import { initialiseForces } from "./utils/forceUtils.js";
 import { colours, opacity, text } from "../../styling.js";
 import farUserIcon from "../../assets/farUserIcon.svg";
 
@@ -73,7 +74,6 @@ function NetworkGraph({
         networkGraphDimensions.height <= networkGraphDimensions.width
           ? (networkGraphDimensions.height * 0.8) / 2
           : (networkGraphDimensions.width * 0.8) / 2, // Radius based on parent container dimensions
-      pullStrength = 0.1, // Increase to make forces stronger
       primaryNodes = data.nodes.filter((d) => d.type === "primary"),
       angleStep = (2 * Math.PI) / primaryNodes.length,
       center = initialiseCenter(d3Container);
@@ -295,35 +295,8 @@ function NetworkGraph({
       ) // Use pattern for primary nodes to populate profile pictures
       .on("click", clickNode);
 
-    function forceTowardsCenter(alpha) {
-      data.nodes.forEach((node) => {
-        if (node.type === "secondary") {
-          node.vx += (center.x - node.x) * alpha * pullStrength * 10;
-          node.vy += (center.y - node.y) * alpha * pullStrength * 10;
-        }
-      });
-    }
-
     // Simulation setup with all forces
-    const simulation = d3
-      .forceSimulation(data.nodes)
-      .force(
-        "link",
-        d3.forceLink(data.links).id((d) => d.id)
-      )
-      .force("forceTowardsCenter", forceTowardsCenter)
-      .force("charge", d3.forceManyBody().strength(-20))
-      .force(
-        "collision",
-        d3.forceCollide().radius((d) => d.radius * 1.8)
-      )
-      .alphaDecay(0.09)
-      .alphaTarget(0.001)
-      .alpha(0.1)
-      .velocityDecay(0.4)
-      .alphaMin(0.0010001);
-
-    simulationRef.current = simulation; // Store the simulation reference to stop simulation when needed
+    simulationRef.current = initialiseForces(data, center); // Store the simulation reference to stop simulation when needed
 
     // Append text to nodes and add general styling
     nodeElements
@@ -376,7 +349,7 @@ function NetworkGraph({
       .style("-ms-user-select", "none");
 
     // Update configurations
-    simulation.on("tick", () => {
+    simulationRef.current.on("tick", () => {
       nodeElements.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
       linkElements
         .attr("x1", (d) => d.source.x)
