@@ -1,53 +1,26 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { analytics, logEvent } from "../firebase.js";
-import { colours, opacity, text } from "../styling.js";
-import farUserIcon from "../assets/farUserIcon.svg";
+import { analytics, logEvent } from "../../firebase.js";
+import { combineAndProcessData } from "./utils/dataUtils.js";
+import {
+  primaryNodeTextWrapping,
+  secondaryNodeTextWrapping,
+} from "./utils/textUtils.js";
+import {
+  getSourceId,
+  getTargetId,
+  calculateNodeDegree,
+  sortNodesByDegree,
+  reorderNodes,
+  initialiseCenter,
+  getNodeRadius,
+  isConnected,
+} from "./utils/graphUtils.js";
+import { colours, opacity, text } from "../../styling.js";
+import farUserIcon from "../../assets/farUserIcon.svg";
 
 const secondaryNodeRadiusFlex = 2.3, // Stated in vw
   secondaryNodeRadiusMax = 50;
-
-// Combining datasets and mapping them to the correct attribute names
-const combineAndProcessData = (primaryNodes, secondaryNodes, links) => {
-  const combinedNodes = [
-    ...primaryNodes.map(({ personUuid: id, personName: name, ...rest }) => ({
-      type: "primary",
-      id,
-      name,
-      ...rest,
-    })),
-    ...secondaryNodes.map(({ orgUuid: id, orgName: name, ...rest }) => ({
-      type: "secondary",
-      id,
-      name,
-      ...rest,
-    })),
-  ];
-  const combinedLinks = links.map(
-    ({ personUuid: source, orgUuid: target, ...rest }) => ({
-      source,
-      target,
-      ...rest,
-    })
-  );
-
-  const data = {
-    nodes: combinedNodes,
-    links: combinedLinks,
-  };
-
-  return data;
-};
-
-// Support function to get the ID of the source element of a link
-const getSourceId = (link) => {
-  return typeof link.source === "object" ? link.source.id : link.source;
-};
-
-// Support function to get the ID of the target element of a link
-const getTargetId = (link) => {
-  return typeof link.target === "object" ? link.target.id : link.target;
-};
 
 function NetworkGraph({
   targetOrg,
@@ -103,46 +76,7 @@ function NetworkGraph({
       pullStrength = 0.1, // Increase to make forces stronger
       primaryNodes = data.nodes.filter((d) => d.type === "primary"),
       angleStep = (2 * Math.PI) / primaryNodes.length,
-      center = { x: 0, y: 0 }; // Placeholder value
-
-    const calculateNodeDegree = (nodes, links) => {
-      const degreeMap = {};
-      nodes.forEach((node) => {
-        degreeMap[node.id] = 0;
-      });
-      links.forEach((link) => {
-        degreeMap[link.source] = (degreeMap[link.source] || 0) + 1;
-        degreeMap[link.target] = (degreeMap[link.target] || 0) + 1;
-      });
-      return degreeMap;
-    };
-
-    const sortNodesByDegree = (nodes, degreeMap) => {
-      return nodes.sort((a, b) => degreeMap[b.id] - degreeMap[a.id]);
-    };
-
-    // Evenly distribute the nodes in the list based on degree
-    function reorderNodes(nodes, numBins) {
-      // Calculate the size of each bin
-      const binSize = Math.ceil(nodes.length / numBins);
-      let bins = Array.from({ length: numBins }, (_, index) =>
-        nodes.slice(index * binSize, (index + 1) * binSize)
-      );
-
-      // Create a new array by alternating between the bins
-      let reorderedArray = [];
-      for (let i = 0; i < binSize; i++) {
-        for (let j = 0; j < numBins; j++) {
-          if (j % 2 === 0 && i < bins[j].length) {
-            reorderedArray.push(bins[j][i]);
-          } else if (j % 2 !== 0 && i < bins[j].length) {
-            reorderedArray.push(bins[j][bins[j].length - 1 - i]);
-          }
-        }
-      }
-
-      return reorderedArray;
-    }
+      center = initialiseCenter(d3Container);
 
     // Evenly distribute the nodes in the list based on degree
     const degreeMap = calculateNodeDegree(primaryNodes, data.links);
@@ -151,36 +85,6 @@ function NetworkGraph({
       sortedNodes,
       Math.ceil(primaryNodes.length / 6)
     );
-
-    const fundingExtent = d3.extent(
-      data.nodes
-        .filter((d) => d.type === "secondary")
-        .map((d) => d.totalFundingUsd)
-    ); // [min, max] of funding
-
-    // Scaling function
-    const sizeScale = d3
-      .scalePow()
-      .exponent(0.45) // Tune this for good secondary node sizes
-      .domain(fundingExtent)
-      .range([
-        3.5,
-        Math.min(
-          (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
-          secondaryNodeRadiusMax
-        ),
-      ]); // Dynamically setting maximum secondary node radius
-
-    // Helper function to calculate the center
-    function resize() {
-      center = {
-        x: d3Container.current.parentNode.clientWidth / 2,
-        y: d3Container.current.parentNode.clientHeight / 2,
-      };
-    }
-
-    // Initialise the center value
-    resize();
 
     primaryNodes.forEach((d, i) => {
       d.fx = center.x + mafiaRadius * Math.cos(i * angleStep);
@@ -207,77 +111,6 @@ function NetworkGraph({
       linkedByIndex[`${sourceId},${targetId}`] = true;
       linkedByIndex[`${targetId},${sourceId}`] = true; // Ensure the connection is bidirectional
     });
-
-    // Helper function to check if two nodes are linked
-    function isConnected(a, b) {
-      return (
-        linkedByIndex[`${a.id},${b.id}`] ||
-        linkedByIndex[`${b.id},${a.id}`] ||
-        a.id === b.id
-      );
-    }
-
-    // Helper function for text wrapping
-    function wrapText(selection, width) {
-      selection.each(function () {
-        const text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          dy = parseFloat(text.attr("dy") || 0.35);
-
-        text.text(null); // Clear the text once and manage via tspans
-
-        if (words.length === 1) {
-          let word = words[0];
-          text
-            .append("tspan")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("dy", `${dy}em`)
-            .text(word);
-        } else {
-          let word,
-            line = [],
-            tspan = text
-              .append("tspan")
-              .attr("x", 0)
-              .attr("y", 0)
-              .attr("dy", `${dy}em`);
-
-          while (words.length > 0) {
-            word = words.pop();
-            line.push(word);
-            tspan.text(line.join(" ")); // Update text in the existing tspan
-
-            if (
-              tspan.node().getComputedTextLength() > width &&
-              line.length > 1
-            ) {
-              line.pop(); // Remove last word that caused overflow
-              tspan.text(line.join(" ")); // Set text to previous valid line
-              line = [word]; // Start new line with last word
-              tspan = text.append("tspan").attr("x", 0).attr("y", 0).text(word); // Append new tspan for the new line
-            }
-          }
-        }
-
-        // Recalculate dy for each tspan to vertically center them
-        let tspans = text.selectAll("tspan");
-        let lineCount = tspans.size();
-        let lineNumber = 0;
-        tspans.each(function () {
-          d3.select(this).attr(
-            "dy",
-            `${(lineNumber - lineCount / 2 + 0.5) * 1.1 + dy}em`
-          );
-          lineNumber++;
-        });
-      });
-    }
-
-    // Helper function to get node radius
-    function getNodeRadius(node) {
-      return sizeScale(node.totalFundingUsd);
-    }
 
     const svg = d3
       .select(d3Container.current)
@@ -353,17 +186,21 @@ function NetworkGraph({
       onNodeSelect(clickedNode);
       // Adjust the opacity to emphasise/de-emphasise nodes
       nodeElements.style("opacity", (node) => {
-        return isConnected(clickedNode, node) ? 1 : opacity.deselectNode;
+        return isConnected(linkedByIndex, clickedNode, node)
+          ? 1
+          : opacity.deselectNode;
       });
 
       linkElements
         // Adjust the opacity to emphasise/de-emphasise nodes
         .style("stroke-opacity", (link) =>
-          isConnected(clickedNode, link.target) ? 1 : opacity.deselectLink
+          isConnected(linkedByIndex, clickedNode, link.target)
+            ? 1
+            : opacity.deselectLink
         )
         // Adjust the stroke weight to emphasise/de-emphasise nodes
         .style("stroke-width", (link) =>
-          isConnected(clickedNode, link.target) ? "2px" : "1px"
+          isConnected(linkedByIndex, clickedNode, link.target) ? "2px" : "1px"
         )
         // Adjust the stroke colour for directly connected nodes
         .style("stroke", (link) =>
@@ -377,7 +214,7 @@ function NetworkGraph({
         if (
           clickedNode.type === "primary" &&
           node.type === "secondary" &&
-          isConnected(clickedNode, node)
+          isConnected(linkedByIndex, clickedNode, node)
         ) {
           // Find if there's a direct link between the clickedNode and this secondary node
           const directLink = data.links.find(
@@ -393,7 +230,7 @@ function NetworkGraph({
         if (
           clickedNode.type === "secondary" &&
           node.type === "primary" &&
-          isConnected(clickedNode, node)
+          isConnected(linkedByIndex, clickedNode, node)
         ) {
           const link = data.links.find(
             (link) =>
@@ -439,7 +276,13 @@ function NetworkGraph({
         if (d.type === "primary") {
           d.radius = primaryNodeRadius;
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
-          d.radius = getNodeRadius(d); // Dynamic size for secondary nodes based on funding amount
+          d.radius = getNodeRadius(
+            d.totalFundingUsd,
+            data.nodes,
+            networkGraphDimensions,
+            secondaryNodeRadiusFlex,
+            secondaryNodeRadiusMax
+          ); // Dynamic size for secondary nodes based on funding amount
         } else {
           d.radius = 3; // Default size secondary nodes without funding info
         }
@@ -496,7 +339,9 @@ function NetworkGraph({
       .style("font-family", text.contentFocus.fontFamily)
       .style("font-size", text.contentFocus.fontSize)
       .style("font-weight", text.contentFocus.fontWeight)
-      .style("fill", text.contentFocus.color);
+      .style("fill", text.contentFocus.color)
+      .style("pointer-events", "all")
+      .on("click", clickNode); // Enable click on text
 
     nodeElements
       .filter((d) => d.type === "secondary")
@@ -505,92 +350,7 @@ function NetworkGraph({
       .style("font-weight", text.content.fontWeight)
       .style("fill", text.content.color);
 
-    // Update primary node text styling, including splitting names into multiple lines
-    nodeElements
-      .filter((d) => d.type === "primary")
-      .select("text")
-      .each(function () {
-        const text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          dy = parseFloat(text.attr("dy") || 0.35);
-
-        text.text(null); // Clear the text once and manage via tspans
-
-        if (words.length === 1) {
-          let word = words[0];
-          text
-            .append("tspan")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("dy", `${dy}em`)
-            .text(word);
-        } else {
-          let word,
-            line = [],
-            vw = window.innerWidth,
-            scaleWidth = { x: vw * 0.02 + 65, y: vw * 0.02 + 24 },
-            tspan = text
-              .append("tspan")
-              .attr("x", (d) => {
-                const angle = Math.atan2(d.y - center.y, d.x - center.x);
-                return Math.cos(angle) * scaleWidth.x;
-              })
-              .attr("y", (d) => {
-                const angle = Math.atan2(d.y - center.y, d.x - center.x);
-                return Math.sin(angle) * scaleWidth.y;
-              })
-              .style("text-anchor", "middle")
-              .attr("dy", `${dy}em`);
-
-          while (words.length > 0) {
-            word = words.pop();
-            line.push(word);
-            tspan.text(line.join(" ")); // Update text in the existing tspan
-
-            // Append new tspan for the new line
-            if (tspan.node().getComputedTextLength() > 100 && line.length > 1) {
-              line.pop(); // Remove last word that caused overflow
-              tspan.text(line.join(" ")); // Set text to previous valid line
-              line = [word]; // Start new line with last word
-              tspan = text
-                .append("tspan")
-                // eslint-disable-next-line no-loop-func
-                .attr("x", (d) => {
-                  const angle = Math.atan2(d.y - center.y, d.x - center.x);
-                  return Math.cos(angle) * scaleWidth.x;
-                })
-                // eslint-disable-next-line no-loop-func
-                .attr("y", (d) => {
-                  const angle = Math.atan2(d.y - center.y, d.x - center.x);
-                  return Math.sin(angle) * scaleWidth.y;
-                })
-                .style("text-anchor", "middle")
-                .text(word);
-            }
-          }
-        }
-
-        // Add primary node aria-label for SEO
-        nodeElements
-          .filter((d) => d.type === "primary")
-          .attr("aria-label", (d) => {
-            return `${d.name}, ${d.jobTitle}, ${targetOrg.orgName}`;
-          });
-
-        // Recalculate dy for each tspan to vertically center them
-        let tspans = text.selectAll("tspan");
-        let lineCount = tspans.size();
-        let lineNumber = 0;
-        tspans.each(function () {
-          d3.select(this).attr(
-            "dy",
-            `${(lineNumber - lineCount / 2 + 0.5) * 1.1 + dy}em`
-          );
-          lineNumber++;
-        });
-      })
-      .style("pointer-events", "all")
-      .on("click", clickNode); // Enable click on text
+    primaryNodeTextWrapping(nodeElements, center, targetOrg.name);
 
     // Update secondary node text styling
     nodeElements
@@ -599,7 +359,7 @@ function NetworkGraph({
       .each(function (d) {
         const nodeRadius = d.radius; // Calculate radius dynamically
         const maxWidth = nodeRadius * 2 - 5; // Subtract some padding
-        wrapText(d3.select(this), maxWidth);
+        secondaryNodeTextWrapping(d3, d3.select(this), maxWidth);
       })
       .style("text-anchor", "middle")
       .style("user-select", "none") // Disable click on text
@@ -626,10 +386,6 @@ function NetworkGraph({
 
       nodeElements.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
     });
-
-    // Updates SVG size based on window size
-    window.addEventListener("resize", resize);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, networkGraphDimensions]); // Ensures effect is only run on mount and unmount
 
   if (error) {

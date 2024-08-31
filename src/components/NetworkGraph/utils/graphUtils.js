@@ -1,0 +1,98 @@
+import * as d3 from "d3";
+
+// Support function to get the ID of the source element of a link
+export const getSourceId = (link) => {
+  return typeof link.source === "object" ? link.source.id : link.source;
+};
+
+// Support function to get the ID of the target element of a link
+export const getTargetId = (link) => {
+  return typeof link.target === "object" ? link.target.id : link.target;
+};
+
+// Helper function to calculate the number of connections
+export const calculateNodeDegree = (nodes, links) => {
+  const degreeMap = {};
+  nodes.forEach((node) => {
+    degreeMap[node.id] = 0;
+  });
+  links.forEach((link) => {
+    degreeMap[link.source] = (degreeMap[link.source] || 0) + 1;
+    degreeMap[link.target] = (degreeMap[link.target] || 0) + 1;
+  });
+  return degreeMap;
+};
+
+// Helper function to sort nodes based on number of connections
+export const sortNodesByDegree = (nodes, degreeMap) => {
+  return nodes.sort((a, b) => degreeMap[b.id] - degreeMap[a.id]);
+};
+
+// Evenly distribute the nodes in the list based on degree
+export const reorderNodes = (nodes, numBins) => {
+  // Calculate the size of each bin
+  const binSize = Math.ceil(nodes.length / numBins);
+  let bins = Array.from({ length: numBins }, (_, index) =>
+    nodes.slice(index * binSize, (index + 1) * binSize)
+  );
+
+  // Create a new array by alternating between the bins
+  let reorderedArray = [];
+  for (let i = 0; i < binSize; i++) {
+    for (let j = 0; j < numBins; j++) {
+      if (j % 2 === 0 && i < bins[j].length) {
+        reorderedArray.push(bins[j][i]);
+      } else if (j % 2 !== 0 && i < bins[j].length) {
+        reorderedArray.push(bins[j][bins[j].length - 1 - i]);
+      }
+    }
+  }
+
+  return reorderedArray;
+};
+
+// Helper function to calculate the center
+export const initialiseCenter = (d3Container) => {
+  let center = {
+    x: d3Container.current.parentNode.clientWidth / 2,
+    y: d3Container.current.parentNode.clientHeight / 2,
+  };
+  return center;
+};
+
+// Helper function to get the node radius
+export const getNodeRadius = (
+  totalFundingUsd,
+  nodes,
+  networkGraphDimensions,
+  secondaryNodeRadiusFlex,
+  secondaryNodeRadiusMax
+) => {
+  const fundingExtent = d3.extent(
+    nodes.filter((d) => d.type === "secondary").map((d) => d.totalFundingUsd)
+  ); // [min, max] of funding
+
+  // Scale the node size according to the funding extent
+  const sizeScale = d3
+    .scalePow()
+    .exponent(0.45) // Tune this for good secondary node sizes
+    .domain(fundingExtent)
+    .range([
+      3.5,
+      Math.min(
+        (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
+        secondaryNodeRadiusMax
+      ),
+    ]); // Dynamically setting maximum secondary node radius
+
+  return sizeScale(totalFundingUsd);
+};
+
+// Helper function to check if two nodes are linked
+export const isConnected = (linkedByIndex, a, b) => {
+  return (
+    linkedByIndex[`${a.id},${b.id}`] ||
+    linkedByIndex[`${b.id},${a.id}`] ||
+    a.id === b.id
+  );
+};
