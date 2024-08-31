@@ -1,6 +1,6 @@
 import { text } from "../../styling.js";
 
-function TargetOrgSidebarInfo({
+function TargetOrgInfo({
   targetOrg,
   epochToDate,
   formatToUSD,
@@ -35,4 +35,4 @@ function TargetOrgSidebarInfo({
     </div>
   );
 }
-export default TargetOrgSidebarInfo;
+export default TargetOrgInfo;

@@ -1,6 +1,6 @@
 import { text } from "../../styling.js";
 
-function SecondaryNodeSidebarInfo({ selectedNodeData, epochToDate, formatToUSD }) {
+function SecondaryNodeInfo({ selectedNodeData, epochToDate, formatToUSD }) {
   return (
     <div>
       <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
@@ -39,4 +39,4 @@ function SecondaryNodeSidebarInfo({ selectedNodeData, epochToDate, formatToUSD }
     </div>
   );
 }
-export default SecondaryNodeSidebarInfo;
+export default SecondaryNodeInfo;

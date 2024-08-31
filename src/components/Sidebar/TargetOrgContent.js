@@ -1,8 +1,8 @@
 import LogoImage from "./LogoImage.js";
 import TitleTargetOrg from "./TitleTargetOrg.js";
-import TargetOrgSidebarInfo from "./TargetOrgSidebarInfo.js";
+import TargetOrgInfo from "./TargetOrgInfo.js";
 
-function TargetOrgSidebarContent({
+function TargetOrgContent({
   targetOrg,
   availableOrgs,
   onTargetOrgSelect,
@@ -26,7 +26,7 @@ function TargetOrgSidebarContent({
           onTargetOrgSelect={onTargetOrgSelect}
         />
       </div>
-      <TargetOrgSidebarInfo
+      <TargetOrgInfo
         targetOrg={targetOrg}
         epochToDate={epochToDate}
         formatToUSD={formatToUSD}
@@ -34,4 +34,4 @@ function TargetOrgSidebarContent({
     </div>
   );
 }
-export default TargetOrgSidebarContent;
+export default TargetOrgContent;

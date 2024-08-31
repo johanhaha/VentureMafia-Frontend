@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import TargetOrgSidebarContent from "./TargetOrgSidebarContent.js";
-import PrimaryNodeSidebarContent from "./PrimaryNodeSidebarContent.js";
-import SecondaryNodeSidebarContent from "./SecondaryNodeSidebarContent.js";
-import { colours, text } from "../../styling.js";
+import TargetOrgContent from "./TargetOrgContent.js";
+import PrimaryNodeContent from "./PrimaryNodeContent.js";
+import SecondaryNodeContent from "./SecondaryNodeContent.js";
+import { colours } from "../../styling.js";
 import { ReactComponent as VMlogo } from "../../assets/VMlogo.svg";
 
 // Helper function to format as USD and abbreviate
@@ -77,7 +77,7 @@ function Sidebar({
       />
 
       {!selectedNodeData && (
-        <TargetOrgSidebarContent
+        <TargetOrgContent
           targetOrg={targetOrg}
           availableOrgs={availableOrgs}
           onTargetOrgSelect={onTargetOrgSelect}
@@ -87,7 +87,7 @@ function Sidebar({
       )}
       {/* Displaying information about selected primary nodes */}
       {selectedNodeData && selectedNodeData.type === "primary" && (
-        <PrimaryNodeSidebarContent
+        <PrimaryNodeContent
           targetOrg={targetOrg}
           selectedNodeData={selectedNodeData}
           epochToDate={epochToDate}
@@ -95,7 +95,7 @@ function Sidebar({
       )}
       {/* Displaying information about selected secondary nodes */}
       {selectedNodeData && selectedNodeData.type === "secondary" && (
-        <SecondaryNodeSidebarContent
+        <SecondaryNodeContent
           selectedNodeData={selectedNodeData}
           epochToDate={epochToDate}
           formatToUSD={formatToUSD}

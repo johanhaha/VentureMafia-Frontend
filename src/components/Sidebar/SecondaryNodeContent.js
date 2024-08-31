@@ -1,7 +1,7 @@
 import LogoImage from "./LogoImage.js";
-import SecondaryNodeSidebarInfo from "./SecondaryNodeSidebarInfo.js";
+import SecondaryNodeInfo from "./SecondaryNodeInfo.js";
 
-function SecondaryNodeSidebarContent({
+function SecondaryNodeContent({
   selectedNodeData,
   epochToDate,
   formatToUSD,
@@ -21,7 +21,7 @@ function SecondaryNodeSidebarContent({
           name={selectedNodeData.Name}
         />
       </div>
-      <SecondaryNodeSidebarInfo
+      <SecondaryNodeInfo
         selectedNodeData={selectedNodeData}
         epochToDate={epochToDate}
         formatToUSD={formatToUSD}
@@ -29,4 +29,4 @@ function SecondaryNodeSidebarContent({
     </div>
   );
 }
-export default SecondaryNodeSidebarContent;
+export default SecondaryNodeContent;

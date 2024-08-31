@@ -1,6 +1,6 @@
 import { text } from "../../styling.js";
 
-function PrimaryNodeSidebarInfo({ orgName, selectedNodeData, epochToDate }) {
+function PrimaryNodeInfo({ orgName, selectedNodeData, epochToDate }) {
   return (
     <div>
       <h2 style={text.subHeader}>Role at {orgName}</h2>
@@ -25,4 +25,4 @@ function PrimaryNodeSidebarInfo({ orgName, selectedNodeData, epochToDate }) {
     </div>
   );
 }
-export default PrimaryNodeSidebarInfo;
+export default PrimaryNodeInfo;

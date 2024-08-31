@@ -1,8 +1,8 @@
 import ProfileImage from "./ProfileImage.js";
-import PrimaryNodeSidebarInfo from "./PrimaryNodeSidebarInfo.js";
+import PrimaryNodeInfo from "./PrimaryNodeInfo.js";
 import { text } from "../../styling.js";
 
-function PrimaryNodeSidebarContent({
+function PrimaryNodeContent({
   targetOrg,
   selectedNodeData,
   epochToDate,
@@ -23,7 +23,7 @@ function PrimaryNodeSidebarContent({
         />
         <h1 style={{ ...text.header }}>{selectedNodeData.name}</h1>
       </div>
-      <PrimaryNodeSidebarInfo
+      <PrimaryNodeInfo
         orgName={targetOrg.orgName}
         selectedNodeData={selectedNodeData}
         epochToDate={epochToDate}
@@ -31,4 +31,4 @@ function PrimaryNodeSidebarContent({
     </div>
   );
 }
-export default PrimaryNodeSidebarContent;
+export default PrimaryNodeContent;
