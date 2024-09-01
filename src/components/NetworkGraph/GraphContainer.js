@@ -30,6 +30,7 @@ const GraphContainer = ({ width, height, d3Container, children }) => {
 
     // Cleanup on component unmount
     return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       d3.select(containerRef.current).selectAll("*").remove();
     };
   }, [width, height, d3Container]);

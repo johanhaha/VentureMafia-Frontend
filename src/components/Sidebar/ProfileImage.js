@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "../../fontAwesome.js";
 
 function ProfileImage({ personLogoUrl, name }) {
   return personLogoUrl ? (
+    // eslint-disable-next-line jsx-a11y/img-redundant-alt
     <img
       src={personLogoUrl}
       alt={`${name} profile picture`}
