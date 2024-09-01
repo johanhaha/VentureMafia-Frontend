@@ -4,13 +4,13 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAtekFH3hGoIGqpn-m1CM9M5bA09qmMW88",
-  authDomain: "venturemafia-e1278.firebaseapp.com",
-  projectId: "venturemafia-e1278",
-  storageBucket: "venturemafia-e1278.appspot.com",
-  messagingSenderId: "500267624550",
-  appId: "1:500267624550:web:afd673293094ac8c0c25a7",
-  measurementId: "G-TP1PT6JE58"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
