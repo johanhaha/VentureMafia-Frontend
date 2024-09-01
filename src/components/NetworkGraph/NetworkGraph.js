@@ -350,7 +350,7 @@ function NetworkGraph({
 
       nodeElements.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
     });
-  }, [data, networkGraphDimensions]); // Ensures effect is only run on mount and unmount
+  }, [data, networkGraphDimensions, targetOrg]); // Ensures effect is only run on mount and unmount
 
   if (error) {
     return <div>Error processing data</div>;
