@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Layout from "./Layout.js";
 import NetworkGraph from "./NetworkGraph/NetworkGraph.js";
 import Sidebar from "./Sidebar/Sidebar.js";
@@ -6,7 +7,10 @@ import Sidebar from "./Sidebar/Sidebar.js";
 var targetOrgUuid = "f7a3ff7d-5a7c-71c7-383d-6883b355f8b0"; // Set the default target uuid
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
 
-function OrgAlumniContent() {
+function OrgAlumniContent(defaultTargetOrgName) {
+  const { targetOrgName } = useParams();
+  const navigate = useNavigate();
+
   const [selectedNode, setSelectedNode] = useState(null);
   const [networkGraphDimensions, setNetworkGraphDimensions] = useState(null); // Used for passing down container dimensions for flex
   const containerRef = useRef(null);
@@ -16,33 +20,40 @@ function OrgAlumniContent() {
   const [subsequentOrgsInfo, setSubsequentOrgsInfo] = useState("");
   const [relations, setRelations] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadingAvailableOrgs, setLoadingAvailableOrgs] = useState(true);
   const [error, setError] = useState(false);
+
+  // Helper fucntion to import available organisations
+  async function loadAvailableOrgs() {
+    try {
+      var [availableOrgsRaw] = await Promise.all([
+        fetch(`${BASE_URL}/available_orgs`).then((res) => res.json()),
+      ]);
+      setAvailableOrgs(availableOrgsRaw.data);
+    } catch (err) {
+      console.error("Failed to fetch data:", err);
+      setError(true);
+    }
+  }
 
   // Helper fucntion to import data
   async function loadData(targetOrgUuid) {
     try {
-      var [
-        availableOrgsRaw,
-        targetOrgRaw,
-        alumniInfoRaw,
-        subsequentOrgsInfoRaw,
-        relationsRaw,
-      ] = await Promise.all([
-        fetch(`${BASE_URL}/available_orgs`).then((res) => res.json()),
-        fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) =>
-          res.json()
-        ),
-        fetch(`${BASE_URL}/alumni_info/${targetOrgUuid}`).then((res) =>
-          res.json()
-        ),
-        fetch(`${BASE_URL}/subsequent_orgs_info/${targetOrgUuid}`).then((res) =>
-          res.json()
-        ),
-        fetch(`${BASE_URL}/relations/${targetOrgUuid}`).then((res) =>
-          res.json()
-        ),
-      ]);
-      setAvailableOrgs(availableOrgsRaw.data);
+      var [targetOrgRaw, alumniInfoRaw, subsequentOrgsInfoRaw, relationsRaw] =
+        await Promise.all([
+          fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) =>
+            res.json()
+          ),
+          fetch(`${BASE_URL}/alumni_info/${targetOrgUuid}`).then((res) =>
+            res.json()
+          ),
+          fetch(`${BASE_URL}/subsequent_orgs_info/${targetOrgUuid}`).then(
+            (res) => res.json()
+          ),
+          fetch(`${BASE_URL}/relations/${targetOrgUuid}`).then((res) =>
+            res.json()
+          ),
+        ]);
       setTargetOrg(targetOrgRaw.data);
       setAlumniInfo(alumniInfoRaw.data);
       setSubsequentOrgsInfo(subsequentOrgsInfoRaw.data);
@@ -54,16 +65,38 @@ function OrgAlumniContent() {
     }
   }
 
+  // Loads availableOrgs before everything else to enable routing
   useEffect(() => {
-    loadData(targetOrgUuid);
-
-    if (containerRef.current) {
-      setNetworkGraphDimensions({
-        width: containerRef.current.offsetWidth,
-        height: containerRef.current.offsetHeight,
-      });
-    }
+    const fetchData = async () => {
+      try {
+        setLoadingAvailableOrgs(true);
+        await loadAvailableOrgs();
+        setLoadingAvailableOrgs(false);
+      } catch (err) {
+        console.error("Failed to fetch data:", err);
+        setError(true);
+      }
+    };
+    fetchData();
   }, []); // Empty dependency array to ensure this runs only once
+
+  useEffect(() => {
+    if (!loadingAvailableOrgs && !error) {
+      if (containerRef.current) {
+        setNetworkGraphDimensions({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight,
+        });
+      }
+
+      // Go to default organisation if none is selected
+      if (!targetOrgName) {
+        navigate(`/${defaultTargetOrgName}`);
+      } else {
+        loadData(availableOrgs.find((org) => org.label === targetOrgName).value);
+      }
+    }
+  }, [loading, error, targetOrgName, navigate, availableOrgs]);
 
   if (loading) console.log("Waiting for data...");
   if (error) console.error("Error processing data (App):", error);
@@ -74,9 +107,14 @@ function OrgAlumniContent() {
   };
 
   // Handler for setting new target organisation
-  const handleTargetOrgSelect = (newTargetOrgUuid) => {
-    loadData(newTargetOrgUuid);
+  const handleTargetOrgSelect = (selection) => {
+    // Load data for the new organisation
+    loadData(selection.value);
 
+    // Update the URL to reflect the selected organisation
+    navigate(`/${selection.label}`);
+
+    // Set network graph dimensions based on the container's size
     if (containerRef.current) {
       setNetworkGraphDimensions({
         width: containerRef.current.offsetWidth,

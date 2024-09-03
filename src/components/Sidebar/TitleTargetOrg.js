@@ -9,7 +9,7 @@ function TitleTargetOrg({ availableOrgs, targetOrg, onTargetOrgSelect }) {
 
   // Callback function to set tartget organisation
   function handleTargetOrgSelection(selection) {
-    onTargetOrgSelect(selection.value);
+    onTargetOrgSelect(selection);
     setTooltipDefaultOpen(false); // Default have tooltip closed after user selection
 
     logEvent(analytics, "dropdown_item_select", {
