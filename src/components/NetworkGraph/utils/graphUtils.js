@@ -60,6 +60,21 @@ export const initialiseCenter = (d3Container) => {
   return center;
 };
 
+// Calculate a scaling factor based on the number of nodes. I.e fewer nodes --> Larger
+const getNodeCountScale = (nodeCount) => {
+  const minNodes = 20;
+  const maxNodes = 300;
+
+  const nodeCountScale = d3
+    .scaleLinear()
+    // .exponent(194) // Tune this for good secondary node sizes
+    .domain([minNodes, maxNodes])
+    .range([2, 1]) // Tune this for good secondary node sizes
+    .clamp(true);
+
+  return nodeCountScale(nodeCount);
+};
+
 // Helper function to get the node radius
 export const getNodeRadius = (
   totalFundingUsd,
@@ -68,9 +83,9 @@ export const getNodeRadius = (
   secondaryNodeRadiusFlex,
   secondaryNodeRadiusMax
 ) => {
-  const fundingExtent = d3.extent(
-    nodes.filter((d) => d.type === "secondary").map((d) => d.totalFundingUsd)
-  ); // [min, max] of funding
+  const fundingValues = nodes.map((d) => d.totalFundingUsd);
+  const fundingExtent = d3.extent(fundingValues); // [min, max] of funding
+  const scalingFactor = getNodeCountScale(nodes.length); // * getVarianceScale(fundingValues);
 
   // Scale the node size according to the funding extent
   const sizeScale = d3
@@ -78,14 +93,25 @@ export const getNodeRadius = (
     .exponent(0.45) // Tune this for good secondary node sizes
     .domain(fundingExtent)
     .range([
-      3.5,
+      3.5 * scalingFactor,
       Math.min(
         (networkGraphDimensions.width * secondaryNodeRadiusFlex) / 100,
         secondaryNodeRadiusMax
-      ),
-    ]); // Dynamically setting maximum secondary node radius
+      ) * scalingFactor,
+    ])
+    .clamp(true); // Dynamically setting maximum secondary node radius
 
-  return sizeScale(totalFundingUsd);
+  // Adjust the node size based on total node size and number of nodes
+  const maxTotalNodeSize =
+    (nodes.length * (networkGraphDimensions.width * secondaryNodeRadiusFlex)) /
+    230;
+  const initialNodeSizes = nodes.map((node) => sizeScale(node.totalFundingUsd));
+  const totalNodeSize = d3.sum(initialNodeSizes);
+  const adjustmentFactor =
+    totalNodeSize > maxTotalNodeSize ? maxTotalNodeSize / totalNodeSize : 1;
+  const adjustedNodeSize = sizeScale(totalFundingUsd) * adjustmentFactor;
+
+  return adjustedNodeSize;
 };
 
 // Helper function to check if two nodes are linked

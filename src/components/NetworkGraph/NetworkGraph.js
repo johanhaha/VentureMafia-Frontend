@@ -269,7 +269,7 @@ function NetworkGraph({
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
           d.radius = getNodeRadius(
             d.totalFundingUsd,
-            data.nodes,
+            data.nodes.filter((d) => d.type === "secondary" && d.totalFundingUsd != null),
             networkGraphDimensions,
             secondaryNodeRadiusFlex,
             secondaryNodeRadiusMax
