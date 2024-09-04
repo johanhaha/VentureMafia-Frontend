@@ -4,7 +4,6 @@ import Layout from "./Layout.js";
 import NetworkGraph from "./NetworkGraph/NetworkGraph.js";
 import Sidebar from "./Sidebar/Sidebar.js";
 
-var targetOrgUuid = "f7a3ff7d-5a7c-71c7-383d-6883b355f8b0"; // Set the default target uuid
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
 
 function OrgAlumniContent({ defaultTargetOrgName }) {
@@ -101,7 +100,7 @@ function OrgAlumniContent({ defaultTargetOrgName }) {
         );
       }
     }
-  }, [loading, error, targetOrgName, navigate, availableOrgs]);
+  }, [loading, error, targetOrgName, defaultTargetOrgName, navigate, availableOrgs, loadingAvailableOrgs]);
 
   if (loading) console.log("Waiting for data...");
   if (error) console.error("Error processing data (App):", error);
