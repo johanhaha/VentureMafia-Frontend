@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar/Sidebar.js";
 var targetOrgUuid = "f7a3ff7d-5a7c-71c7-383d-6883b355f8b0"; // Set the default target uuid
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
 
-function OrgAlumniContent(defaultTargetOrgName) {
+function OrgAlumniContent({ defaultTargetOrgName }) {
   const { targetOrgName } = useParams();
   const navigate = useNavigate();
 
@@ -90,10 +90,15 @@ function OrgAlumniContent(defaultTargetOrgName) {
       }
 
       // Go to default organisation if none is selected
-      if (!targetOrgName) {
+      if (
+        !targetOrgName |
+        !availableOrgs.some((org) => org.label === targetOrgName)
+      ) {
         navigate(`/${defaultTargetOrgName}`);
       } else {
-        loadData(availableOrgs.find((org) => org.label === targetOrgName).value);
+        loadData(
+          availableOrgs.find((org) => org.label === targetOrgName).value
+        );
       }
     }
   }, [loading, error, targetOrgName, navigate, availableOrgs]);
