@@ -122,3 +122,35 @@ export const isConnected = (linkedByIndex, a, b) => {
     a.id === b.id
   );
 };
+
+// Helper function to ge tthe N most funded organisations
+export const getMostFundedOrgs = (subsequentOrgsInfo, orgsCount) => {
+  return subsequentOrgsInfo
+    .sort((a, b) => b.totalFundingUsd - a.totalFundingUsd)
+    .slice(0, orgsCount)
+    .map((org) => org.orgName);
+};
+
+// Helper function to ge tthe N most connected alumni
+export const getMostConnectedAlumni = (
+  alumniInfo,
+  relations,
+  alumniCount
+) => {
+  const personCount = relations.reduce((acc, { personUuid }) => {
+    acc[personUuid] = (acc[personUuid] || 0) + 1; // Count occurrences
+    return acc;
+  }, {});
+
+  const topPersonUuids = Object.entries(personCount)
+    .sort(([, countA], [, countB]) => countB - countA)
+    .slice(0, alumniCount)
+    .map(([personUuid]) => personUuid);
+    
+  return topPersonUuids.map((personUuid) => {
+    const person = alumniInfo.find(
+      (person) => person.personUuid === personUuid
+    );
+    return person ? person.personName : null; // Return personName if found
+  });
+};

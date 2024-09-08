@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import { Helmet } from "react-helmet";
 import { analytics, logEvent } from "../../firebase.js";
 import GraphContainer from "./GraphContainer.js";
 import { combineAndProcessData } from "./utils/dataUtils.js";
@@ -16,6 +17,8 @@ import {
   initialiseCenter,
   getNodeRadius,
   isConnected,
+  getMostFundedOrgs,
+  getMostConnectedAlumni,
 } from "./utils/graphUtils.js";
 import { initialiseForces } from "./utils/forceUtils.js";
 import { colours, opacity, text } from "../../styling.js";
@@ -269,7 +272,9 @@ function NetworkGraph({
         } else if (d.type === "secondary" && d.totalFundingUsd != null) {
           d.radius = getNodeRadius(
             d.totalFundingUsd,
-            data.nodes.filter((d) => d.type === "secondary" && d.totalFundingUsd != null),
+            data.nodes.filter(
+              (d) => d.type === "secondary" && d.totalFundingUsd != null
+            ),
             networkGraphDimensions,
             secondaryNodeRadiusFlex,
             secondaryNodeRadiusMax
@@ -314,7 +319,7 @@ function NetworkGraph({
       .style("font-weight", text.content.fontWeight)
       .style("fill", text.content.color);
 
-    primaryNodeTextWrapping(nodeElements, center, targetOrg.name);
+    primaryNodeTextWrapping(nodeElements, center, targetOrg.orgName);
 
     // Update secondary node text styling
     nodeElements
@@ -350,7 +355,7 @@ function NetworkGraph({
 
       nodeElements.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
     });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, networkGraphDimensions, targetOrg]); // Ensures effect is only run on mount and unmount
 
   if (error) {
@@ -361,8 +366,32 @@ function NetworkGraph({
     return <div>Loading...</div>;
   }
 
+  const title = `The ${targetOrg.orgName} Mafia 2024`;
+
+  const description = `Explore the alumni network of ${
+    targetOrg.orgName
+  }. Including founders and early executives including ${getMostConnectedAlumni(
+    alumniInfo,
+    relations,
+    5
+  ).join(
+    ", "
+  )}, working at, investing in, and advising companies like ${getMostFundedOrgs(
+    subsequentOrgsInfo,
+    5
+  ).join(", ")}`;
+
   return (
-    <GraphContainer d3Container={d3Container} width="100%" height="100%" />
+    <>
+      {/* Helmet for dynamic meta tags */}
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+      </Helmet>
+      <GraphContainer d3Container={d3Container} width="100%" height="100%" />
+    </>
   );
 }
 
