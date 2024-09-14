@@ -389,6 +389,7 @@ function NetworkGraph({
         <meta name="description" content={description} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
+        <meta property="twitter:description" content={description} />
       </Helmet>
       <GraphContainer d3Container={d3Container} width="100%" height="100%" />
     </>
