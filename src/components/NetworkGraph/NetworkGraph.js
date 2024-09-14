@@ -366,7 +366,7 @@ function NetworkGraph({
     return <div>Loading...</div>;
   }
 
-  const title = `The ${targetOrg.orgName} Mafia 2024`;
+  const title = `The ${targetOrg.orgName} Mafia`;
 
   const description = `Explore the alumni network of ${
     targetOrg.orgName
