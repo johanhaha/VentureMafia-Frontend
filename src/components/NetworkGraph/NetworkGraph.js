@@ -356,7 +356,7 @@ function NetworkGraph({
       nodeElements.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, networkGraphDimensions, targetOrg]); // Ensures effect is only run on mount and unmount
+  }, [data]); // Ensures effect is only run on mount and unmount
 
   if (error) {
     return <div>Error processing data</div>;
