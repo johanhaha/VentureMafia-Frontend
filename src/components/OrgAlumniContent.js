@@ -121,9 +121,6 @@ function OrgAlumniContent({ defaultTargetOrgName }) {
 
   // Handler for setting new target organisation
   const handleTargetOrgSelect = (selection) => {
-    // Load data for the new organisation
-    loadData(selection.value);
-
     // Update the URL to reflect the selected organisation
     navigate(`/${selection.label}`);
 
