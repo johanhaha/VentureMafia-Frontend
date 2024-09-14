@@ -136,10 +136,6 @@ function OrgAlumniContent({ defaultTargetOrgName }) {
   return (
     <Layout>
       <Helmet>
-        {/* <meta
-          name="keywords"
-          content={`venture mafia, startup mafia, founder factory, startup founders, startup networks, startup alumni, venture capital, ${availableOrgs}`}
-        /> */}
         {availableOrgs && availableOrgs.length > 0 && (
           <meta
             name="keywords"
