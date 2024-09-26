@@ -139,7 +139,7 @@ function OrgAlumniContent({ defaultTargetOrgName }) {
         {availableOrgs && availableOrgs.length > 0 && (
           <meta
             name="keywords"
-            content={`venture mafia, startup mafia, founder factory, startup founders, startup networks, startup alumni, venture capital, ${availableOrgs
+            content={`venture mafia, startup mafia, founder factory, alumni network, startup founders, startup networks, startup alumni, venture capital, ${availableOrgs
               .map((org) => org.label)
               .join(" Mafia, ")}`}
           />
