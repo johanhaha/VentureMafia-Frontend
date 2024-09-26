@@ -21,7 +21,7 @@ const GraphContainer = ({ width, height, d3Container, children }) => {
         .attr("aria-label", "Network graph of successful startup alumni networks")
         .attr(
           "desc",
-          "This network graph illustrates the founders and early executives of successful startups and the companies they have subsequently started, worked at, invested in, advised, or served on the board of. It includes the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia with people such as Elon Musk, Peter Thiel, Reid Hoffman, and Niklas Zennström."
+          "This network graph illustrates the alumni network of successful startups and the companies they have subsequently started, worked at, invested in, advised, or served on the board of. It includes the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia with people such as Elon Musk, Peter Thiel, Reid Hoffman, and Niklas Zennström."
         ); // For SEO
 
       // Assign the created SVG element to the d3Container ref for D3 manipulations

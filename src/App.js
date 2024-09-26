@@ -18,24 +18,20 @@ function App() {
         <title>Venture Mafia</title>
         <meta
           name="description"
-          content="Explore the networks of founders and early executives from various successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
+          content="Explore the alumni networks of founders and early executives from various successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
         />
         <meta
           name="keywords"
-          content="venture mafia, startup mafia, founder factory, startup founders, startup networks, startup alumni, venture capital, PayPal mafia, Skype mafia, eBay mafia, LinkedIn mafia"
+          content="venture mafia, startup mafia, alumni network, founder factory, startup founders, startup networks, startup alumni, venture capital, PayPal mafia, Skype mafia, eBay mafia, LinkedIn mafia"
         />
         <meta name="author" content="Johan Torssell" />
         {/* <!-- Social media tags --> */}
         <meta property="og:title" content="Venture Mafia" />
         <meta
           property="og:description"
-          content="Explore the networks of founders and early executives from successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
+          content="Explore the alumni networks of founders and early executives from successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
         />
         <meta property="og:site_name" content="Venture Mafia" />
-        <meta
-          property="og:description"
-          content="Explore the alumni networks of successful startups."
-        />
         <meta
           property="og:image"
           content="https://venturemafia.xyz/VMoverview.png"
@@ -47,7 +43,7 @@ function App() {
         <meta name="twitter:title" content="Venture Mafia" />
         <meta
           property="twitter:description"
-          content="Explore the networks of founders and early executives from successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
+          content="Explore the alumni networks of founders and early executives from successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
         />
         <meta
           property="og:image"
