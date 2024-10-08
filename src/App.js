@@ -45,10 +45,6 @@ function App() {
           property="twitter:description"
           content="Explore the alumni networks of founders and early executives from successful startups. Discover their professional connections, subsequent ventures, investments, and roles in other companies. Including the PayPal Mafia, Skype Mafia, eBay Mafia, and LinkedIn Mafia"
         />
-        <meta
-          property="og:image"
-          content="https://venturemafia.xyz/VMoverview.png"
-        />
         <meta property="og:type" content="website" />
       </Helmet>
       <Layout>
