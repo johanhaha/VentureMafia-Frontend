@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics, logEvent } from "firebase/analytics";
+import { getAnalytics, logEvent as firebaseLogEvent } from "firebase/analytics";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,5 +16,21 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+console.log(
+  "Logging disabled",
+  process.env.REACT_APP_ANALYTICS_DISABLED
+);
+// Wrapper function for logging events
+const logEvent = (analytics, eventName, eventParams) => {
+  if (process.env.REACT_APP_ANALYTICS_DISABLED === "true") {
+    // Analytics is disabled
+    console.log(
+      `Analytics disabled. Event ${eventName} ${eventParams.item_name} not logged.`
+    );
+  } else {
+    firebaseLogEvent(analytics, eventName, eventParams.item_name);
+  }
+};
 
 export { analytics, logEvent };
