@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# Venture Mafia (Documentation in progress)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Project Structure](#project-structure)
+3. [Key Components](#key-components)
+4. [Styling](#styling)
+5. [Utilities](#utilities)
+6. [External Integrations](#external-integrations)
+7. [Build and Deployment](#build-and-deployment)
 
-## Available Scripts
+## Project Overview
 
-In the project directory, you can run:
+This React application appears to be a data visualization tool for exploring alumni networks of various organizations, with a focus on startups and venture capital. It uses D3.js for creating interactive network graphs and includes features like displaying information about organizations, individuals, and their connections.
 
-### `npm start`
+## Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The project follows a typical React application structure:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- `src/`: Contains the main source code
+  - `components/`: React components
+  - `assets/`: Static assets like images and fonts
+  - `styling.js`: Global styling configurations
+- `public/`: Public assets and HTML template
+- Configuration files (e.g., `package.json`, `.firebaserc`, etc.)
 
-### `npm test`
+## Key Components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### App.js
+The main component that sets up routing and overall layout.
 
-### `npm run build`
+### Layout.js
+Defines the overall layout of the application, including a grid structure and footer.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### OrgAlumniContent.js
+Manages the main content for displaying organization alumni information.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### NetworkGraph/
+Contains components and utilities for rendering the network graph:
+- `NetworkGraph.js`: Main component for rendering the D3.js graph
+- `GraphContainer.js`: Container for the graph
+- `utils/`: Helper functions for graph operations
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Sidebar/
+Components for the sidebar, displaying detailed information:
+- `Sidebar.js`: Main sidebar component
+- `TargetOrgContent.js`, `PrimaryNodeContent.js`, `SecondaryNodeContent.js`: Different content types for the sidebar
+- `ProfileImage.js`: Component for displaying profile images
+- `utils.js`: Utility functions for the sidebar
 
-### `npm run eject`
+### Footer.js
+Renders the footer with color-coded relationship types.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Styling
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The project uses a combination of inline styles and a global styling configuration:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- `styling.js`: Defines color schemes, opacities, and text styles
+- `assets/fonts.css`: Custom font definitions
+- Inline styles are used extensively throughout components
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Utilities
 
-## Learn More
+Several utility functions are defined to handle data processing, formatting, and graph operations:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- `dataUtils.js`: Data processing for the graph
+- `textUtils.js`: Text wrapping utilities for graph labels
+- `graphUtils.js`: Various graph-related calculations and helper functions
+- `forceUtils.js`: Force simulation setup for D3.js
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## External Integrations
 
-### Code Splitting
+1. **Firebase**: Used for analytics (`firebase.js`)
+2. **D3.js**: For creating the interactive network graph
+3. **Font Awesome**: Icon library integration (`fontAwesome.js`)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Build and Deployment
 
-### Analyzing the Bundle Size
+- The project uses Create React App for development and building
+- `Dockerfile` and `nginx.conf` suggest containerization for deployment
+- Firebase configuration indicates possible hosting on Firebase
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Additional Notes
 
-### Making a Progressive Web App
+1. SEO optimization is implemented using React Helmet for dynamic meta tags.
+2. The application supports multiple "mafia" networks (PayPal, Skype, LinkedIn, eBay, Spotify).
+3. Responsive design considerations are evident in the styling and layout.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This documentation provides an overview of the project structure and key components. For more detailed information about specific functions or components, refer to the inline comments in the respective files.
