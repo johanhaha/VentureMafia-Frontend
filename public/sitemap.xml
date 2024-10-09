@@ -30,4 +30,22 @@
     <changefreq>yearly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://venturemafia.xyz/iZettle</loc>
+    <lastmod>2024-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://venturemafia.xyz/Kry</loc>
+    <lastmod>2024-09-04</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://venturemafia.xyz/Netscape</loc>
+    <lastmod>2024-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
