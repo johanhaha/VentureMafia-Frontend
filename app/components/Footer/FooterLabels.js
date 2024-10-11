@@ -1,7 +1,7 @@
 import React from "react";
-import { colours, text } from "../styling.js";
+import { colours, text } from "../../styling.js";
 
-function Footer() {
+function FooterLabels() {
 
   // Manual mapping between attribute keys and display text
   const attributeDisplayMapping = {
@@ -70,4 +70,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default FooterLabels;
