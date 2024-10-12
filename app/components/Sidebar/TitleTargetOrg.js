@@ -3,7 +3,7 @@ import Tooltip from "./Tooltip.js";
 import { text } from "../../styling.js";
 
 function TitleTargetOrg({ availableOrgs, targetOrg }) {
-  // const [tooltipDefaultOpen, setTooltipDefaultOpen] = useState(true); // Used for only showing the tooltip if the user hasn't picked a company
+  const tooltipDefaultOpen = true;
 
   return (
     <h1
@@ -17,9 +17,7 @@ function TitleTargetOrg({ availableOrgs, targetOrg }) {
     >
       <span>The</span>
       <DropdownTargetOrg availableOrgs={availableOrgs} targetOrg={targetOrg} />
-      {/* <Tooltip
-        tooltipDefaultOpen={tooltipDefaultOpen}
-      /> */}
+      <Tooltip tooltipDefaultOpen={tooltipDefaultOpen} />
       <span>Mafia</span>
     </h1>
   );
