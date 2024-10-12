@@ -1,5 +1,7 @@
-// import { analytics, logEvent } from "../firebase.js";
-import { colours, text } from "../../styling.js";
+"use client";
+
+import { analytics, logEvent } from "../../firebase.js";
+import { text } from "../../styling.js";
 
 function FooterAuthor() {
   return (
@@ -15,9 +17,9 @@ function FooterAuthor() {
         target="_blank"
         rel="noreferrer"
         style={{ textDecoration: "none", color: "inherit" }}
-        // onClick={(event) => {
-        //   logEvent(analytics, "johan_linkedin_click"); // Log click to LinkedIn profile
-        // }}
+        onClick={(event) => {
+          logEvent(analytics, "johan_linkedin_click"); // Log click to LinkedIn profile
+        }}
       >
         &copy;Johan Torssell
       </a>

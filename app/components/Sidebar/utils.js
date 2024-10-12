@@ -42,6 +42,25 @@ export async function loadData(targetOrgUuid) {
   }
 }
 
+// Handler for selecting new node
+export const handleNodeSelect = (nodeData) => {
+  setSelectedNode(nodeData);
+};
+
+// Handler for setting new target organisation
+export const handleTargetOrgSelect = (selection) => {
+  // Update the URL to reflect the selected organisation
+  navigate(`/${selection.label}`);
+
+  // Set network graph dimensions based on the container's size
+  if (containerRef.current) {
+    setNetworkGraphDimensions({
+      width: containerRef.current.offsetWidth,
+      height: containerRef.current.offsetHeight,
+    });
+  }
+};
+
 // Helper function to format as USD and abbreviate
 export const formatToUSD = (value) => {
   let prefix = "$";
@@ -64,7 +83,7 @@ export const formatToUSD = (value) => {
   });
 
   return prefix + formatter.format(abbreviatedNumber) + suffix;
-}
+};
 
 // Helper function to format epoch to date
 export const epochToDate = (epoch) => {
@@ -72,4 +91,4 @@ export const epochToDate = (epoch) => {
     year: "numeric",
     // month: "long",
   });
-}
+};

@@ -1,19 +1,20 @@
 // src/app/[targetOrgName]/page.js
 import Head from "next/head";
 import { loadAvailableOrgs } from "../components/Sidebar/utils";
-import { loadData } from "../components/Sidebar/utils";
+import { loadData, handleTargetOrgSelect } from "../components/Sidebar/utils";
+import Sidebar from "../components/Sidebar/Sidebar";
 
-const targetOrgName = "PayPal";
+export default async function Page({ params }) {
+  const { targetOrgName } = params;
+  console.log("targetOrgName", targetOrgName);
+  //   const [selectedNode, setSelectedNode] = useState(null);
+  const selectedNode = null;
 
-
-
-export default async function Test() {
   const availableOrgs = await loadAvailableOrgs(); // Server-side fetch
 
   const [targetOrg, alumniInfo, subsequentOrgsInfo, relations] = await loadData(
     availableOrgs.find((org) => org.label === targetOrgName).value
   ); // Server-side fetch
-  console.log("targetOrg", targetOrg);
 
   return (
     <>
@@ -35,20 +36,12 @@ export default async function Test() {
         }}
       >
         {/* Static Sidebar */}
-        <div
-          style={{
-            padding: "20px",
-          }}
-        >
-          <h2>Sidebar</h2>
-          <ul>
-            <li>ExampleOrg</li>
-            <li>AnotherOrg</li>
-            {availableOrgs.map((org) => (
-              <li key={org.value}>{org.label}</li>
-            ))}
-          </ul>
-        </div>
+        <Sidebar
+          availableOrgs={availableOrgs}
+          targetOrg={targetOrg}
+          onTargetOrgSelect={handleTargetOrgSelect}
+          selectedNodeData={selectedNode}
+        />
 
         {/* Static NetworkGraph Area */}
         <div
