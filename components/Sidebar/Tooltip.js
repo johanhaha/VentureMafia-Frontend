@@ -1,7 +1,7 @@
 "use client";
 
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { text } from "../../styling.js";
+import { text } from "../../app/styling.js";
 
 function Tooltip({ tooltipDefaultOpen }) {
   return (

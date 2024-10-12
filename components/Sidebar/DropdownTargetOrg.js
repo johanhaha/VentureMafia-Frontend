@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import Select from "react-select";
-import { colours } from "../../styling.js";
-import { analytics, logEvent } from "../../firebase.js";
+import { colours } from "../../app/styling.js";
+import { analytics, logEvent } from "../../app/firebase.js";
 
 function DropdownTargetOrg({ availableOrgs, targetOrg }) {
   const router = useRouter();

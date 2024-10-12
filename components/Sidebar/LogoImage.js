@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from "../../fontAwesome.js";
+import { FontAwesomeIcon } from "../../app/fontAwesome.js";
 
 function LogoImage({ logoUrl, name }) {
   return logoUrl ? (

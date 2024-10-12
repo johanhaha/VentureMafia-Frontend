@@ -1,5 +1,5 @@
 import Footer from "./Footer/Footer";
-import { colours, text } from "../styling.js";
+import { colours, text } from "../app/styling.js";
 
 const Layout = ({ children }) => {
   return (

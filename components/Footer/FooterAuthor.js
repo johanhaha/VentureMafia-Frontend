@@ -1,7 +1,7 @@
 "use client";
 
-import { analytics, logEvent } from "../../firebase.js";
-import { text } from "../../styling.js";
+import { analytics, logEvent } from "../../app/firebase.js";
+import { text } from "../../app/styling.js";
 
 function FooterAuthor() {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { colours, text } from "../../styling.js";
+import { colours, text } from "../../app/styling.js";
 
 function FooterLabels() {
 

@@ -1,6 +1,6 @@
 import DropdownTargetOrg from './DropdownTargetOrg';
 import Tooltip from "./Tooltip.js";
-import { text } from "../../styling.js";
+import { text } from "../../app/styling.js";
 
 function TitleTargetOrg({ availableOrgs, targetOrg }) {
   const tooltipDefaultOpen = true;

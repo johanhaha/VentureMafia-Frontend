@@ -1,4 +1,4 @@
-import { text } from "../../styling.js";
+import { text } from "../../app/styling.js";
 
 function TargetOrgInfo({
   targetOrg,

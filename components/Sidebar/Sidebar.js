@@ -2,9 +2,9 @@ import TargetOrgContent from "./TargetOrgContent.js";
 // import PrimaryNodeContent from "./PrimaryNodeContent.js";
 // import SecondaryNodeContent from "./SecondaryNodeContent.js";
 import { epochToDate, formatToUSD } from "./utils.js";
-import { colours } from "../../styling.js";
+import { colours } from "../../app/styling.js";
 import Image from 'next/image';
-import VMlogo from "../../../public/logos/VMlogo.svg";
+import VMlogo from "../../public/logos/VMlogo.svg";
 
 function Sidebar({
   availableOrgs,
