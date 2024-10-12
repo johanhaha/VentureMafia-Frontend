@@ -5,7 +5,6 @@ import TargetOrgInfo from "./TargetOrgInfo.js";
 function TargetOrgContent({
   targetOrg,
   availableOrgs,
-  onTargetOrgSelect,
   epochToDate,
   formatToUSD,
 }) {
@@ -23,7 +22,6 @@ function TargetOrgContent({
         <TitleTargetOrg
           availableOrgs={availableOrgs}
           targetOrg={targetOrg}
-          onTargetOrgSelect={onTargetOrgSelect}
         />
       </div>
       <TargetOrgInfo

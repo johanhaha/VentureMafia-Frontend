@@ -1,8 +1,8 @@
 import DropdownTargetOrg from "./DropdownTargetOrg";
-// import Tooltip from "./Tooltip.js";
+import Tooltip from "./Tooltip.js";
 import { text } from "../../styling.js";
 
-function TitleTargetOrg({ availableOrgs, targetOrg, onTargetOrgSelect }) {
+function TitleTargetOrg({ availableOrgs, targetOrg }) {
   // const [tooltipDefaultOpen, setTooltipDefaultOpen] = useState(true); // Used for only showing the tooltip if the user hasn't picked a company
 
   return (

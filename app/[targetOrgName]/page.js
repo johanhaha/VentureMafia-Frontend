@@ -1,7 +1,7 @@
 // src/app/[targetOrgName]/page.js
 import Head from "next/head";
 import { loadAvailableOrgs } from "../components/Sidebar/utils";
-import { loadData, handleTargetOrgSelect } from "../components/Sidebar/utils";
+import { loadData } from "../components/Sidebar/utils";
 import Sidebar from "../components/Sidebar/Sidebar";
 
 export default async function Page({ params }) {
@@ -39,7 +39,6 @@ export default async function Page({ params }) {
         <Sidebar
           availableOrgs={availableOrgs}
           targetOrg={targetOrg}
-          onTargetOrgSelect={handleTargetOrgSelect}
           selectedNodeData={selectedNode}
         />
 

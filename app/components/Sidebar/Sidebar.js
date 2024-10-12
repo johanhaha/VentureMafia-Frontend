@@ -9,7 +9,6 @@ import VMlogo from "../../../public/logos/VMlogo.svg";
 function Sidebar({
   availableOrgs,
   targetOrg,
-  onTargetOrgSelect,
   selectedNodeData,
 }) {
   return (
@@ -38,7 +37,6 @@ function Sidebar({
         <TargetOrgContent
           targetOrg={targetOrg}
           availableOrgs={availableOrgs}
-          onTargetOrgSelect={onTargetOrgSelect}
           epochToDate={epochToDate}
           formatToUSD={formatToUSD}
         />
