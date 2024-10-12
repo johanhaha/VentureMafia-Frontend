@@ -1,23 +1,19 @@
 // src/app/[targetOrgName]/page.js
 import Head from "next/head";
+import { loadAvailableOrgs } from "../components/Sidebar/utils";
+import { loadData } from "../components/Sidebar/utils";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3000";
+const targetOrgName = "PayPal";
 
-// Helper fucntion to import available organisations
-async function loadAvailableOrgs() {
-  try {
-    const response = await fetch(`${BASE_URL}/available_orgs`);
-    const availableOrgsRaw = await response.json();
-    console.log(availableOrgsRaw.data);
-    return availableOrgsRaw.data;
-  } catch (err) {
-    console.error("Failed to fetch data:", err);
-    return [];
-  }
-}
+
 
 export default async function Test() {
   const availableOrgs = await loadAvailableOrgs(); // Server-side fetch
+
+  const [targetOrg, alumniInfo, subsequentOrgsInfo, relations] = await loadData(
+    availableOrgs.find((org) => org.label === targetOrgName).value
+  ); // Server-side fetch
+  console.log("targetOrg", targetOrg);
 
   return (
     <>
