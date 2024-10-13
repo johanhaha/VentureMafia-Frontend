@@ -2,7 +2,6 @@ import React from "react";
 import { colours, text } from "../../app/styling.js";
 
 function FooterLabels() {
-
   // Manual mapping between attribute keys and display text
   const attributeDisplayMapping = {
     executive: "Executive",
@@ -14,22 +13,45 @@ function FooterLabels() {
   const relationKeys = Object.keys(colours.relations);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "10px 2vw",
-      }}
-    >
-      {relationKeys.map((key) => (
+    <div style={{ height: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "10px 2vw",
+        }}
+      >
+        {relationKeys.map((key) => (
+          <div
+            key={key}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5vw",
+              paddingLeft: "2vw",
+            }}
+          >
+            <div
+              style={{
+                width: "25px",
+                height: "25px",
+                borderRadius: "50%",
+                backgroundColor: colours.relations[key],
+                flexShrink: 0,
+              }}
+            ></div>
+            {/* Use the mapping for display text */}
+            <span style={text.content}>{attributeDisplayMapping[key]}</span>
+          </div>
+        ))}
         <div
-          key={key}
           style={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             gap: "0.5vw",
-            paddingLeft: "2vw",
+            paddingLeft: "1vw",
           }}
         >
           <div
@@ -37,34 +59,13 @@ function FooterLabels() {
               width: "25px",
               height: "25px",
               borderRadius: "50%",
-              backgroundColor: colours.relations[key],
+              backgroundColor: colours.neutrals.background2,
               flexShrink: 0,
             }}
           ></div>
           {/* Use the mapping for display text */}
-          <span style={text.content}>{attributeDisplayMapping[key]}</span>
+          <span style={text.content}>Size represents funding amount</span>
         </div>
-      ))}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "0.5vw",
-          paddingLeft: "1vw",
-        }}
-      >
-        <div
-          style={{
-            width: "25px",
-            height: "25px",
-            borderRadius: "50%",
-            backgroundColor: colours.neutrals.background2,
-            flexShrink: 0,
-          }}
-        ></div>
-        {/* Use the mapping for display text */}
-        <span style={text.content}>Size represents funding amount</span>
       </div>
     </div>
   );
