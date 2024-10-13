@@ -26,38 +26,27 @@ export default async function Page({ params }) {
           content="A simple test page for displaying an organization's alumni network."
         />
       </Head>
+      {/* Static Sidebar */}
+      <Sidebar
+        availableOrgs={availableOrgs}
+        targetOrg={targetOrg}
+        selectedNodeData={selectedNode}
+      />
 
+      {/* Static NetworkGraph Area */}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 3fr",
-          width: "100vw",
-          height: "100vh",
-          overflow: "hidden",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        {/* Static Sidebar */}
-        <Sidebar
-          availableOrgs={availableOrgs}
+        <NetworkGraph
           targetOrg={targetOrg}
-          selectedNodeData={selectedNode}
+          alumniInfo={alumniInfo}
+          subsequentOrgsInfo={subsequentOrgsInfo}
+          relations={relations}
         />
-
-        {/* Static NetworkGraph Area */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <NetworkGraph
-            targetOrg={targetOrg}
-            alumniInfo={alumniInfo}
-            subsequentOrgsInfo={subsequentOrgsInfo}
-            relations={relations}
-          />
-        </div>
       </div>
     </>
   );
