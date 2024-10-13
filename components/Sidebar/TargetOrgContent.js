@@ -1,13 +1,19 @@
 import LogoImage from "./LogoImage.js";
 import TitleTargetOrg from "./TitleTargetOrg.js";
 import TargetOrgInfo from "./TargetOrgInfo.js";
+import {
+  loadAvailableOrgs,
+  loadTargetOrgData,
+} from "../../components/Sidebar/utils";
+import { epochToDate, formatToUSD } from "./utils.js";
 
-function TargetOrgContent({
-  targetOrg,
-  availableOrgs,
-  epochToDate,
-  formatToUSD,
-}) {
+async function TargetOrgContent({ targetOrgName }) {
+  const availableOrgs = await loadAvailableOrgs(); // Server-side fetch
+
+  const [targetOrg] = await loadTargetOrgData(
+    availableOrgs.find((org) => org.label === targetOrgName).value
+  ); // Server-side fetch
+
   return (
     <div>
       <div
@@ -19,10 +25,7 @@ function TargetOrgContent({
         }}
       >
         <LogoImage logoUrl={targetOrg.orgLogoUrl} name={targetOrg.orgName} />
-        <TitleTargetOrg
-          availableOrgs={availableOrgs}
-          targetOrg={targetOrg}
-        />
+        <TitleTargetOrg availableOrgs={availableOrgs} targetOrg={targetOrg} />
       </div>
       <TargetOrgInfo
         targetOrg={targetOrg}

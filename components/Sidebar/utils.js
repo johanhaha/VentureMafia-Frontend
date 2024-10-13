@@ -42,6 +42,21 @@ export async function loadData(targetOrgUuid) {
   }
 }
 
+// Helper function to import target org data
+export async function loadTargetOrgData(targetOrgUuid) {
+  try {
+    const [targetOrgRaw] = await Promise.all([
+      fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) =>
+        res.json()
+      ),
+    ]);
+    return [targetOrgRaw.data];
+  } catch (err) {
+    console.error("Failed to fetch target org data:", err);
+    throw new Error("Failed to fetch target org data");
+  }
+}
+
 // Helper function to format as USD and abbreviate
 export const formatToUSD = (value) => {
   let prefix = "$";
