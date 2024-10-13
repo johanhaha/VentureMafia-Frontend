@@ -15,11 +15,8 @@ export async function loadAvailableOrgs() {
 // Helper function to import data
 export async function loadData(targetOrgUuid) {
   try {
-    const [targetOrgRaw, alumniInfoRaw, subsequentOrgsInfoRaw, relationsRaw] =
+    const [alumniInfoRaw, subsequentOrgsInfoRaw, relationsRaw] =
       await Promise.all([
-        fetch(`${BASE_URL}/target_org/${targetOrgUuid}`).then((res) =>
-          res.json()
-        ),
         fetch(`${BASE_URL}/alumni_info/${targetOrgUuid}`).then((res) =>
           res.json()
         ),
@@ -30,12 +27,7 @@ export async function loadData(targetOrgUuid) {
           res.json()
         ),
       ]);
-    return [
-      targetOrgRaw.data,
-      alumniInfoRaw.data,
-      subsequentOrgsInfoRaw.data,
-      relationsRaw.data,
-    ];
+    return [alumniInfoRaw.data, subsequentOrgsInfoRaw.data, relationsRaw.data];
   } catch (err) {
     console.error("Failed to fetch data:", err);
     throw new Error("Failed to fetch data");

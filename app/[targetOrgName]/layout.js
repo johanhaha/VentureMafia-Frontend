@@ -13,7 +13,7 @@ export default async function RootLayout({ params, children }) {
 
   const availableOrgs = await loadAvailableOrgs(); // Server-side fetch
 
-  const [targetOrg, alumniInfo, subsequentOrgsInfo, relations] = await loadData(
+  const [alumniInfo, subsequentOrgsInfo, relations] = await loadData(
     availableOrgs.find((org) => org.label === targetOrgName).value
   ); // Server-side fetch
   return (
