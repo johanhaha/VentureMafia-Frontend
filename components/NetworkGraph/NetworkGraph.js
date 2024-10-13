@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
+import { useRouter } from "next/navigation";
 import { Helmet } from "react-helmet";
 import { analytics, logEvent } from "../../app/firebase.js";
 import GraphContainer from "./GraphContainer.js";
@@ -21,7 +22,6 @@ import {
   isConnected,
   getMostFundedOrgs,
   getMostConnectedAlumni,
-  handleNodeSelect,
 } from "./utils/graphUtils.js";
 import { initialiseForces } from "./utils/forceUtils.js";
 import { colours, opacity, text } from "../../app/styling.js";
@@ -40,6 +40,8 @@ function NetworkGraph({
   const d3Container = useRef(null);
   const simulationRef = useRef(null);
   const containerRef = useRef(null);
+
+  const router = useRouter();
 
   var data = null;
 
@@ -174,8 +176,32 @@ function NetworkGraph({
       .enter()
       .append("g");
 
+    // Handler for selecting new node
+    function handleNodeSelect(nodeData) {
+      console.log("New node selected", nodeData);
+
+      switch (nodeData.type) {
+        case "primary":
+          router.push(`/${targetOrgName}/person/${nodeData.name}`);
+          break;
+        case "secondary":
+          router.push(`/${targetOrgName}/company/${nodeData.name}`);
+          break;
+        default:
+          console.log("Unknown node type", nodeData.type);
+      }
+
+      // logEvent(analytics, "dropdown_item_select", {
+      //   item_id: selection.value,
+      //   item_name: selection.label,
+      //   dropdown_name: "target_org_selector",
+      // }); // Log which item was selected
+    }
+
     // Event handler for selecting nodes
     function clickNode(event, clickedNode) {
+      console.log("clickNode", clickedNode)
+      console.log("event", event)
       handleNodeSelect(clickedNode);
       // Adjust the opacity to emphasise/de-emphasise nodes
       nodeElements.style("opacity", (node) => {
@@ -368,9 +394,7 @@ function NetworkGraph({
 
   const title = `The ${targetOrgName} Mafia - Alumni Network of Top Startups`;
 
-  const description = `Explore the alumni network of ${
-    targetOrgName
-  }. Including founders and early executives including ${getMostConnectedAlumni(
+  const description = `Explore the alumni network of ${targetOrgName}. Including founders and early executives including ${getMostConnectedAlumni(
     alumniInfo,
     relations,
     5

@@ -132,11 +132,7 @@ export const getMostFundedOrgs = (subsequentOrgsInfo, orgsCount) => {
 };
 
 // Helper function to ge tthe N most connected alumni
-export const getMostConnectedAlumni = (
-  alumniInfo,
-  relations,
-  alumniCount
-) => {
+export const getMostConnectedAlumni = (alumniInfo, relations, alumniCount) => {
   const personCount = relations.reduce((acc, { personUuid }) => {
     acc[personUuid] = (acc[personUuid] || 0) + 1; // Count occurrences
     return acc;
@@ -146,23 +142,11 @@ export const getMostConnectedAlumni = (
     .sort(([, countA], [, countB]) => countB - countA)
     .slice(0, alumniCount)
     .map(([personUuid]) => personUuid);
-    
+
   return topPersonUuids.map((personUuid) => {
     const person = alumniInfo.find(
       (person) => person.personUuid === personUuid
     );
     return person ? person.personName : null; // Return personName if found
   });
-};
-
-// Handler for selecting new node
-export const handleNodeSelect = (nodeData) => {
-  console.log("New node selected", nodeData)
-  // router.push(`/${selection.label}`);
-
-  // logEvent(analytics, "dropdown_item_select", {
-  //   item_id: selection.value,
-  //   item_name: selection.label,
-  //   dropdown_name: "target_org_selector",
-  // }); // Log which item was selected
 };
