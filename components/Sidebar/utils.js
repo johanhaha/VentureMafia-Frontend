@@ -42,11 +42,6 @@ export async function loadData(targetOrgUuid) {
   }
 }
 
-// Handler for selecting new node
-export const handleNodeSelect = (nodeData) => {
-  setSelectedNode(nodeData);
-};
-
 // Helper function to format as USD and abbreviate
 export const formatToUSD = (value) => {
   let prefix = "$";

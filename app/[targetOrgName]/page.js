@@ -3,6 +3,7 @@ import Head from "next/head";
 import { loadAvailableOrgs } from "../../components/Sidebar/utils";
 import { loadData } from "../../components/Sidebar/utils";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import NetworkGraph from "../../components/NetworkGraph/NetworkGraph";
 
 export default async function Page({ params }) {
   const { targetOrgName } = params;
@@ -50,7 +51,12 @@ export default async function Page({ params }) {
             alignItems: "center",
           }}
         >
-          <p>Network Graph will be displayed here.</p>
+          <NetworkGraph
+            targetOrg={targetOrg}
+            alumniInfo={alumniInfo}
+            subsequentOrgsInfo={subsequentOrgsInfo}
+            relations={relations}
+          />
         </div>
       </div>
     </>
