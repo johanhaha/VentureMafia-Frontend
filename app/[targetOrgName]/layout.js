@@ -38,7 +38,6 @@ export default async function RootLayout({ params, children }) {
           {/* Static Sidebar area */}
           <Sidebar
             availableOrgs={availableOrgs}
-            targetOrg={targetOrg}
             selectedNodeData={selectedNode}
           >
             {children}
@@ -52,7 +51,7 @@ export default async function RootLayout({ params, children }) {
             }}
           >
             <NetworkGraph
-              targetOrg={targetOrg}
+              targetOrgName={targetOrgName}
               alumniInfo={alumniInfo}
               subsequentOrgsInfo={subsequentOrgsInfo}
               relations={relations}

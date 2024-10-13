@@ -31,7 +31,7 @@ const secondaryNodeRadiusFlex = 2.3, // Stated in vw
   secondaryNodeRadiusMax = 50;
 
 function NetworkGraph({
-  targetOrg,
+  targetOrgName,
   alumniInfo,
   subsequentOrgsInfo,
   relations,
@@ -318,7 +318,7 @@ function NetworkGraph({
       .style("font-weight", text.content.fontWeight)
       .style("fill", text.content.color);
 
-    primaryNodeTextWrapping(nodeElements, center, targetOrg.orgName);
+    primaryNodeTextWrapping(nodeElements, center, targetOrgName);
 
     // Update secondary node text styling
     nodeElements
@@ -366,10 +366,10 @@ function NetworkGraph({
     return <div>Loading...</div>;
   }
 
-  const title = `The ${targetOrg.orgName} Mafia - Alumni Network of Top Startups`;
+  const title = `The ${targetOrgName} Mafia - Alumni Network of Top Startups`;
 
   const description = `Explore the alumni network of ${
-    targetOrg.orgName
+    targetOrgName
   }. Including founders and early executives including ${getMostConnectedAlumni(
     alumniInfo,
     relations,
