@@ -1,5 +1,4 @@
 import { colours } from "../../app/styling.js";
-import Image from "next/image";
 import VMlogo from "../../public/logos/VMlogo.svg";
 
 function Sidebar({ children }) {
@@ -14,8 +13,7 @@ function Sidebar({ children }) {
         padding: "2vw",
       }}
     >
-      <Image
-        src={VMlogo}
+      <VMlogo
         style={{
           stroke: colours.main.primary1,
           width: "70%",
