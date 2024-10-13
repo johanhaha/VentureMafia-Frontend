@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import { Helmet } from "react-helmet";
 import { analytics, logEvent } from "../../app/firebase.js";
