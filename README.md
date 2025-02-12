@@ -1,3 +1,5 @@
+View web app live at [venturemafia.xyz](https://venturemafia.xyz/)
+
 # Venture Mafia (Documentation in progress)
 
 ## Table of Contents
